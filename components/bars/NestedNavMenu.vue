@@ -58,8 +58,7 @@
           v-else
           :to="subitem.to"
           link
-          @click="navigateTO(subitem.to)"
-          class="nested-menu-item"
+          @click="navigateTO(subitem.to)" 
         >
           {{ subitem.text }}
         </v-list-item>
