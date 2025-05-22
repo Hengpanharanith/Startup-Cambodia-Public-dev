@@ -13,8 +13,7 @@
             {{ $t("landing.section_what_we_do.subtitle") }}
           </div>
         </v-card-text>
-      </v-card
-      rounded="lg">
+      </v-card>
       <v-row cols="2" cols-lg="4" class="justify-content-center text-left">
         <v-col
           cols="6"
