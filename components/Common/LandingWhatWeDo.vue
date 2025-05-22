@@ -1,42 +1,42 @@
 <template>
   <section class="landing-we-do d-flex align-items-center">
     <v-container class="text-md-center overflow-hidden">
-      <v-card
-        color="transparent"
-        flat
-      >
-        <v-card-title class="justify-md-center  block-title__text text-break">{{$t("landing.section_what_we_do.title")}}</v-card-title>
+      <v-card color="transparent" flat>
+        <v-card-title class="justify-md-center block-title__text text-break">{{
+          $t("landing.section_what_we_do.title")
+        }}</v-card-title>
         <v-card-text>
           <div
             class="text-h5 mx-auto text-subtitle-1 text-break"
             style="max-width: 800px"
-          >{{ $t("landing.section_what_we_do.subtitle") }}</div>
+          >
+            {{ $t("landing.section_what_we_do.subtitle") }}
+          </div>
         </v-card-text>
-      </v-card>
-      <v-row
-        cols="2"
-        cols-lg="4"
-        class="justify-content-center text-left"
-      >
+      </v-card
+      rounded="lg">
+      <v-row cols="2" cols-lg="4" class="justify-content-center text-left">
         <v-col
           cols="6"
           lg="3"
           class="mb-4"
           :key="key"
-          :data-aos-delay="50*(key)"
+          :data-aos-delay="50 * key"
           data-aos="fade-up"
           data-aos-duration="500"
           v-for="(item, key) in itemList"
         >
           <div style="max-width: 150px">
             <Lottie
-                :options="{animationData:item.lottie,loop:false}"
-                :height="150"
-                :width="150"
-                class="mb-4 ml-md-0"
+              :options="{ animationData: item.lottie, loop: false }"
+              :height="150"
+              :width="150"
+              class="mb-4 ml-md-0"
             />
           </div>
-          <h3 class="blog-one__title card-simple__title mb-2">{{item.title}}</h3>
+          <h3 class="blog-one__title card-simple__title mb-2">
+            {{ item.title }}
+          </h3>
           <p class="blog-one__text card-simple__text">{{ item.text }}</p>
         </v-col>
       </v-row>
@@ -86,6 +86,4 @@ export default {
 .landing-we-do {
   padding: 1rem 0;
 }
-
 </style>
-

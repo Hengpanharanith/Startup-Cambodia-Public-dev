@@ -5,29 +5,29 @@
     <v-divider></v-divider>
 
     <v-container class="py-6 d-none">
-      <v-card
-          class="card-quote"
-          rounded="lg"
-          outlined
-      >
+      <v-card class="card-quote" rounded="lg" outlined>
         <v-row
-            align="center"
-            justify="center"
-            class="pa-6"
-            data-aos-delay="50"
-            data-aos="fade-up"
-            data-aos-duration="500"
+          align="center"
+          justify="center"
+          class="pa-6"
+          data-aos-delay="50"
+          data-aos="fade-up"
+          data-aos-duration="500"
         >
           <v-col cols="12">
             <p class="text-left quoteText">
-                  <span class="text-primary quote-sign">
-                    <v-icon class="text-primary quote-sign">mdi-format-quote-open</v-icon>
-                  </span>
+              <span class="text-primary quote-sign">
+                <v-icon class="text-primary quote-sign"
+                  >mdi-format-quote-open</v-icon
+                >
+              </span>
 
               {{ $t("about.section.testimonial.quote") }}
               <span class="text-primary quote-sign">
-                    <v-icon class="text-primary quote-sign">mdi-format-quote-close</v-icon>
-                  </span>
+                <v-icon class="text-primary quote-sign"
+                  >mdi-format-quote-close</v-icon
+                >
+              </span>
             </p>
             <p class="text-right pt-6 dpmTitle">
               <b>{{ $t("about.section.testimonial.author") }}</b>
@@ -39,147 +39,128 @@
         </v-row>
       </v-card>
 
+      <!--      <v-row>-->
+      <!--        <v-col-->
+      <!--          cols="12"-->
+      <!--          md="10"-->
+      <!--          class="mx-auto"-->
+      <!--        >-->
 
-<!--      <v-row>-->
-<!--        <v-col-->
-<!--          cols="12"-->
-<!--          md="10"-->
-<!--          class="mx-auto"-->
-<!--        >-->
+      <!--          <v-card-->
+      <!--            class="card-quote"-->
+      <!--            rounded="lg"-->
+      <!--            outlined-->
+      <!--          >-->
+      <!--            <v-row-->
+      <!--              align="center"-->
+      <!--              justify="center"-->
+      <!--              class="pa-6"-->
+      <!--              data-aos-delay="50"-->
+      <!--              data-aos="fade-up"-->
+      <!--              data-aos-duration="500"-->
+      <!--            >-->
+      <!--              <v-col cols="12">-->
+      <!--                <p class="text-left quoteText">-->
+      <!--                  <span class="text-primary quote-sign">-->
+      <!--                    <v-icon class="text-primary quote-sign">mdi-format-quote-open</v-icon>-->
+      <!--                  </span>-->
 
-<!--          <v-card-->
-<!--            class="card-quote"-->
-<!--            rounded="lg"-->
-<!--            outlined-->
-<!--          >-->
-<!--            <v-row-->
-<!--              align="center"-->
-<!--              justify="center"-->
-<!--              class="pa-6"-->
-<!--              data-aos-delay="50"-->
-<!--              data-aos="fade-up"-->
-<!--              data-aos-duration="500"-->
-<!--            >-->
-<!--              <v-col cols="12">-->
-<!--                <p class="text-left quoteText">-->
-<!--                  <span class="text-primary quote-sign">-->
-<!--                    <v-icon class="text-primary quote-sign">mdi-format-quote-open</v-icon>-->
-<!--                  </span>-->
-
-<!--                  {{ $t("about.section.testimonial.quote") }}-->
-<!--                  <span class="text-primary quote-sign">-->
-<!--                    <v-icon class="text-primary quote-sign">mdi-format-quote-close</v-icon>-->
-<!--                  </span>-->
-<!--                </p>-->
-<!--                <p class="text-right pt-6 dpmTitle">-->
-<!--                  <b>{{ $t("about.section.testimonial.author") }}</b>-->
-<!--                </p>-->
-<!--                <p class="text-right dpmTitle">-->
-<!--                  {{ $t("about.section.testimonial.author_title") }}-->
-<!--                </p>-->
-<!--              </v-col>-->
-<!--            </v-row>-->
-<!--          </v-card>-->
-<!--        </v-col>-->
-<!--      </v-row>-->
+      <!--                  {{ $t("about.section.testimonial.quote") }}-->
+      <!--                  <span class="text-primary quote-sign">-->
+      <!--                    <v-icon class="text-primary quote-sign">mdi-format-quote-close</v-icon>-->
+      <!--                  </span>-->
+      <!--                </p>-->
+      <!--                <p class="text-right pt-6 dpmTitle">-->
+      <!--                  <b>{{ $t("about.section.testimonial.author") }}</b>-->
+      <!--                </p>-->
+      <!--                <p class="text-right dpmTitle">-->
+      <!--                  {{ $t("about.section.testimonial.author_title") }}-->
+      <!--                </p>-->
+      <!--              </v-col>-->
+      <!--            </v-row>-->
+      <!--          </v-card>-->
+      <!--        </v-col>-->
+      <!--      </v-row>-->
     </v-container>
-
-
 
     <v-container>
       <v-card flat>
         <v-card-text>
-<!-- src="/images/default-user.png"-->
+          <!-- src="/images/default-user.png"-->
 
           <v-img
-              class="d-none d-sm-block"
-              src="images/about/startup_rocket.png"
-                 width="20%"
-                 style="position: absolute; bottom: 0; left: 0;"
-
+            class="d-none d-sm-block rounded-sm"
+            src="images/about/startup_rocket.png"
+            width="20%"
+            style="position: absolute; bottom: 0px; left: 0%"
           ></v-img>
           <v-row>
-
-
             <v-col cols="12" sm="9" class="mx-auto">
               <div class="block-title text-center mt-8">
-                <v-card-title class="block-title__text text-capitalize justify-center">
-                  <span class="dark--text text--primary">{{ $t("about.section_header.about") }}</span>
+                <v-card-title
+                  class="block-title__text text-capitalize justify-center"
+                >
+                  <span class="dark--text text--primary">{{
+                    $t("about.section_header.about")
+                  }}</span>
                 </v-card-title>
                 <!-- /.block-title__text -->
               </div>
-              <p
-                  class="blockquote"
-
-              >
-                <span class="font-weight-bold">{{ paragraphs[0].content }}</span>
+              <p class="blockquote">
+                <span class="font-weight-bold">{{
+                  paragraphs[0].content
+                }}</span>
                 <span class="">{{ paragraphs[1].content }}</span>
 
-                <span class="font-weight-bold">{{ paragraphs[2].content }}</span>
+                <span class="font-weight-bold">{{
+                  paragraphs[2].content
+                }}</span>
 
                 <span>{{ paragraphs[3].content }}</span>
-                <span class="font-weight-bold">{{ paragraphs[4].content }}</span>
+                <span class="font-weight-bold">{{
+                  paragraphs[4].content
+                }}</span>
 
                 <span>
-                {{ paragraphs[5].content }}
-              </span>
+                  {{ paragraphs[5].content }}
+                </span>
               </p>
-              <p
-                  class="blockquote"
-
-              >
+              <p class="blockquote">
                 <span class="">{{ paragraphs[6].content }}</span>
               </p>
 
-              <p
-                  class="blockquote"
-
-              >
+              <p class="blockquote">
                 {{ $t("about.section.about_startup_cambodia_paragraph_two") }}
               </p>
             </v-col>
-
-
-
           </v-row>
-
-
         </v-card-text>
-
-
-
       </v-card>
-
-
-
     </v-container>
 
     <v-container>
       <v-card flat>
         <v-card-text>
-          <LandingWhatWeDo/>
+          <LandingWhatWeDo />
         </v-card-text>
       </v-card>
-
     </v-container>
 
     <v-container>
-      <OnBoardingGuideline/>
+      <OnBoardingGuideline />
     </v-container>
 
     <v-container>
       <client-only>
-        <h1 class="text-center my-4">
-          {{$t('ourPartner')}}
-        </h1>
+        <h1 class="text-center my-4">{{ $t("ourPartner") }}kljasd</h1>
         <OurPartner
-            :title="$t('ourPartner')"
-            :partner-list="partnerList"
-            class="section-padding"
+          :title="$t('ourPartner')"
+          :partner-list="partnerList"
+          class="section-padding"
         />
       </client-only>
     </v-container>
-<!--    <MileStone />-->
+    <!--    <MileStone />-->
   </div>
 </template>
 <script>
@@ -208,7 +189,6 @@ export default {
       rocketIcon,
       rocketIconKm,
       e1: 1,
-
     };
   },
   mounted() {
@@ -219,7 +199,7 @@ export default {
   },
   computed: {
     ...mapState("partner", { partnerList: "dataList" }),
-    ...mapState("partner", {partnerList: "dataList"}),
+    ...mapState("partner", { partnerList: "dataList" }),
     breadCrumbs() {
       return [
         { homePage: true, text: this.$t("breadcrumb.home"), to: "/" },
@@ -285,11 +265,10 @@ export default {
         },
       ];
     },
-
   },
 };
 </script>
-<style >
+<style>
 .block-title__text {
   text-align: center !important;
 }
@@ -298,7 +277,6 @@ p.quoteText {
   font-size: 1.25rem;
   line-height: 2.5rem;
   font-style: italic;
-
 }
 .card-quote .quoteText .quote-sign {
   font-size: 2.5rem;
@@ -315,5 +293,4 @@ p.dpmTitle {
   line-height: 1.5rem;
   color: black;
 }
-
 </style>

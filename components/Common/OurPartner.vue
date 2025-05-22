@@ -1,39 +1,34 @@
 <template>
   <section class="brand-style-one py-5">
-
     <v-container class="mt-5">
-
       <v-card
-
-        class="fill-height card-pie-chart d-flex flex-column" rounded="lg" elevation="0"
-
+        class="fill-height card-pie-chart d-flex flex-column"
+        elevation="0"
+        bn
       >
-<!--        <h1 class="text-center my-4">-->
-<!--          {{title}}-->
-<!--        </h1>-->
-<!--        <v-card-title class="justify-md-center text-h5 block-title__text text-break mb-6">{{title}}</v-card-title>-->
+        <!--        <h1 class="text-center my-4">-->
+        <!--          {{title}}-->
+        <!--        </h1>-->
+        <!--        <v-card-title class="justify-md-center text-h5 block-title__text text-break mb-6">{{title}}</v-card-title>-->
       </v-card>
-      <v-card class="fill-height card-pie-chart d-flex flex-column" rounded="lg" elevation="0">
+      <v-card
+        class="fill-height card-pie-chart d-flex flex-column"
+        elevation="0"
+      >
         <v-card-text>
           <div class="swiper swiperPartner">
             <div class="swiper-wrapper">
               <div
-                  class="swiper-slide"
-                  v-for="item in partnerList"
-                  :key="item.id"
+                class="swiper-slide"
+                v-for="item in partnerList"
+                :key="item.id"
               >
-                <v-img
-                    :src="item.thumbnail"
-                    alt=""
-                    height="100%"
-                    contain
-                />
+                <v-img :src="item.thumbnail" alt="" height="100%" contain />
               </div>
             </div>
           </div>
         </v-card-text>
       </v-card>
-
     </v-container>
   </section>
 </template>
@@ -101,7 +96,6 @@ export default {
   -webkit-align-items: center;
   align-items: center;
 }
-
 /* .swiper.swiperPartner .swiper-slide img {
   display: block;
   width: 100%;
