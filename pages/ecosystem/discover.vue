@@ -22,6 +22,7 @@
               :to="item.to"
               class="px-4"
               rounded="lg"
+              
             >
               <v-list-item-title>{{ item.text }}</v-list-item-title>
             </v-list-item>

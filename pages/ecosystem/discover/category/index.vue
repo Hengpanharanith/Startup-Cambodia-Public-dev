@@ -3,7 +3,7 @@
     <PageHeader
       :title="$t($route.query.id)"
       v-bind:bannerUrl="bannerUrl"
-    />
+    />  
     <section id="networkShowCase">
       <client-only>
         <NetworkSubNavbar />

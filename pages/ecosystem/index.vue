@@ -1,5 +1,11 @@
 <template>
-  <div style="background-color: #06083d">
+  <div
+    style="
+      background-image: url('https://startupcambodia.gov.kh/images/about/pattern.svg');
+      background-position: center center;
+      background-repeat: repeat;
+    "
+  >
     <PageHeader :bannerUrl="bannerUrl" />
     <BreadcrumbsBar :breadcrumb-items="breadCrumbs" />
     <LandingEcosystem

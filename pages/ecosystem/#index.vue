@@ -8,35 +8,22 @@
       :showButton="false"
       :animationEnabled="false"
     />
-    <div
-      id="ecoSystemContainer"
-      class="py-16 white"
-    >
+    <div id="ecoSystemContainer" class="py-16 white">
       <v-container>
-        <v-card
-          rounded="xl"
-          outlined
-        >
+        <v-card rounded="xl" outlined>
           <v-card-text>
             <v-row
               class="align-center flex-column-reverse flex-md-row"
-              style="min-height:calc(50vh)"
+              style="min-height: calc(50vh)"
               no-gutters
             >
-              <v-col
-                cols="12"
-                md="6"
-                offset-md="1"
-              >
-                <v-card
-                  rounded="lg"
-                  flat
-                >
-                  <v-layout
-                    style="min-height:200px"
-                    column
-                  >
-                    <v-card-title class="font-weight-normal text-break text-md-h4 grey--text text--darken-3">{{ $t("ecosystem.discover.desc") }}</v-card-title>
+              <v-col cols="12" md="6" offset-md="1">
+                <v-card rounded="lg" flat>
+                  <v-layout style="min-height: 200px" column>
+                    <v-card-title
+                      class="font-weight-normal text-break text-md-h4 grey--text text--darken-3"
+                      >{{ $t("ecosystem.discover.desc") }}</v-card-title
+                    >
                     <v-card-actions class="mt-auto py-4">
                       <v-spacer class="d-md-none"></v-spacer>
                       <v-btn
@@ -45,7 +32,8 @@
                         color="primary"
                         elevation="0"
                         large
-                      >{{ $t("ecosystem.discover.title") }}</v-btn>
+                        >{{ $t("ecosystem.discover.title") }}</v-btn
+                      >
                     </v-card-actions>
                   </v-layout>
                 </v-card>
@@ -62,22 +50,14 @@
     </div>
 
     <v-container class="py-16">
-      <v-card
-        class="py-16"
-        rounded="xl"
-        flat
-      >
+      <v-card class="py-16" rounded="xl" flat>
         <v-layout justify-center>
-          <v-card
-            max-width="960"
-            color="transparent"
-            class="mb-16"
-            flat
-          >
+          <v-card max-width="960" color="transparent" class="mb-16" flat>
             <v-card-title
               class="text-break text-center justify-center text-h5 text-md-h4"
               style="color: #2e3d62"
-            >{{ $t("ecosystem.featured_text") }} </v-card-title>
+              >{{ $t("ecosystem.featured_text") }}
+            </v-card-title>
           </v-card>
         </v-layout>
         <v-layout
@@ -120,10 +100,7 @@
               <div class="block-title__text py-8 text-center">
                 {{ $t("ecosystem.featured_startup") }}
               </div>
-              <v-row
-                justify="center"
-                class="mb-4"
-              >
+              <v-row justify="center" class="mb-4">
                 <v-col
                   v-for="(item, key) in featuredStartups"
                   :key="'startup-' + key"
@@ -158,10 +135,7 @@
               <div class="block-title__text py-8 text-center">
                 {{ $t("ecosystem.featured_investor") }}
               </div>
-              <v-row
-                justify="center"
-                class="mb-4"
-              >
+              <v-row justify="center" class="mb-4">
                 <v-col
                   v-for="(item, key) in featuredInvestors"
                   :key="'startup-' + key"
@@ -192,10 +166,7 @@
               <div class="block-title__text py-8 text-center">
                 {{ $t("ecosystem.featured_mentor") }}
               </div>
-              <v-row
-                justify="center"
-                class="mb-4"
-              >
+              <v-row justify="center" class="mb-4">
                 <v-col
                   v-for="(item, key) in featuredMentors"
                   :key="'mentor-' + key"
@@ -236,7 +207,7 @@ import BreadcrumbsBar from "../../components/bars/BreadcrumbsBar.vue";
 export default {
   layout: "common",
   head: {
-    title: "Ecosystem",
+    title: "Ecosystemasdas",
     meta: [
       {
         hid: "og:image",
@@ -353,7 +324,7 @@ export default {
   },
 };
 </script>
-<style scoped lang='sass'>
+<style scoped lang="sass">
 .blog-one__single.card-event
   border-radius: 0.5rem
 
