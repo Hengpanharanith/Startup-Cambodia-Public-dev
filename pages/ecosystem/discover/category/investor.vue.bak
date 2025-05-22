@@ -1,0 +1,531 @@
+<template>
+  <div class="pt-3">
+    <BreadcrumbsBar :breadcrumb-items="breadCrumbs" />
+    <v-divider></v-divider>
+    <v-expand-transition>
+      <v-progress-linear
+        v-show="isLoading"
+        indeterminate
+        color="primary"
+      ></v-progress-linear>
+    </v-expand-transition>
+    <v-container
+      class="pt-5"
+      style="min-height: 40vh"
+      id="top-container"
+    >
+      <v-expand-transition>
+        <div v-if="visibleSearch">
+          <v-card
+            :disabled="isLoading"
+            class="mb-6"
+            rounded="lg"
+            outlined
+          >
+            <v-card-text>
+              <v-layout
+                style="gap:1rem"
+                class="flex-lg-row mb-4"
+                align-start
+                column
+              >
+                <v-text-field
+                  v-model="search.keyword"
+                  :readonly="isLoading"
+                  :placeholder="$t('form.common.label.type2search')"
+                  class="rounded-lg align-self-stretch"
+                  prepend-inner-icon="mdi-magnify"
+                  name="search"
+                  id="search"
+                  clearable
+                  hide-details
+                  outlined
+                  dense
+                ></v-text-field>
+                <v-spacer></v-spacer>
+                <v-menu
+                  offset-y
+                  left
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-layout
+                      class="flex-grow-0 d-none d-md-flex"
+                      align-center
+                    >
+                      <span class="py-auto px-4">{{$t('form.common.label.sort_by')}}</span>
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        class="text-capitalize font-weight-regular d-block"
+                        text
+                      >{{sortText}} <v-icon>mdi-menu-down</v-icon>
+                      </v-btn>
+                    </v-layout>
+                  </template>
+                  <v-list
+                    class="overflow-y-auto"
+                    max-height="300"
+                  >
+                    <v-list-item
+                      @click="selectOrdering(value)"
+                      v-for="{ text, value, desc } in orderItems"
+                      :key="`sort-by-${value}`"
+                    >
+                      <v-list-item-action>
+                        <v-icon v-if="desc">mdi-sort-descending</v-icon>
+                        <v-icon v-else>mdi-sort-ascending</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-title>{{text}}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-layout>
+              <v-layout
+                class="flex-lg-row"
+                style="min-height:36px"
+                align-start
+                column
+                wrap
+              >
+                <v-menu
+                  v-for="(item,key) in filterItems"
+                  :key="`filter-menu-${key}`"
+                  :close-on-content-click="false"
+                  style=" right:0"
+                  max-width="350"
+                  offset-y
+                  right
+                >
+                  <template v-slot:activator="{ on, attrs }">
+
+                    <v-btn
+                      v-bind="attrs"
+                      v-on="on"
+                      class="text-capitalize font-weight-regular"
+                      text
+                    >
+                      <v-chip
+                        v-if="search[item.value]&&search[item.value].length"
+                        color="primary"
+                        small
+                      >{{search[item.value].length||0}}</v-chip>
+                      {{item.title}}
+                      <v-icon>mdi-menu-down</v-icon>
+                    </v-btn>
+                  </template>
+                  <v-list
+                    class="overflow-y-auto"
+                    max-height="300"
+                  >
+                    <v-list-item
+                      v-for="(subitem, subKey) in item.items"
+                      :key="`filter-sub-${key}-${subKey}`"
+                    >
+                      <v-checkbox
+                        v-model="search[item.value]"
+                        :disabled="isLoading"
+                        :value="subitem.key"
+                        hide-details
+                      >
+                        <template #label><span class="mt-2">{{subitem.name}}</span></template>
+                      </v-checkbox>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+                <v-spacer></v-spacer>
+                <v-divider class="my-4 d-lg-none align-self-stretch"></v-divider>
+                <v-menu
+                  offset-y
+                  left
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <v-layout
+                      class="flex-grow-0 d-md-none"
+                      align-center
+                    >
+                      <span class="py-auto px-4">{{$t('form.common.label.sort_by')}}</span>
+                      <v-btn
+                        v-bind="attrs"
+                        v-on="on"
+                        class="text-capitalize font-weight-regular d-block"
+                        text
+                      >{{sortText}} <v-icon>mdi-menu-down</v-icon>
+                      </v-btn>
+                    </v-layout>
+                  </template>
+                  <v-list
+                    class="overflow-y-auto"
+                    max-height="300"
+                  >
+                    <v-list-item
+                      @click="selectOrdering(value)"
+                      v-for="{ text, value, desc } in orderItems"
+                      :key="`sort-by1-${value}`"
+                    >
+                      <v-list-item-action>
+                        <v-icon v-if="desc">mdi-sort-descending</v-icon>
+                        <v-icon v-else>mdi-sort-ascending</v-icon>
+                      </v-list-item-action>
+                      <v-list-item-title>{{text}}</v-list-item-title>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </v-layout>
+            </v-card-text>
+            <v-expand-transition>
+              <div v-show="showTags">
+                <v-card-text>
+                  <v-layout
+                    align-center
+                    wrap
+                  >
+                    <span class="mr-2 my-2">{{$t('selected')}}:</span>
+                    <template v-for="item in filterItems">
+                      <v-chip
+                        @click:close="deselectFilter(item.value, subitem)"
+                        v-for="subitem in search[item.value]"
+                        :key="`selected-${item.value}-${subitem}`"
+                        class="ma-1"
+                        color="warning"
+                        small
+                        close
+                      >{{ getChipLabel(item.value,subitem) }}</v-chip>
+                    </template>
+                  </v-layout>
+                </v-card-text>
+              </div>
+            </v-expand-transition>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                @click="clearSearch"
+                color="warning"
+                outlined
+              >{{$t('form.common.label.clear_filter')}}</v-btn>
+            </v-card-actions>
+            <v-divider class="my-0"></v-divider>
+            <v-card-text
+              class="text-center"
+              v-if="networks.length"
+            >
+              {{ $t("network.showing") }} <strong>{{ networks.length }} </strong>
+              {{ $t("network.of") }} {{ itemCount }} {{ $t("network.result") }}
+            </v-card-text>
+            <v-card-text
+              v-else
+              class="text-center"
+            >{{$t('noItem')}}</v-card-text>
+          </v-card>
+        </div>
+      </v-expand-transition>
+      <v-card
+        :disabled="isLoading"
+        color="transparent"
+        flat
+      >
+        <v-row class="mb-4">
+          <v-col
+            v-for="(item, key) in networks"
+            :key="'startup-' + key"
+            cols="12"
+            sm="6"
+            md="6"
+          >
+            <CardViewInvestor
+              :id="item.id"
+              :to="`/ecosystem/discover/category/investor/${item.id}`"
+              :thumbnail="item.logo"
+              :type="item.investor_type"
+              :text-title="item.name"
+              :incorporated-at="item.date_incorporated"
+              :investment-stage="item.investment_stage"
+              :sectors="item.industry"
+              @click-stage="onClickStage"
+              @click-industry="onClickIndustry"
+              class="fill-height"
+            />
+          </v-col>
+        </v-row>
+      </v-card>
+      <CardNoItem :visible="noItem" />
+      <div v-if="showPagination">
+        <v-pagination
+          @input="onPageChange"
+          :value="currentPage"
+          :total-visible="7"
+          :length="totalPage"
+          :disabled="isLoading"
+          class="mb-8"
+          circle
+        ></v-pagination>
+      </div>
+    </v-container>
+  </div>
+</template>
+
+<script>
+import { mapActions, mapState } from "vuex";
+import CardViewInvestor from "@/components/CardView/CardViewInvestor";
+import BreadcrumbsBar from "../../../../components/bars/BreadcrumbsBar.vue";
+import CardNoItem from "../../../../components/CardView/CardNoItem.vue";
+
+export default {
+  head: { title: "Ecosystem" },
+  layout: "common",
+  components: {
+    CardViewInvestor,
+    BreadcrumbsBar,
+    CardNoItem,
+  },
+  data() {
+    return {
+      search: {
+        advanced: false,
+        keyword: "",
+        sort: "",
+        investment_stage: [],
+        industry: [],
+      },
+      filterOptions: {},
+      networks: [],
+      totalPage: 1,
+      itemCount: 0,
+      noItem: false,
+    };
+  },
+  async fetch() {
+    await this.getFilterOptions({ params: { stakeholder: "investor" } }).then(
+      (result) => {
+        const opts = { ...result };
+        delete opts.status_code;
+        this.filterOptions = Object.assign({}, opts);
+      }
+    );
+    const { page, search, sort, investment_stage, industry } =
+      this.$route.query;
+    this.search.keyword = search;
+    this.search.sort = sort;
+    this.search.investment_stage = investment_stage?.split(",") || [];
+    this.search.industry = industry?.split(",") || [];
+    await this.getStakeHolder(page);
+  },
+  computed: {
+    ...mapState("stakeholder", ["isLoading"]),
+    breadCrumbs() {
+      return [
+        { homePage: true, text: this.$t("breadcrumb.home"), to: "/" },
+        { text: this.$t("breadcrumb.ecosystem"), to: "/ecosystem" },
+        {
+          text: this.$t("breadcrumb.network.investor"),
+          to: `/ecosystem/discover/category/investor`,
+          disabled: true,
+        },
+      ];
+    },
+    currentPage() {
+      return Number(this.$route.query.page || 1);
+    },
+    visibleSearch() {
+      let { visible_search } = this.$route.query;
+      return !!visible_search;
+    },
+    showTags() {
+      const { investment_stage, industry } = this.search;
+      return !!investment_stage.length || !!industry.length;
+    },
+    showPagination() {
+      return this.totalPage > 1;
+    },
+    filterItems() {
+      return Object.entries(this.filterOptions).map(([key, items]) => ({
+        title: this.$t("form.common." + key),
+        name: key,
+        value: key,
+        items,
+      }));
+    },
+    orderItems() {
+      return [
+        { text: this.$t("form.common.label.default"), value: "" },
+        { text: this.$t("form.common.label.name"), value: "name" },
+        { text: this.$t("form.common.label.name"), value: "-name", desc: true },
+        { text: this.$t("investment_stage"), value: "investment_stage" },
+        {
+          text: this.$t("investment_stage"),
+          value: "-investment_stage",
+          desc: true,
+        },
+        { text: this.$t("establishment_year"), value: "year_of_establishment" },
+        {
+          text: this.$t("establishment_year"),
+          value: "-year_of_establishment",
+          desc: true,
+        },
+      ];
+    },
+    investmentStages() {
+      return {
+        pre_seed: { name: "Pre Seed", id: "pre_seed" },
+        seed: { name: "Seed", id: "seed" },
+        pre_series_a: { name: "Pre Series A", id: "pre_series_a" },
+        series_a: { name: "Series A", id: "series_a" },
+        series_b: { name: "Series B", id: "series_b" },
+        series_c: { name: "Series C", id: "series_c" },
+      };
+    },
+    investorTypes() {
+      return {
+        angel: { name: "Angel", id: "angel" },
+        corporate_vc: { name: "Corporate VC", id: "corporate_vc" },
+        crowdfunding_platform: {
+          name: "Crowdfunding Platform",
+          id: "crowdfunding_platform",
+        },
+        government_linked: {
+          name: "Government Linked",
+          id: "government_linked",
+        },
+        private_equity: { name: "Private Equity", id: "private_equity" },
+        venture_capital: { name: "Venture Capital", id: "venture_capital" },
+      };
+    },
+    sortText() {
+      const item = this.orderItems.find((i) => i.value == this.search.sort);
+      return item?.text || this.$t("form.common.label.default");
+    },
+  },
+  watch: {
+    currentPage(pageNumber) {
+      this.getStakeHolder(pageNumber);
+      this.goTop();
+    },
+    visibleSearch(v) {
+      if (!v) return;
+      this.goTop();
+    },
+    "search.keyword"(v) {
+      if (this.timer) {
+        clearTimeout(this.timer);
+        this.timer = null;
+      }
+      this.timer = setTimeout(() => {
+        this.onFilterChange("search", v);
+      }, 800);
+    },
+    "search.sort"(v) {
+      this.onFilterChange("sort", v);
+    },
+    "search.investment_stage"(v) {
+      this.onFilterChange("investment_stage", v.join(","));
+    },
+    "search.industry"(v) {
+      this.onFilterChange("industry", v.join(","));
+    },
+    "$route.query.search"(v) {
+      this.search.keyword = v || undefined;
+      this.searchStakeholder();
+    },
+    "$route.query.sort"(v) {
+      this.search.sort = v || undefined;
+      this.searchStakeholder();
+    },
+    "$route.query.investment_stage"(v) {
+      this.search.investment_stage = Object.assign([], v ? v.split(",") : []);
+      this.searchStakeholder();
+    },
+    "$route.query.industry"(v) {
+      this.search.industry = Object.assign([], v ? v.split(",") : []);
+      this.searchStakeholder();
+    },
+  },
+  methods: {
+    ...mapActions("stakeholder", ["getStakeholderByCategory"]),
+    ...mapActions("filter-option", { getFilterOptions: "get" }),
+    advanceOptions() {
+      const { investment_stage, industry } = this.$route.query;
+      return { investment_stage, industry };
+    },
+    async getStakeHolder(page = 1) {
+      const { keyword: search, sort } = this.search;
+      const ordering = sort || undefined;
+      let options = { params: { page_size: 6, page, search, ordering } };
+      options.params = { ...options.params, ...this.advanceOptions() };
+      return await this.getStakeholderByCategory({
+        category: "investor",
+        options,
+      })
+        .then((res) => {
+          this.networks = Object.assign([], res.data);
+          this.totalPage = res.total_page;
+          this.itemCount = res.item_count;
+          this.noItem = !res.data.length;
+        })
+        .catch((e) => {
+          this.noItem = true;
+          this.networks = [];
+          this.totalPage = 1;
+        });
+    },
+    selectOrdering(value) {
+      this.search.sort = value;
+    },
+    clearSearch() {
+      this.$router.push({});
+    },
+    onFilterChange(key, val) {
+      const { query } = this.$route;
+      this.$router.push({ query: { ...query, [key]: val || undefined } });
+    },
+    searchStakeholder() {
+      if (this.currentPage != 1) {
+        const { query } = this.$route;
+        this.$router.replace({ query: { ...query, page: 1 } });
+        return;
+      }
+      if (this.searchTimer) {
+        clearTimeout(this.searchTimer);
+        this.searchTimer = null;
+      }
+      this.searchTimer = setTimeout(() => {
+        this.getStakeHolder();
+      }, 100);
+    },
+    deselectFilter(prop, subitem) {
+      if (!subitem || !prop || !this.search[prop]) return;
+      const idx = this.search[prop].findIndex((item) => subitem == item);
+      if (idx == -1) return;
+      this.search[prop].splice(idx, 1);
+    },
+    onClickStage(item) {
+      const { query } = this.$route;
+      this.$router.push({ query: { ...query, visible_search: true } });
+      setTimeout(() => {
+        this.search.investment_stage = Object.assign([], [item.key]);
+      }, 50);
+    },
+    onClickIndustry(item) {
+      const { query } = this.$route;
+      this.$router.push({ query: { ...query, visible_search: true } });
+      setTimeout(() => {
+        this.search.industry = Object.assign([], [item.key]);
+      }, 50);
+    },
+    onPageChange(page) {
+      if (page != this.currentPage) {
+        const { query } = this.$route;
+        this.$router.push({ query: { ...query, page } });
+      }
+    },
+    goTop() {
+      let options = { duration: 300, offset: 75, easing: "linear" };
+      this.$vuetify.goTo("#top-container", options);
+    },
+    getChipLabel(item, subitem) {
+      let found = this.filterOptions[item]?.find((opt) => opt.key == subitem);
+      return found?.name || subitem;
+    },
+  },
+};
+</script>
+<style >
+</style>

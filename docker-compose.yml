@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - ./.env
+    working_dir: /workspace
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/workspace
+    # command: sh -c "npm run dev"
+    # Overrides default command so things don't shut down after the process ends.
+    tty: true

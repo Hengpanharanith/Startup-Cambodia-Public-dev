@@ -1,0 +1,32 @@
+@font-face {
+    font-family: "Phnom-Dangrek";
+    font-display: fallback;
+    src: local("Phnom-Dangrek"),
+        url(https://media.startupcambodia.gov.kh/platform/public-assets/fonts/Dangrek-Regular.ttf)
+            format("truetype");
+}
+
+@font-face {
+    font-family: "Nokora";
+    font-display: fallback;
+    src: local("Nokora"),
+        url(https://media.startupcambodia.gov.kh/platform/public-assets/fonts/Nokora-Regular.ttf)
+            format("truetype");
+}
+
+
+@font-face {
+    font-family: "KantumruyPro-Bold";
+    font-display: fallback;
+    src: local("KantumruyPro-Bold"),
+    url('~assets/fonts/KantumruyPro-Bold.ttf')
+    format("truetype");
+}
+
+@font-face {
+    font-family: "KantumruyPro-Regular";
+    font-display: fallback;
+    src: local("KantumruyPro-Regular"),
+    url('~assets/fonts/KantumruyPro-Regular.ttf')
+    format("truetype");
+}

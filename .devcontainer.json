@@ -1,0 +1,17 @@
+{
+  "name": "Nodejs",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "extensions": [
+    "octref.vetur",
+    "gruntfuggly.todo-tree",
+    "sdras.vue-vscode-extensionpack",
+    "formulahendry.auto-close-tag",
+    "elemefe.vscode-element-helper",
+    "streetsidesoftware.code-spell-checker"
+  ],
+  "settings": {
+    // "terminal.integrated.shell.linux": "/bin/sh"
+  }
+}

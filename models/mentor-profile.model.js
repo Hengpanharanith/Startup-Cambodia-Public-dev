@@ -1,0 +1,41 @@
+export const MentorProfile = {
+    profile: "",
+    first_name: "",
+    last_name: "",
+    first_name_kh: "",
+    last_name_kh: "",
+    company: "",
+    role: "",
+    email: "",
+    phone: "",
+    bio: "",
+    investor: false,
+    previous_entrepreneur: false,
+    language_speak: "",
+    social_media_url: "",
+    interest: "",
+    expertise: [],
+    industry: "",
+
+};
+
+
+export const MockMentorProfile = {
+    profile: "",
+    first_name: "Jenny",
+    last_name: "Kim",
+    first_name_kh: "ចេនី",
+    last_name_kh: "គីម",
+    company: "TSC",
+    role: "developer",
+    email: "tsc.mobile.dev@gmail.com",
+    phone: "098909090",
+    bio: "Just an ordinary human on earth.",
+    investor: false,
+    previous_entrepreneur: false,
+    language_speak: "Khmer",
+    social_media_url: "http://www.facebook.com/12121",
+    interest: "",
+    expertise: [],
+    industry: "",
+};

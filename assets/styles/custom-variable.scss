@@ -1,0 +1,23 @@
+$border-radius: 0.25rem !default;
+$border-radius-lg: 0.3rem !default;
+$border-radius-sm: 0.2rem !default;
+$card-border-radius: 0.5rem !default;
+$secondary: #555 !default;
+$primary: #f79b36 !default;
+
+$primary-gradient: linear-gradient(6deg, $primary 0%, #f79b36 100%);
+
+$box-shadow: 0px 10px 60px 0px rgba(46, 61, 98, 0.1) !default;
+$grid-breakpoints: (
+    xs: 0,
+    sm: 600px,
+    md: 960px,
+    lg: 1264px,
+    xl: 1904px,
+);
+$container-max-widths: (
+    sm: 600px,
+    md: 960px,
+    lg: 1264px,
+    xl: 1904px,
+);
