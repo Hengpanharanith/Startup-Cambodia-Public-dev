@@ -207,7 +207,7 @@ import BreadcrumbsBar from "../../components/bars/BreadcrumbsBar.vue";
 export default {
   layout: "common",
   head: {
-    title: "Ecosystemasdas",
+    title: "Ecosystem",
     meta: [
       {
         hid: "og:image",

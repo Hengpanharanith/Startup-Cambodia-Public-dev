@@ -152,7 +152,7 @@
 
     <v-container>
       <client-only>
-        <h1 class="text-center my-4">{{ $t("ourPartner") }}kljasd</h1>
+        <h1 class="text-center my-4">{{ $t("ourPartner") }}</h1>
         <OurPartner
           :title="$t('ourPartner')"
           :partner-list="partnerList"

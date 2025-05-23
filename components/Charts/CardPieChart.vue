@@ -1,5 +1,11 @@
 <template>
-  <v-card class="fill-height card-pie-chart d-flex flex-column" rounded="lg" elevation="0">
+  <v-card
+    class="fill-height card-pie-chart d-flex flex-column"
+    rounded="lg"
+    elevation="2"
+  
+    
+  >
     <v-card-title class="text-uppercase justify-center text-center text-break">
       <h3>{{ title }}</h3>
     </v-card-title>
@@ -9,7 +15,7 @@
       </div>
       <div class="total-count">
         <h2>{{ totalValue }}</h2>
-        <p class="mb-0">{{ $t("total") }}</p>
+        <p class="mb-0">{{ $t("totalss") }}</p>
       </div>
     </v-card-text>
     <v-card-text class="pt-0">
