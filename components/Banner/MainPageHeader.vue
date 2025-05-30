@@ -12,6 +12,8 @@
           strokeWidth="0"
           fill="white"
           class="star"
+          data-aos="fade-in"
+          data-aos-duration="1000"
         />
         `
       </svg>
@@ -45,7 +47,11 @@
             <div v-else v-html="rocketIcon" class="rocked-svg"></div>
           </v-responsive>
         </div>
-        <div class="text-left describe-grid__text col-12 col-md-6 d-flex">
+        <div
+          class="text-left describe-grid__text col-12 col-md-6 d-flex"
+          data-aos="fade-up"
+          data-aos-duration="1000"
+        >
           <v-carousel
             class="header-carousel my-auto"
             height="auto"
@@ -86,6 +92,8 @@
 
 <script>
 import anime from "animejs";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import rocketIcon from "@/static/icons/Cover_Rocket.svg?raw";
 import rocketIconKm from "@/static/icons/Cover_Rocket_km.svg?raw";
 import rocketAnimation from "@/assets/animations/rocket-in-space.json";
@@ -172,8 +180,10 @@ export default {
       setTimeout(() => {
         this.starryNight();
         this.shootingStars();
+        AOS.refresh();
       }, 100);
     }
+    AOS.init({ once: true });
   },
 };
 </script>
@@ -185,7 +195,8 @@ export default {
   display: flex;
   align-items: center;
   position: relative;
-  background-image: linear-gradient(to left, #df7954 0%, #ff9f4d 100%);
+  background-image: url("/images/banner.svg");
+  /* background-image: linear-gradient(to left, #df7954 0%, #ff9f4d 100%); */
   overflow: hidden;
 }
 
