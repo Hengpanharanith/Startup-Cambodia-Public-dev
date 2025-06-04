@@ -70,7 +70,11 @@
               </v-btn>
             </template>
             <v-carousel-item v-for="(item, key) in sliderList" :key="key">
-              <v-sheet height="100%" color="transparent" class="white--text">
+              <v-sheet
+                height="100%"
+                color="transparent"
+                class="white--text justify-center align-center"
+              >
                 <h1
                   class="mb-6"
                   style="
@@ -190,7 +194,6 @@ export default {
 
 <style>
 .main-header {
-  padding-top: 8rem;
   height: 100vh; /*Make Backgroud Height full screen*/
   display: flex;
   align-items: center;
@@ -272,7 +275,6 @@ export default {
   right: 3rem;
   left: unset;
 }
-
 .v-window--show-arrows-on-hover.v-carousel.header-carousel .v-window__prev,
 .v-window--show-arrows-on-hover.v-carousel.header-carousel .v-window__next {
   transform: translateY(100%);
@@ -293,6 +295,7 @@ export default {
   .main-header {
     background-repeat: no-repeat;
     background-size: cover;
+    align-items: center;
   }
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <v-btn color="primary mt-4 mb-5 custom-shadow" rounded x-large>{{
+  <v-btn color="secondary mt-4 mb-5 custom-shadow" rounded x-large>{{
     title
   }}</v-btn>
 </template>
@@ -7,7 +7,7 @@
 <script>
 export default {
   props: ["title"],
-  name: "ButtonPrimary",
+  name: "ButtonSecondary",
 };
 </script>
 <style>
