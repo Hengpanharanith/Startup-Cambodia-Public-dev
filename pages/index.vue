@@ -1,70 +1,63 @@
 <template>
-  <div style="background-image: url('https://startupcambodia.gov.kh/images/about/pattern.svg'); background-position: center center; background-repeat: repeat;">
-    <MainPageHeader :banners="landingBanners"/>
-<!--    <LandingWhatWeDo/>-->
+  <div
+    style="
+      background-image: url('https://startupcambodia.gov.kh/images/about/pattern.svg');
+      background-position: center center;
+      background-repeat: repeat;
+    "
+  >
+    <MainPageHeader :banners="landingBanners" />
+    <!--    <LandingWhatWeDo/>-->
 
     <LandingEcosystem
-        :items="ecosystemData"
-        :showCaption="false"
-        :showButton="true"
-        :animationEnabled="false"
+      :items="ecosystemData"
+      :showCaption="false"
+      :showButton="true"
+      :animationEnabled="false"
     />
 
     <EcosystemStartup />
+    <CardProgramSharingLanding />
     <EcosystemMentor />
-    <EcosystemProgramEvent />
+    <!-- <EcosystemProgramEvent /> -->
     <EcosystemInvestor :items="[...featuredInvestors, ...featuredInvestors]" />
     <EcosystemStakeholder />
 
-<!--    <template v-if="highlightItems.length>0">-->
-<!--      <Highlight  :highlights="highlightItems" />-->
-<!--    </template>-->
+    <!--    <template v-if="highlightItems.length>0">-->
+    <!--      <Highlight  :highlights="highlightItems" />-->
+    <!--    </template>-->
 
+    <!--    <LandingEcosystem :items="landingEcosystem"/>-->
 
+    <!--    <client-only>-->
+    <!--      <h1 class="text-center my-4">-->
+    <!--       {{$t('ourPartner')}}-->
+    <!--      </h1>-->
+    <!--      <OurPartner-->
+    <!--          :title="$t('ourPartner')"-->
+    <!--          :partner-list="partnerList"-->
+    <!--          class="section-padding"-->
+    <!--      />-->
+    <!--    </client-only>-->
 
-
-
-<!--    <LandingEcosystem :items="landingEcosystem"/>-->
-
-
-
-<!--    <client-only>-->
-<!--      <h1 class="text-center my-4">-->
-<!--       {{$t('ourPartner')}}-->
-<!--      </h1>-->
-<!--      <OurPartner-->
-<!--          :title="$t('ourPartner')"-->
-<!--          :partner-list="partnerList"-->
-<!--          class="section-padding"-->
-<!--      />-->
-<!--    </client-only>-->
-
-
-
-    <LandingProgram :programs="recentPrograms"/>
+    <LandingProgram :programs="recentPrograms" />
     <template v-if="recentEvents.length > 0">
-      <LandingEvent :eventList="recentEvents"/>
+      <LandingEvent :eventList="recentEvents" />
     </template>
     <template v-if="recentPosts.length > 0">
-      <LandingPost :posts="recentPosts"/>
+      <LandingPost :posts="recentPosts" />
     </template>
 
-
-
-
-    <h1 class="text-center my-4">
-      {{$t('visitor')}}
-    </h1>
+    <h1 class="text-center my-4">{{ $t("visitor") }}</h1>
     <VisitorView
-        :title="$t('visitor')" :animationEnabled="true"
-        :visitor-list="visitorData"
-
+      :title="$t('visitor')"
+      :animationEnabled="true"
+      :visitor-list="visitorData"
     />
-
   </div>
 </template>
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 import MainPageHeader from "@/components/Banner/MainPageHeader";
 import LandingProgram from "@/components/Common/LandingProgram";
 import LandingEvent from "@/components/Common/LandingEvent";
@@ -84,7 +77,7 @@ export default {
     LandingWhatWeDo,
     LandingPost,
     LandingEcosystem,
-    VisitorView
+    VisitorView,
   },
   head() {
     title: "Home";
@@ -106,7 +99,7 @@ export default {
         "deep-purple",
         "light-green",
         "deep-orange",
-        "blue-grey"
+        "blue-grey",
       ],
       dialogPreview: false,
       preview: null,
@@ -117,9 +110,12 @@ export default {
         perPage: 4,
         paginationEnabled: false,
         autoplayTimeout: 5000,
-        perPageCustom: [[480, 1], [768, 4]],
+        perPageCustom: [
+          [480, 1],
+          [768, 4],
+        ],
         navigationEnabled: true,
-        autoplayHoverPause:true,
+        autoplayHoverPause: true,
       },
       nextLabel: "⬅️",
       prevLabel: "<<",
@@ -135,8 +131,8 @@ export default {
     };
   },
   computed: {
-    ...mapState("partner", {partnerList: "dataList"}),
-    ...mapState("highlight", {highlightList: "dataList"}),
+    ...mapState("partner", { partnerList: "dataList" }),
+    ...mapState("highlight", { highlightList: "dataList" }),
     landingBanners() {
       return this.landingData.banners || [];
     },
@@ -168,7 +164,6 @@ export default {
       return 1;
     },
     selectedId() {
-
       return this.$route.query.id;
     },
 
@@ -237,25 +232,23 @@ export default {
     this.getPartner();
     this.getVisitorData();
     this.getHighlight().then((response) => {
-      this.highlightItems = response.data
-    })
+      this.highlightItems = response.data;
+    });
   },
   methods: {
-    ...mapActions("partner", {getPartner: "get"}),
-    ...mapActions("highlight", {getHighlight: "get"}),
+    ...mapActions("partner", { getPartner: "get" }),
+    ...mapActions("highlight", { getHighlight: "get" }),
     ...mapActions("ecosystem-page", { getEcosystemPage: "get" }),
-
-
 
     getLandingData() {
       this.isLoading = true;
       this.getEcosystemPage()
-          .then((response) => {
-            this.landingData = Object.assign({}, response);
-          })
-          .catch((error) => {
-            this.isLoading = false;
-          });
+        .then((response) => {
+          this.landingData = Object.assign({}, response);
+        })
+        .catch((error) => {
+          this.isLoading = false;
+        });
     },
 
     fetchOverviewData() {
@@ -269,22 +262,21 @@ export default {
       });
     },
     getVisitorData() {
-      this.isLoading = true
+      this.isLoading = true;
       this.$axios
-          .$get("/public/api/v1/visitor")
-          .then((res) => {
-            this.visitorData = Object.assign({}, res);
-            this.isLoading = false;
-          })
-          .catch(() => {
-            this.isLoading = false;
-          });
+        .$get("/public/api/v1/visitor")
+        .then((res) => {
+          this.visitorData = Object.assign({}, res);
+          this.isLoading = false;
+        })
+        .catch(() => {
+          this.isLoading = false;
+        });
     },
     previewHighlight(item) {
-
       this.preview = Object.assign({}, item);
       this.dialogPreview = true;
-    }
+    },
   },
 
   watch: {
@@ -293,7 +285,7 @@ export default {
         // this.preview = null;
       }
     },
-  }
+  },
 };
 </script>
 <style>
@@ -318,7 +310,7 @@ export default {
   right: 0rem;
 }
 
-.VueCarousel-navigation .VueCarousel-navigation-prev{
+.VueCarousel-navigation .VueCarousel-navigation-prev {
   position: absolute;
   top: -10%;
   left: 98%;
@@ -326,14 +318,13 @@ export default {
   color: slategray;
 }
 
-.VueCarousel-navigation .VueCarousel-navigation-next{
+.VueCarousel-navigation .VueCarousel-navigation-next {
   position: absolute;
   top: -10%;
   right: 2%;
   font-size: 1.5rem;
   color: slategray;
 }
-
 </style>
 <style lang="scss">
 .card-hover {
@@ -345,6 +336,3 @@ export default {
   }
 }
 </style>
-
-
-
