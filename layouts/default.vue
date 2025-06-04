@@ -59,7 +59,17 @@ export default {
     navMenu() {
       return [
         { text: this.$t("about"), to: "/about" },
-        { text: this.$t("programs"), to: "/program" },
+        {
+          text: this.$t("programs"),
+          to: "/program",
+          type: "group",
+          subitems: [
+            {
+              text: this.$t("programSharing.navbar_title"),
+              to: "/programsharing",
+            },
+          ],
+        },
         { text: this.$t("event.title"), to: "/event" },
         {
           text: this.$t("resource"),
