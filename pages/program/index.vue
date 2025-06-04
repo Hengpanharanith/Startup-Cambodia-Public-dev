@@ -200,6 +200,19 @@ import CardProgramSharing from "@/components/CardView/CardProgramSharing.vue";
 export default {
   data() {
     return {
+      bannerUrl:
+        "https://media.startupcambodia.gov.kh/platform/public-assets/banners/program.png",
+      dialogDate: false,
+      dialogPreview: false,
+      preview: null,
+      savingId: null,
+      filter: {
+        sort: "",
+        search: "",
+        date: [],
+        category: "",
+        program_type: "",
+      },
       dialog: false,
     };
   },
@@ -252,23 +265,6 @@ export default {
     CardNoItem,
     DialogPreviewProgram,
     CardProgramSharing,
-  },
-  data() {
-    return {
-      bannerUrl:
-        "https://media.startupcambodia.gov.kh/platform/public-assets/banners/program.png",
-      dialogDate: false,
-      dialogPreview: false,
-      preview: null,
-      savingId: null,
-      filter: {
-        sort: "",
-        search: "",
-        date: [],
-        category: "",
-        program_type: "",
-      },
-    };
   },
   computed: {
     ...mapState("startup-program", [
@@ -365,9 +361,8 @@ export default {
     },
   },
   watch: {
-    //Form popup
-    "$route,query.showform"(val) {
-      this.dialog = val === "1";
+    "$route.query.showForm"(val) {
+      this.dialog = val === "true";
     },
     "filter.search"(v) {
       if (this.timer) {
@@ -423,14 +418,6 @@ export default {
       this.handleSearch();
     },
     currentPage: {
-      /*************  ✨ Windsurf Command ⭐  *************/
-      /**
-       * Updates the current page number and triggers the fetching of filtered results.
-       *
-       * @param {number} pageNumber - The page number to fetch and display.
-       */
-
-      /*******  3bf7884a-694e-47b8-ace6-6c8da381b1e5  *******/
       handler(pageNumber) {
         this.fetchFiltering(pageNumber);
       },
@@ -506,7 +493,8 @@ export default {
       if (s == value) return "primary";
     },
     clearSearch() {
-      $nuxt.$router.push({});
+      const { query } = this.$route;
+      this.$router.push({ query: { ...query, search: undefined } });
     },
     selectOrdering(value) {
       this.filter.sort = value;

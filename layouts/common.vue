@@ -44,6 +44,7 @@ export default {
   middleware: "default",
   data() {
     return {
+      dialog: false,
       isTop: true,
       drawer: false,
       dialogLogin: false,
@@ -63,12 +64,12 @@ export default {
       return [
         { text: this.$t("about"), to: "/about" },
         {
-          text: this.$t("programs"),
+          text: this.$t("programSharing.navbar_title"),
           to: "/programsharing",
           type: "group",
           subitems: [
             {
-              text: this.$t("programSharing.navbar_title"),
+              text: this.$t("programs"),
               to: "/program",
             },
           ],

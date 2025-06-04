@@ -215,23 +215,13 @@ export default {
         },
       ];
     },
-    footerLinks() {
-      return {
-        startup: ["Programs", "Event", "Posts", "Files"],
-        ecosystem: ["Stakeholders", "Startups", "Mentors", "Investors"],
-        information: [
-          "About us",
-          "Contact us",
-          "Term of use",
-          "Privacy policy",
-        ],
-      };
-    },
   },
   methods: {
     goToForm() {
-      this.$router.push({ name: "program", query: { showForm: true } });
-      console.log("Scrolling to form...");
+      this.$router.push({
+        name: "program",
+        query: { ...this.$route.query, showForm: "true" },
+      });
     },
   },
   mounted() {

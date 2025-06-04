@@ -60,13 +60,13 @@ export default {
       return [
         { text: this.$t("about"), to: "/about" },
         {
-          text: this.$t("programs"),
-          to: "/program",
+          text: this.$t("programSharing.navbar_title"),
+          to: "/programsharing",
           type: "group",
           subitems: [
             {
-              text: this.$t("programSharing.navbar_title"),
-              to: "/programsharing",
+              text: this.$t("programs"),
+              to: "/program",
             },
           ],
         },

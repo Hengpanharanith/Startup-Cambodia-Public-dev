@@ -24,23 +24,35 @@
     </v-card-title>
 
     <v-spacer></v-spacer>
-    <nuxt-link to="/programsharing" class="text-decoration-none">
-      <v-card-actions>
-        <v-btn
-          v-ripple="{ class: 'custom-ripple' }"
-          class="inner-shadow-btn rounded-lg"
-          width="100%"
-          variant="elevated"
-        >
-          <span class="submit-btn font-weight-bold">
-            {{ $t("programSharing.submitBtn") }}
-          </span>
-        </v-btn>
-      </v-card-actions>
-    </nuxt-link>
+
+    <v-card-actions>
+      <v-btn
+        @click="gotoForm"
+        v-ripple="{ class: 'custom-ripple' }"
+        class="inner-shadow-btn rounded-lg text-decoration-none font-weight-bold"
+        width="100%"
+        variant="elevated"
+      >
+        <span class="submit-btn font-weight-bold">
+          {{ $t("programSharing.submitBtn") }}
+        </span>
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </template>
-
+<script>
+export default {
+  name: "CardProgramSharing",
+  methods: {
+    gotoForm() {
+      this.$router.push({
+        name: "program",
+        query: { ...this.$route.query, showForm: "true" },
+      });
+    },
+  },
+};
+</script>
 <style>
 .submit-btn {
   background: linear-gradient(90deg, #f07900, #ffa500);

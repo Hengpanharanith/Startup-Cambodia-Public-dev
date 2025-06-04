@@ -45,18 +45,18 @@
                   </div>
                 </v-card-text>
                 <v-card-actions class="justify-center justify-md-start pa-0">
-                  <nuxt-link to="/program">
-                    <v-btn
-                      class="suggest-btn mr-4 rounded-pill"
-                      color="primary"
-                      large
-                      elevation="0"
-                    >
-                      {{
-                        $t("programSharing.programsharing_landing_primary_btn")
-                      }}
-                    </v-btn></nuxt-link
+                  <v-btn
+                    @click="goToForm"
+                    class="suggest-btn mr-4 rounded-pill"
+                    color="primary"
+                    large
+                    elevation="0"
                   >
+                    {{
+                      $t("programSharing.programsharing_landing_primary_btn")
+                    }}
+                  </v-btn>
+
                   <nuxt-link to="/programsharing">
                     <v-btn
                       class="explore-btn rounded-pill"
@@ -87,7 +87,15 @@ export default {
     programList() {
       return this.programs.slice(0, 4);
     },
-  },  
+  },
+  methods: {
+    goToForm() {
+      this.$router.push({
+        name: "program",
+        query: { ...this.$route.query, showForm: "true" },
+      });
+    },
+  },
 };
 </script>
 
