@@ -118,6 +118,7 @@
               >{{ $t("noItem") }}
             </v-card-text>
           </v-card>
+          <CardProgramSharing />
         </v-col>
         <v-col cols="12" md="8" lg="9">
           <v-row>
@@ -171,6 +172,19 @@
         :loading="isLoading"
       />
     </v-container>
+    <div>
+      <v-dialog v-model="dialog" max-width="500">
+        <v-card>
+          <v-card-title>Submit Your Program</v-card-title>
+          <v-card-text>
+            <!-- Your form here -->
+          </v-card-text>
+          <v-card-actions>
+            <v-btn text @click="closeDialog">Close</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
   </div>
 </template>
 
@@ -181,8 +195,14 @@ import SimpleCard from "@/components/CardView/SimpleCard";
 import DateRangePickerDialog from "@/components/pickers/DateRangePickerDialog.vue";
 import CardNoItem from "@/components/CardView/CardNoItem.vue";
 import DialogPreviewProgram from "@/components/dialogs/DialogPreviewProgram.vue";
+import CardProgramSharing from "@/components/CardView/CardProgramSharing.vue";
 
 export default {
+  data() {
+    return {
+      dialog: false,
+    };
+  },
   head() {
     const img = this.preview?.image || "/images/yfp.jpeg";
     const title = this.preview?.title || "Explore all programs";
@@ -231,6 +251,7 @@ export default {
     DateRangePickerDialog,
     CardNoItem,
     DialogPreviewProgram,
+    CardProgramSharing,
   },
   data() {
     return {
@@ -344,6 +365,10 @@ export default {
     },
   },
   watch: {
+    //Form popup
+    "$route,query.showform"(val) {
+      this.dialog = val === "1";
+    },
     "filter.search"(v) {
       if (this.timer) {
         clearTimeout(this.timer);
@@ -398,6 +423,14 @@ export default {
       this.handleSearch();
     },
     currentPage: {
+      /*************  ✨ Windsurf Command ⭐  *************/
+      /**
+       * Updates the current page number and triggers the fetching of filtered results.
+       *
+       * @param {number} pageNumber - The page number to fetch and display.
+       */
+
+      /*******  3bf7884a-694e-47b8-ace6-6c8da381b1e5  *******/
       handler(pageNumber) {
         this.fetchFiltering(pageNumber);
       },
@@ -433,6 +466,9 @@ export default {
     this.filter.category = category;
     this.fetchFiltering();
     this.fetchProgramCategory();
+    if (this.$route.query.showForm) {
+      this.dialog = true;
+    }
   },
   methods: {
     ...mapActions("startup-program", {
@@ -450,6 +486,14 @@ export default {
         this.preview = Object.assign({}, result);
       });
       return detail;
+    },
+    closeDialog() {
+      this.dialog = false;
+      const { query } = this.$route;
+      // Remove showForm from query
+      const newQuery = { ...query };
+      delete newQuery.showForm;
+      this.$router.replace({ query: newQuery });
     },
     toggleSearch() {
       const { query } = this.$route;
@@ -517,7 +561,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .container-program {
   min-height: 47vh;
 }
@@ -530,5 +574,20 @@ export default {
   position: absolute;
   top: 1.5rem;
   right: 1.5rem;
+}
+.submit-btn {
+  background: linear-gradient(90deg, #f07900, #ffa500);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  display: inline-block;
+  text-transform: none;
+}
+.inner-shadow-btn {
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.25);
+}
+.custom-ripple {
+  background-color: rgba(240, 121, 0, 0.3);
 }
 </style>
