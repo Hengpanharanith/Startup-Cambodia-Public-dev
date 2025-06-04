@@ -829,6 +829,52 @@
   "button": {
     "done": "Done",
     "more": "More",
-    "filter":"Filter"
+    "filter": "Filter"
+  },
+  "programSharing": {
+    "programsharing_landing_title": "Send Us Your Program Suggestion",
+    "programsharing_landing_subtitle": "Share your program idea with us! We're looking for innovative, educational, or community-driven programs to feature. All suggestions will be reviewed and approved before listing. Help us highlight meaningful initiatives that inspire, educate, or create a positive impact.",
+    "programsharing_landing_primary_btn": "Suggest a Program",
+    "programsharing_landing_secondary_btn": "View Details",
+    "suggestTitle": "Suggest a program",
+    "suggestDescription": "You can fill in a form to suggest your program. Programs will be curated to be listed and will be subjected to approval.",
+    "submitBtn": "Submit Your Program",
+    "heroTitle": "Let the World Discover Your Idea",
+    "heroSubtitle": "Share your project, event, or startup and get featured. Expand your reach and connect with a wider community.",
+    "submitBtn": "Submit Your Program",
+    "aboutTitle": "About Sharing Program",
+    "whyShareTitle": "Why Share Your Program Here?",
+    "howToSubmitTitle": "How to submit your program for sharing ?",
+    "benefit1": {
+      "title": "Boost Visibility",
+      "description": "Let more people discover your project or startup."
+    },
+    "benefit2": {
+      "title": "Build Credibility",
+      "description": "Show you're active and serious about your work."
+    },
+    "benefit3": {
+      "title": "Find Support",
+      "description": "Attract collaborators, users, or potential investors."
+    },
+    "benefit4": {
+      "title": "No Cost",
+      "description": "Submitting your program is completely free."
+    },
+    "step1": {
+      "title": "Fill in the form",
+      "description": "Complete the program submission form with all required details."
+    },
+    "step2": {
+      "title": "Verify with email",
+      "description": "Check your email and verify your submission."
+    },
+    "step3": {
+      "title": "Waiting for approval",
+      "description": "Our team will review and approve your program."
+    },
+    "navbar_title": "Program Sharing",
+    "aboutParagraph1": " allows individuals, organizations, and startups to share their projects, initiatives, or events on your platform. Whether it's a tech startup, educational workshop, social campaign, or creative initiative, contributors can submit their program details for publication.",
+    "aboutParagraph2": "Each submission includes key information like the program name, category, description, thumbnail image, and optional links (website, video, etc.). After a short review process, approved programs are showcased to a broader audience through your platform—helping increase visibility, attract interest, and build community engagement."
   }
 }
