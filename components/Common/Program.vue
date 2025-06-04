@@ -26,13 +26,7 @@
             </p>
             <nuxt-link
               :to="{ path: '/program/category', query: { id: item.id } }"
-              class="
-                button_link
-                service-one__link
-                float-right
-                card-program__link
-                text-decoration-none
-              "
+              class="button_link service-one__link float-right card-program__link text-decoration-none"
             >
               <i class="nonid-icon-left-arrow"></i>
             </nuxt-link>
@@ -87,4 +81,3 @@ export default {
   height: 64px;
 }
 </style>
-

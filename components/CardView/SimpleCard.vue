@@ -5,14 +5,14 @@
     outlined
   >
     <div class="blog-one__single-inner-block fill-height">
-      <v-img
-        :src="thumbnail"
-        :aspect-ratio="16/9"
-        alt=""
-      />
-      <v-card-title class="blog-one__title card-simple__title text-break"><span class="line-clamp-2">{{label}}</span></v-card-title>
+      <v-img :src="thumbnail" :aspect-ratio="16 / 9" alt="" />
+      <v-card-title class="blog-one__title card-simple__title text-break"
+        ><span class="line-clamp-2">{{ label }}</span></v-card-title
+      >
       <v-card-text v-if="description">
-        <p class="blog-one__text card-simple__text">{{ description }}</p>
+        <p class="blog-one__text card-simple__text">
+          {{ description }}
+        </p>
       </v-card-text>
     </div>
   </v-card>
