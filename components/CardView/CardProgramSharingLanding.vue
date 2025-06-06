@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="landing-programsharing px-12">
+    <div class="landing-programsharing">
       <v-card class="landing-programsharing mt-8 rounded-lg py-4" flat>
         <div class="">
           <v-container class="overflow-hidden">
@@ -152,5 +152,16 @@ export default {
 /* Button spacing */
 .mr-4 {
   margin-right: 1rem !important;
+}
+@media (width <= 542px) {
+  .suggest-btn {
+    margin: 0 !important;
+  }
+  .suggest-btn,
+  .explore-btn {
+    padding: 10px 24px !important;
+    font-size: 0.9rem;
+    margin: 1rem;
+  }
 }
 </style>
