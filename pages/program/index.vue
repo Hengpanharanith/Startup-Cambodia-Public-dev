@@ -172,24 +172,14 @@
         :loading="isLoading"
       />
     </v-container>
-    <div>
-      <v-dialog v-model="dialog" max-width="500">
-        <v-card>
-          <v-card-title>Submit Your Program</v-card-title>
-          <v-card-text>
-            <!-- Your form here -->
-          </v-card-text>
-          <v-card-actions>
-            <v-btn text @click="closeDialog">Close</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </div>
+
+    <FormProgramSubmit :visible="dialog" @close="closeDialog" />
   </div>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+
 import PageHeader from "@/components/Common/PageHeader";
 import SimpleCard from "@/components/CardView/SimpleCard";
 import DateRangePickerDialog from "@/components/pickers/DateRangePickerDialog.vue";
