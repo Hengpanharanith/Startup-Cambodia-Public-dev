@@ -294,12 +294,44 @@ export default {
       this.confirmationDialog = true;
     },
 
-    submitProgram() {
-      this.confirmationDialog = false;
-      alert("Program submitted successfully!");
-      // Optional: Reset the form
-      this.resetForm();
-    },
+    //   submitProgram() {
+    //     this.confirmationDialog = false;
+    //     alert("Program submitted successfully!");
+    //     // Optional: Reset the form
+    //     this.resetForm();
+    //   },
+    //   async submitProgram() {
+    //   try {
+    //     this.confirmationDialog = false;
+
+    //     const formData = new FormData();
+    //     formData.append("programTitle", this.form.programTitle);
+    //     formData.append("email", this.form.email);
+    //     formData.append("programType", this.form.programType);
+    //     formData.append("programCategory", this.form.programCategory);
+    //     formData.append("thumbnail", this.form.thumbnail); // assuming File object
+    //     formData.append("date", this.form.date);
+    //     formData.append("url", this.form.url);
+    //     formData.append("description", this.form.description);
+    //     formData.append("content", this.form.content);
+
+    //     const response = await axios.post("https://your-backend.com/api/programs/", formData, {
+    //       headers: {
+    //         "Content-Type": "multipart/form-data",
+    //       },
+    //     });
+
+    //     console.log("API Response:", response.data);
+    //     alert("Program submitted successfully!");
+
+    //     // Optional: reset form
+    //     this.resetForm();
+
+    //   } catch (error) {
+    //     console.error("Submission error:", error.response?.data || error.message);
+    //     alert("Failed to submit program. Please try again.");
+    //   }
+    // },
 
     resetForm() {
       this.form = {
