@@ -1,5 +1,11 @@
 <template>
-  <v-footer class="main-footer flex-column" padless dark>
+  <v-footer
+    class="main-footer flex-column"
+    padless
+    dark
+    data-aos="fade-up"
+    data-aos-duration="1000"
+  >
     <v-card width="100%" class="d-none" flat>
       <div class="main-footer__subscribe st-bg-secondary">
         <div class="container">
@@ -137,8 +143,9 @@
     </v-btn>
   </v-footer>
 </template>
-
 <script>
+import AOS from "aos";
+import "aos/dist/aos.css";
 export default {
   props: ["title"],
   name: "MainFooter",
@@ -199,6 +206,10 @@ export default {
     },
   },
   mounted() {
+    AOS.init({ once: false });
+    this.$nextTick(() => {
+      AOS.refresh();
+    });
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
@@ -210,7 +221,11 @@ export default {
       }
     },
     scrollTop() {
-      this.$vuetify.goTo(0, { duration: 0, offset: 0, easing: "linear" });
+      this.$vuetify.goTo(0, {
+        duration: 500,
+        offset: 0,
+        easing: "easeInOutCubic",
+      });
     },
   },
 };
