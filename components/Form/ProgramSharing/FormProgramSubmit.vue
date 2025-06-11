@@ -191,8 +191,8 @@
 
     <!-- Confirmation Step -->
     <v-dialog v-model="confirmationDialog" max-width="500px">
-      <v-card class="rounded-md pa-5" elevation="0">
-        <div class="confirmation-card pa- rounded-md text-center">
+      <v-card class="rounded-md pa-8" elevation="0">
+        <div class="confirmation-card pa-8 rounded-md text-center">
           <!-- Icon -->
           <div class="mb-6">
             <v-icon size="64" color="grey darken-2"
@@ -211,8 +211,9 @@
           <p
             class="text-body-1 grey--text text--darken-2 mb-8 line-height-relaxed"
           >
-            Please check your inbox at [{{ form.email }}] and click "Verify" to
-            continue. Email verification is required to submit your program.
+            Please check your inbox at <b>[{{ form.email }}]</b> and click
+            "Verify" to continue. Email verification is required to submit your
+            program.
           </p>
 
           <!-- Action Button -->
@@ -271,38 +272,26 @@ export default {
     };
   },
   methods: {
-    async openConfirmation() {
-      try {
-        const formData = new FormData();
-        formData.append("programTitle", this.form.programTitle);
-        formData.append("email", this.form.email);
-        formData.append("programType", this.form.programType);
-        formData.append("programCategory", this.form.programCategory);
-        formData.append("thumbnail", this.form.thumbnail);
-        formData.append("date", this.form.date);
-        formData.append("url", this.form.url);
-        formData.append("description", this.form.description);
-        formData.append("content", this.form.content);
+    openConfirmation() {
+      const formData = new FormData();
+      formData.append("programTitle", this.form.programTitle);
+      formData.append("email", this.form.email);
+      formData.append("programType", this.form.programType);
+      formData.append("programCategory", this.form.programCategory);
+      formData.append("thumbnail", this.form.thumbnail); // assuming it's a File
+      formData.append("date", this.form.date);
+      formData.append("url", this.form.url);
+      formData.append("description", this.form.description);
+      formData.append("content", this.form.content);
 
-        const response = await axios.post(
-          "https://your-backend.com/api/programs",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        console.log("API Response:", response.data);
-
-        // If successful → close dialog and show confirmation dialog
-        this.$emit("close");
-        this.confirmationDialog = true;
-      } catch (error) {
-        console.error("API Error:", error);
-        alert("There was an error submitting your form. Please try again.");
+      // Console log each field to verify
+      for (let pair of formData.entries()) {
+        console.log(`${pair[0]}:`, pair[1]);
       }
+
+      // Simulate confirmation dialog without API call
+      this.$emit("close");
+      this.confirmationDialog = true;
     },
 
     submitProgram() {
