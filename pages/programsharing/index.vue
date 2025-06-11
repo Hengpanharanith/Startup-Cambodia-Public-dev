@@ -21,7 +21,6 @@
             data-aos="fade-up"
             data-aos-duration="900"
           >
-            h
             {{ $t("programSharing.heroSubtitle") }}
           </p>
 
@@ -85,7 +84,7 @@
     </v-container>
 
     <!-- Why Share Your Program Section -->
-    <v-container class="py-12">
+    <v-container>
       <v-row>
         <v-col cols="12" class="text-center mb-8">
           <h2 class="section-title">
@@ -93,7 +92,6 @@
           </h2>
         </v-col>
       </v-row>
-
       <v-row>
         <v-col
           cols="12"
@@ -124,7 +122,7 @@
     </v-container>
 
     <!-- How to Submit Section -->
-    <v-container class="py-12">
+    <v-container>
       <v-row>
         <v-col cols="12" class="text-center mb-8">
           <h2 class="section-title">
@@ -143,10 +141,18 @@
               large
             >
               <template v-slot:icon>
-                <v-icon color="white">{{ step.icon }}</v-icon>
+                <nuxt-link
+                  v-if="index === 0"
+                  to="/program"
+                  style="display: inline-block"
+                >
+                  <v-icon color="white">{{ step.icon }}</v-icon>
+                </nuxt-link>
+                <v-icon v-else color="white">{{ step.icon }}</v-icon>
               </template>
               <v-card
-                class="elevation-2"
+                class="rounded-lg"
+                elevation="2"
                 :data-aos="index % 2 == 0 ? 'fade-right' : 'fade-left'"
                 :data-aos-duration="1000"
               >
