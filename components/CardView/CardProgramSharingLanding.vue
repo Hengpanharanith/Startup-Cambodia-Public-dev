@@ -40,7 +40,7 @@
                   </v-card-title>
                   <v-card-text class="pa-0 mb-8">
                     <div
-                      class="text-subtitle program-description text-center text-md-left font-weight-regular"
+                      class="text-subtitle program-description text-center text-md-center font-weight-regular"
                     >
                       {{ $t("programSharing.programsharing_landing_subtitle") }}
                     </div>
@@ -115,7 +115,8 @@ export default {
   color: #000000;
   font-size: 1rem;
   line-height: 1.6;
-  max-width: 600px;
+  /* max-width: 600px;
+*/
 }
 
 .suggest-btn {
@@ -162,6 +163,10 @@ export default {
     padding: 10px 24px !important;
     font-size: 0.9rem;
     margin: 1rem;
+  }
+}
+@media (width <= 956px) {
+  .program-description {
   }
 }
 </style>
