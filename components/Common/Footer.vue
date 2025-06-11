@@ -1,11 +1,5 @@
 <template>
-  <v-footer
-    class="main-footer flex-column"
-    padless
-    dark
-    data-aos="fade-up"
-    data-aos-duration="1000"
-  >
+  <v-footer class="main-footer flex-column" padless dark>
     <v-card width="100%" class="d-none" flat>
       <div class="main-footer__subscribe st-bg-secondary">
         <div class="container">
@@ -144,8 +138,6 @@
   </v-footer>
 </template>
 <script>
-import AOS from "aos";
-import "aos/dist/aos.css";
 export default {
   props: ["title"],
   name: "MainFooter",
@@ -205,13 +197,7 @@ export default {
       return this.$localeNumb(new Date().getFullYear());
     },
   },
-  mounted() {
-    AOS.init({ once: false });
-    this.$nextTick(() => {
-      AOS.refresh();
-    });
-    window.addEventListener("scroll", this.handleScroll);
-  },
+
   methods: {
     handleScroll() {
       if (window.scrollY > 70) {
