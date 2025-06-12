@@ -271,18 +271,14 @@ export default {
       formData.append("email", this.form.email);
       formData.append("programType", this.form.programType);
       formData.append("programCategory", this.form.programCategory);
-      formData.append("thumbnail", this.form.thumbnail); // assuming it's a File
+      formData.append("thumbnail", this.form.thumbnail);
       formData.append("date", this.form.date);
       formData.append("url", this.form.url);
       formData.append("description", this.form.description);
       formData.append("content", this.form.content);
-
-      // Console log each field to verify
       for (let pair of formData.entries()) {
         console.log(`${pair[0]}:`, pair[1]);
       }
-
-      // Simulate confirmation dialog without API call
       this.$emit("close");
       this.confirmationDialog = true;
     },

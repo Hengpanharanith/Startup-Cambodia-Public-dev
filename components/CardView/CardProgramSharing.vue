@@ -8,6 +8,7 @@
       background-size: cover;
       background-position: center;
     "
+    elevation="0"
   >
     <v-card-title class="white--text">
       <div>
