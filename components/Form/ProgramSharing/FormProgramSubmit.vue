@@ -199,24 +199,17 @@
               >mdi-check-circle-outline</v-icon
             >
           </div>
-
-          <!-- Title -->
-          <h2
-            class="text-h5 font-weight-semibold mb-6 grey--text text--darken-4"
-          >
+          <h2 class="text-h5 font-weight-bold mb-6 black--text text--darken-2">
             Verification Email Sent
           </h2>
-
-          <!-- Description -->
           <p
             class="text-body-1 grey--text text--darken-2 mb-8 line-height-relaxed"
           >
-            Please check your inbox at <b>[{{ form.email }}]</b> and click
-            "Verify" to continue. Email verification is required to submit your
-            program.
+            Please check your inbox at
+            <b class="black--text font-weight-semibold">[{{ form.email }}]</b>
+            and click "Verify" to continue. Email verification is required to
+            submit your program.
           </p>
-
-          <!-- Action Button -->
           <v-btn
             color="primary"
             large
@@ -294,12 +287,12 @@ export default {
       this.confirmationDialog = true;
     },
 
-    //   submitProgram() {
-    //     this.confirmationDialog = false;
-    //     alert("Program submitted successfully!");
-    //     // Optional: Reset the form
-    //     this.resetForm();
-    //   },
+    submitProgram() {
+      this.confirmationDialog = false;
+      alert("Program submitted successfully!");
+      // Optional: Reset the form
+      this.resetForm();
+    },
     //   async submitProgram() {
     //   try {
     //     this.confirmationDialog = false;
