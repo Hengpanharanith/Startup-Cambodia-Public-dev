@@ -115,18 +115,16 @@
                     :error-messages="errors"
                   />
                 </ValidationProvider>
-
-                <!-- Date & URL -->
                 <v-row>
+                  <!-- Start Date -->
                   <v-col cols="6">
                     <ValidationProvider
-                      name="Date"
+                      name="Start Date"
                       rules="required"
                       v-slot="{ errors }"
                     >
                       <v-menu
-                        ref="menu"
-                        v-model="menu"
+                        v-model="menuStart"
                         :close-on-content-click="false"
                         transition="scale-transition"
                         offset-y
@@ -134,8 +132,8 @@
                       >
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
-                            v-model="form.date"
-                            label="Start / End Date"
+                            v-model="form.startDate"
+                            label="Start Date"
                             prepend-icon="mdi-calendar"
                             readonly
                             v-bind="attrs"
@@ -144,13 +142,49 @@
                           />
                         </template>
                         <v-date-picker
-                          v-model="form.date"
-                          @input="menu = false"
+                          v-model="form.startDate"
+                          @input="menuStart = false"
                         />
                       </v-menu>
                     </ValidationProvider>
                   </v-col>
+
+                  <!-- End Date -->
                   <v-col cols="6">
+                    <ValidationProvider
+                      name="End Date"
+                      rules="required"
+                      v-slot="{ errors }"
+                    >
+                      <v-menu
+                        v-model="menuEnd"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                      >
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                            v-model="form.endDate"
+                            label="End Date"
+                            prepend-icon="mdi-calendar"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
+                            :error-messages="errors"
+                          />
+                        </template>
+                        <v-date-picker
+                          v-model="form.endDate"
+                          @input="menuEnd = false"
+                        />
+                      </v-menu>
+                    </ValidationProvider>
+                  </v-col>
+                </v-row>
+
+                <v-row>
+                  <v-col cols="12">
                     <v-text-field v-model="form.url" label="URL" />
                   </v-col>
                 </v-row>
@@ -257,7 +291,8 @@ export default {
         programType: null,
         programCategory: null,
         thumbnail: null,
-        date: "",
+        startDate: "",
+        endDate: "",
         url: "",
         description: "",
         content: "",
@@ -272,7 +307,8 @@ export default {
       formData.append("programType", this.form.programType);
       formData.append("programCategory", this.form.programCategory);
       formData.append("thumbnail", this.form.thumbnail);
-      formData.append("date", this.form.date);
+      formData.append("startDate", this.form.startDate);
+      formData.append("endDate", this.form.endDate);
       formData.append("url", this.form.url);
       formData.append("description", this.form.description);
       formData.append("content", this.form.content);
