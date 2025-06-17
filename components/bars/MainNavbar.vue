@@ -20,7 +20,7 @@
       </NuxtLink>
       <v-spacer></v-spacer>
       <div class="d-none d-lg-flex">
-               <!-- <template v-for="item in navMenu">-->
+        <!-- <template v-for="item in navMenu">-->
         <!--          <v-hover :key="item.id" close-delay="200" open-delay="200" v-slot="{ hover }">-->
         <!--            <v-btn text x-large v-if="item.subitems" :ripple="false" :to="item.to">-->
         <!--              {{ item.text }}-->
@@ -158,7 +158,7 @@ export default {
 
 .v-app-bar.main-navbar .v-tab {
   font-family: Arial, Helvetica, "KantumruyPro-Bold", sans-serif;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
 }
 
 .v-app-bar.main-navbar

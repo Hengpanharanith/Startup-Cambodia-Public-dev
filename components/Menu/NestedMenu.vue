@@ -1,13 +1,6 @@
 <template>
   <v-list dense class="nested-menu">
-    <v-hover
-      v-for="item in items"
-      :key="item.id"
-      close-delay="200"
-      open-on-hover
-      open-delay="200"
-      v-slot="{ hover }"
-    >
+    <v-hover v-for="item in items" :key="item.id" v-slot="{ hover }">
       <v-list v-if="item.subitems" nav>
         <v-list-item>
           <v-list-item-title>

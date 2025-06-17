@@ -58,7 +58,7 @@
           v-else
           :to="subitem.to"
           link
-          @click="navigateTO(subitem.to)" 
+          @click="navigateTO(subitem.to)"
         >
           {{ subitem.text }}
         </v-list-item>
@@ -187,7 +187,7 @@ export default {
 
 .v-app-bar.main-navbar .v-tab {
   font-family: Arial, Helvetica, KantumruyPro-Bold, sans-serif;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
 }
 
 .v-app-bar.main-navbar
