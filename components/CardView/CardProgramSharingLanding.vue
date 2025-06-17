@@ -38,9 +38,9 @@
                   >
                     {{ $t("programSharing.programsharing_landing_title") }}
                   </v-card-title>
-                  <v-card-text class="pa-0 mb-8">
+                  <v-card-text class="mb-8">
                     <div
-                      class="text-subtitle program-description text-center text-md-center font-weight-regular"
+                      class="text-subtitle program-description text-lg-left text-md-center font-weight-regular"
                     >
                       {{ $t("programSharing.programsharing_landing_subtitle") }}
                     </div>
@@ -87,6 +87,7 @@
 
 <script>
 export default {
+  name: "CardProgramSharingLanding",
   computed: {
     programList() {
       return this.programs.slice(0, 4);
