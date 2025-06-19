@@ -7,7 +7,16 @@
     "
   >
     <div class="hero-section">
-      <v-row class="fill-height" align="center" justify="center" no-gutters>
+      <!-- Background image layer -->
+      <div class="hero-bg"></div>
+
+      <!-- Content layer -->
+      <v-row
+        class="fill-height hero-content"
+        align="center"
+        justify="center"
+        no-gutters
+      >
         <v-col cols="12" class="text-center">
           <h1
             class="hero-title white--text mb-4 font-weight-bold text-h7"
@@ -240,11 +249,43 @@ export default {
 </script>
 
 <style>
-.hero-section {
-  background: linear-gradient(180deg, #ff6b35 25%, #f7931e 100%);
-  height: 50vh;
+  .hero-section {
   position: relative;
-  width: 100% !important;
+  height: 55vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* .hero-bg {
+  position: absolute;
+  background-position: center 30%;
+  inset: 0; 
+  background: linear-gradient(180deg, #ff6b35 25%, #f7931e 100%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 1;
+  z-index: 0;
+} */
+.hero-bg {
+  position: absolute;
+  background-position: center 30%;
+  inset: 0;
+  background-image: url("/images/programsharing/background.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  z-index: 0;
+}
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.373);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1; /* Ensures content appears above background */
 }
 
 .hero-title {
