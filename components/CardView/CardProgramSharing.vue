@@ -28,11 +28,11 @@
 
     <v-card-actions>
       <v-btn
+        elevation="1"
         @click="gotoForm"
         v-ripple="{ class: 'custom-ripple' }"
-        class="inner-shadow-btn rounded-lg text-decoration-none font-weight-bold"
+        class="rounded-lg text-decoration-none"
         width="100%"
-        variant="elevated"
       >
         <span class="submit-btn font-weight-bold">
           {{ $t("programSharing.submitBtn") }}
