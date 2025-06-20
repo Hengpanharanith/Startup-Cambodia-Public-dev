@@ -146,6 +146,9 @@ export default {
       scrollBtn: false,
     };
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
   computed: {
     footerMenus() {
       return [
