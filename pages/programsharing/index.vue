@@ -19,14 +19,14 @@
       >
         <v-col cols="12" class="text-center">
           <h1
-            class="hero-title white--text mb-4 font-weight-bold text-h7"
+            class="hero-title white--text mb-4 font-weight-bold"
             data-aos="fade-up"
             data-aos-duration="800"
           >
             {{ $t("programSharing.heroTitle") }}
           </h1>
           <p
-            class="hero-subtitle white--text mb-6 font-weight-light text-body-1 text-medium-emphasis"
+            class="hero-subtitle white--text mb-6"
             data-aos="fade-up"
             data-aos-duration="900"
           >
@@ -113,7 +113,7 @@
             class="benefit-card text-center pa-8 rounded-lg"
             elevation="0"
             :data-aos="idx % 2 == 0 ? 'fade-up' : 'fade-down'"
-            :data-aos-duration="1000"
+            :data-aos-duration="500"
           >
             <v-img
               :src="benefit.image"
@@ -132,7 +132,7 @@
 
     <!-- How to Submit Section -->
     <v-container>
-      <EcosystemProgramEvent />
+      <!-- <EcosystemProgramEvent /> -->
       <v-row>
         <v-col cols="12" class="text-center mb-8">
           <h2 class="section-title">
@@ -281,7 +281,7 @@ export default {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.373); 
+  background: rgba(0, 0, 0, 0.373);
 }
 
 .hero-content {
@@ -296,7 +296,7 @@ export default {
 }
 
 .hero-subtitle {
-  font-size: 1rem !important;
+  font-size: 1.2rem !important;
   /* font-weight: 300px !important; */
   max-width: 700px;
   margin: 0 auto;
@@ -314,8 +314,11 @@ export default {
   position: relative;
   z-index: 4;
   overflow: visible;
+  transition: all 0.3s ease !important;
 }
-
+.about-card:hover {
+  transform: translateY(-5px);
+}
 .about-card-inner {
   border: 3px dashed #f7931e !important;
   border-radius: 16px;
@@ -330,16 +333,16 @@ export default {
   position: absolute;
   bottom: -15px;
   right: -15px;
-  width: 130px;
-  height: 290px;
+  width: 110px;
+  height: 250px;
   opacity: 1;
-  z-index: 1;
+  z-index: 3;
   pointer-events: none;
   transition: all 0.3s ease !important;
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700px;
   color: #000000;
 }

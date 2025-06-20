@@ -3,6 +3,7 @@
     :color="isTop ? 'transparent' : 'black'"
     class="main-navbar"
     height="75px"
+    
     fixed
     dark
     flat
