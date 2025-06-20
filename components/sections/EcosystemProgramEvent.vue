@@ -15,7 +15,7 @@
         <v-row> -->
       <v-col cols="12" sm="4">
         <CardPieChart
-          @click-chart-item="onProgramTypeClick"
+            @click-chart-item="onProgramTypeClick"
           :title="$t('insight.program_event.program.title')"
           :dataset="programs.dataset"
           :loading="loading"

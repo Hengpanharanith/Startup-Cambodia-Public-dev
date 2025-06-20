@@ -95,7 +95,7 @@
     <!-- Why Share Your Program Section -->
     <v-container>
       <v-row>
-        <v-col cols="12" class="text-center mb-8">
+        <v-col cols="12" class="text-center">
           <h2 class="section-title">
             {{ $t("programSharing.whyShareTitle") }}
           </h2>
@@ -132,6 +132,7 @@
 
     <!-- How to Submit Section -->
     <v-container>
+      <EcosystemProgramEvent />
       <v-row>
         <v-col cols="12" class="text-center mb-8">
           <h2 class="section-title">
@@ -249,7 +250,7 @@ export default {
 </script>
 
 <style>
-  .hero-section {
+.hero-section {
   position: relative;
   height: 55vh;
   width: 100%;
@@ -280,7 +281,7 @@ export default {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.373);
+  background: rgba(0, 0, 0, 0.373); 
 }
 
 .hero-content {
@@ -341,7 +342,6 @@ export default {
   font-size: 2rem;
   font-weight: 700px;
   color: #000000;
-  margin-bottom: 2rem;
 }
 
 .about-content p {

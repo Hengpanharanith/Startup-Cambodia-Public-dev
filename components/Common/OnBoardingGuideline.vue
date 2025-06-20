@@ -121,15 +121,14 @@
           <div class="image-container">
             <v-img
               :key="currentStep"
-              class="cover-image rounded-lg"
+              class="fit-image"
               :src="stepImages[currentStep]"
               :alt="`Step ${currentStep} illustration`"
-              max-width="1000"
-              max-height="800"
-              data-aos="fade-left"
-              data-aos-anchor="#example-anchor"
-              data-aos-offset="500"
-              data-aos-duration="500"
+              contain
+              rounded="lg"
+              data-aos="fade-zoom-in"
+              data-aos-duration="700"
+              data-aos-easing="ease-in-out"
             >
               <template v-slot:placeholder>
                 <v-row class="fill-height ma-0" align="center" justify="center">
@@ -173,15 +172,16 @@ export default {
 
 <style scoped>
 .image-container {
-  min-height: 500px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  width: 100%;
+  height: 600px;
+  position: relative;
 }
-
+.fit-image {
+  width: 100%;
+  height: 600px;
+  border-radius: 12px;
+}
 .v-img {
   transition: all 0.3s ease-in-out;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 </style>
