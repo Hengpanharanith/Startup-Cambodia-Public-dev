@@ -135,7 +135,6 @@ export default {
     "@/plugins/form-rule",
     "@/plugins/v-mask",
     { src: "@/plugins/vue-carousel.js", mode: "client" },
-
   ],
   buildModules: [
     "@nuxtjs/style-resources",
@@ -150,6 +149,8 @@ export default {
     "@nuxtjs/axios",
     "@nuxtjs/toast",
     "@nuxt/image",
+    "@nuxtjs/recaptcha",
+
     [
       "portal-vue/nuxt",
       { portalName: "v-portal", portalTargetName: "v-portal-target" },
@@ -159,6 +160,12 @@ export default {
     "@nuxtjs/robots",
     // "~/plugins/embedded.js"
   ],
+  recaptcha: {
+    hideBadge: false, // for v3 only
+    siteKey: "6LdZw2krAAAAADEsYrWdnIR8Kz-CVSCVALrGWF3I", // reCAPTCHA v2 or v3 key
+    version: 2, // Use 2 or 3 depending on what you prefer
+    size: "normal", // for v2: 'normal' or 'invisible'
+  },
 
   robots: [
     {

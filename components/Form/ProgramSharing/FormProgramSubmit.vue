@@ -3,6 +3,7 @@
     <v-dialog :value="visible" max-width="800px" @input="$emit('close')">
       <v-card class="pa-8" elevation="0">
         <v-card class="input-card1" elevation="0">
+          <!-- Stepper Header -->
           <v-row
             no-gutters
             class="form-step py-8"
@@ -11,256 +12,277 @@
             elevation="2"
           >
             <v-col cols="6" class="text-center">
-              <v-icon color="primary">mdi-pencil</v-icon>
-              <div class="font-weight-medium">Fill In</div>
-              <v-divider
-                class="mx-auto mt-1"
-                style="background-color: #f57c00; height: 2px; width: 60%"
-              />
+              <v-icon :color="step === 1 ? 'primary' : 'grey'"
+                >mdi-pencil</v-icon
+              >
+              <div :class="step === 1 ? 'font-weight-medium' : 'grey--text'">
+                Fill In
+              </div>
             </v-col>
+            <v-divider
+              class="mx-auto mt-1"
+              style="background-color: #f57c00; height: 2px; width: 60%"
+            />
             <v-col cols="6" class="text-center">
-              <v-icon :color="confirmationDialog ? 'primary' : 'grey'"
+              <v-icon :color="step === 2 ? 'primary' : 'grey'"
                 >mdi-check</v-icon
               >
-              <div
-                :class="
-                  confirmationDialog ? 'font-weight-medium' : 'grey--text'
-                "
-              >
+              <div :class="step === 2 ? 'font-weight-medium' : 'grey--text'">
                 Verify
               </div>
             </v-col>
           </v-row>
 
-          <!-- Form header -->
-          <v-card-title class="ml-4">Program Sharing Details</v-card-title>
-          <v-card-subtitle class="ml-4">
-            You can fill in a form to suggest your event. Events will be curated
-            to be listed and are subjected to approval.
-          </v-card-subtitle>
+          <!-- Step 1: Form -->
+          <div v-if="step === 1" data-aos="fade-right" data-aos-duration="500">
+            <v-card-title class="ml-4">Program Sharing Details</v-card-title>
+            <v-card-subtitle class="ml-4">
+              You can fill in a form to suggest your event. Events will be
+              curated to be listed and are subjected to approval.
+            </v-card-subtitle>
 
-          <!-- Form content -->
-          <v-card-text class="px-8">
-            <ValidationObserver ref="observer" v-slot="{ validate }">
-              <v-form>
-                <!-- Program Title -->
-                <ValidationProvider
-                  name="Program Title"
-                  rules="required"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field
-                    v-model="form.programTitle"
-                    label="Program Title"
-                    :error-messages="errors"
-                  />
-                </ValidationProvider>
+            <v-card-text class="px-8">
+              <ValidationObserver ref="observer" v-slot="{ validate }">
+                <v-form>
+                  <!-- Program Title -->
+                  <ValidationProvider
+                    name="Program Title"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
+                    <v-text-field
+                      v-model="form.programTitle"
+                      label="Program Title"
+                      :error-messages="errors"
+                    />
+                  </ValidationProvider>
 
-                <!-- Email -->
-                <ValidationProvider
-                  name="Email"
-                  rules="required|email"
-                  v-slot="{ errors }"
-                >
-                  <v-text-field
-                    v-model="form.email"
-                    label="Email"
-                    :error-messages="errors"
-                  />
-                </ValidationProvider>
+                  <!-- Email -->
+                  <ValidationProvider
+                    name="Email"
+                    rules="required|email"
+                    v-slot="{ errors }"
+                  >
+                    <v-text-field
+                      v-model="form.email"
+                      label="Email"
+                      :error-messages="errors"
+                    />
+                  </ValidationProvider>
 
-                <!-- Program Type & Program Category -->
-                <v-row>
-                  <v-col cols="6">
-                    <ValidationProvider
-                      name="Program Type"
-                      rules="required"
-                      v-slot="{ errors }"
-                    >
-                      <v-select
-                        v-model="form.programType"
-                        :items="programTypes"
-                        label="Program Type"
-                        :error-messages="errors"
-                      />
-                    </ValidationProvider>
-                  </v-col>
-                  <v-col cols="6">
-                    <ValidationProvider
-                      name="Program Category"
-                      rules="required"
-                      v-slot="{ errors }"
-                    >
-                      <v-select
-                        v-model="form.programCategory"
-                        :items="programCategories"
-                        label="Program Category"
-                        :error-messages="errors"
-                      />
-                    </ValidationProvider>
-                  </v-col>
-                </v-row>
-
-                <!-- Thumbnail -->
-                <ValidationProvider
-                  name="Thumbnail"
-                  rules="required"
-                  v-slot="{ errors }"
-                >
-                  <v-file-input
-                    v-model="form.thumbnail"
-                    label="Upload Thumbnail"
-                    prepend-icon="mdi-upload"
-                    accept="image/*"
-                    :error-messages="errors"
-                  />
-                </ValidationProvider>
-                <v-row>
-                  <!-- Start Date -->
-                  <v-col cols="6">
-                    <ValidationProvider
-                      name="Start Date"
-                      rules="required"
-                      v-slot="{ errors }"
-                    >
-                      <v-menu
-                        v-model="menuStart"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
+                  <!-- Program Type & Program Category -->
+                  <v-row>
+                    <v-col cols="6">
+                      <ValidationProvider
+                        name="Program Type"
+                        rules="required"
+                        v-slot="{ errors }"
                       >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
+                        <v-select
+                          v-model="form.programType"
+                          :items="programTypes"
+                          label="Program Type"
+                          :error-messages="errors"
+                        />
+                      </ValidationProvider>
+                    </v-col>
+                    <v-col cols="6">
+                      <ValidationProvider
+                        name="Program Category"
+                        rules="required"
+                        v-slot="{ errors }"
+                      >
+                        <v-select
+                          v-model="form.programCategory"
+                          :items="programCategories"
+                          label="Program Category"
+                          :error-messages="errors"
+                        />
+                      </ValidationProvider>
+                    </v-col>
+                  </v-row>
+
+                  <!-- Thumbnail -->
+                  <ValidationProvider
+                    name="Thumbnail"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
+                    <v-file-input
+                      v-model="form.thumbnail"
+                      label="Upload Thumbnail"
+                      prepend-icon="mdi-upload"
+                      accept="image/*"
+                      :error-messages="errors"
+                    />
+                  </ValidationProvider>
+
+                  <!-- Start Date & End Date -->
+                  <v-row>
+                    <v-col cols="6">
+                      <ValidationProvider
+                        name="Start Date"
+                        rules="required"
+                        v-slot="{ errors }"
+                      >
+                        <v-menu
+                          v-model="menuStart"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="form.startDate"
+                              label="Start Date"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              :error-messages="errors"
+                            />
+                          </template>
+                          <v-date-picker
                             v-model="form.startDate"
-                            label="Start Date"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            :error-messages="errors"
+                            @input="menuStart = false"
                           />
-                        </template>
-                        <v-date-picker
-                          v-model="form.startDate"
-                          @input="menuStart = false"
-                        />
-                      </v-menu>
-                    </ValidationProvider>
-                  </v-col>
+                        </v-menu>
+                      </ValidationProvider>
+                    </v-col>
 
-                  <!-- End Date -->
-                  <v-col cols="6">
-                    <ValidationProvider
-                      name="End Date"
-                      rules="required"
-                      v-slot="{ errors }"
-                    >
-                      <v-menu
-                        v-model="menuEnd"
-                        :close-on-content-click="false"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="auto"
+                    <v-col cols="6">
+                      <ValidationProvider
+                        name="End Date"
+                        rules="required"
+                        v-slot="{ errors }"
                       >
-                        <template v-slot:activator="{ on, attrs }">
-                          <v-text-field
+                        <v-menu
+                          v-model="menuEnd"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                              v-model="form.endDate"
+                              label="End Date"
+                              prepend-icon="mdi-calendar"
+                              readonly
+                              v-bind="attrs"
+                              v-on="on"
+                              :error-messages="errors"
+                            />
+                          </template>
+                          <v-date-picker
                             v-model="form.endDate"
-                            label="End Date"
-                            prepend-icon="mdi-calendar"
-                            readonly
-                            v-bind="attrs"
-                            v-on="on"
-                            :error-messages="errors"
+                            @input="menuEnd = false"
                           />
-                        </template>
-                        <v-date-picker
-                          v-model="form.endDate"
-                          @input="menuEnd = false"
-                        />
-                      </v-menu>
-                    </ValidationProvider>
-                  </v-col>
-                </v-row>
+                        </v-menu>
+                      </ValidationProvider>
+                    </v-col>
+                  </v-row>
 
-                <v-row>
-                  <v-col cols="12">
-                    <v-text-field v-model="form.url" label="URL" />
-                  </v-col>
-                </v-row>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field v-model="form.url" label="URL" />
+                    </v-col>
+                  </v-row>
 
-                <!-- Description & Content -->
-                <v-textarea
-                  v-model="form.description"
-                  label="Description"
-                  auto-grow
-                  rows="2"
-                />
-                <v-textarea
-                  v-model="form.content"
-                  label="Content"
-                  auto-grow
-                  rows="4"
-                />
-              </v-form>
+                  <!-- Description & Content -->
+                  <v-textarea
+                    v-model="form.description"
+                    label="Description"
+                    auto-grow
+                    rows="2"
+                  />
+                  <v-textarea
+                    v-model="form.content"
+                    label="Content"
+                    auto-grow
+                    rows="4"
+                  />
+                </v-form>
+                <div>
+                  <recaptcha
+                    @verify="onCaptchaVerified"
+                    @expired="onCaptchaExpired"
+                  />
 
-              <!-- Buttons -->
-              <v-card-actions>
-                <v-spacer />
-                <v-btn text @click="$emit('close')">Cancel</v-btn>
-                <v-btn
-                  color="primary"
-                  @click="
-                    () =>
-                      validate().then((valid) => valid && openConfirmation())
-                  "
-                  >Submit</v-btn
-                >
-              </v-card-actions>
-            </ValidationObserver>
-          </v-card-text>
-        </v-card>
-      </v-card>
-    </v-dialog>
-
-    <!-- Confirmation Step -->
-    <v-dialog v-model="confirmationDialog" max-width="500px">
-      <v-card class="rounded-md pa-8" elevation="0">
-        <div class="confirmation-card pa-8 rounded-md text-center">
-          <!-- Icon -->
-          <div class="mb-6">
-            <v-icon size="64" color="grey darken-2"
-              >mdi-check-circle-outline</v-icon
-            >
+                  <p
+                    v-if="recaptchaError"
+                    class="red--text"
+                    data-aos="fade-right"
+                    data-aos-duration="500"
+                  >
+                    Please verify you are not a robot.
+                  </p>
+                </div>
+                <!-- Buttons -->
+                <v-card-actions>
+                  <v-spacer />
+                  <v-btn text @click="$emit('close')">Cancel</v-btn>
+                  <v-btn
+                    color="primary"
+                    @click="
+                      () => validate().then((valid) => valid && goToStep2())
+                    "
+                  >
+                    Submit
+                  </v-btn>
+                </v-card-actions>
+              </ValidationObserver>
+            </v-card-text>
           </div>
-          <h2 class="text-h5 font-weight-bold mb-6 black--text text--darken-2">
-            Verification Email Sent
-          </h2>
-          <p
-            class="text-body-1 grey--text text--darken-2 mb-8 line-height-relaxed"
+
+          <!-- Step 2: Confirmation -->
+          <div
+            v-if="step === 2"
+            class="text-center pa-8"
+            data-aos="fade-right"
+            data-aos-duration="500"
           >
-            Please check your inbox at
-            <b class="black--text font-weight-semibold">[{{ form.email }}]</b>
-            and click "Verify" to continue. Email verification is required to
-            submit your program.
-          </p>
-          <v-btn
-            color="primary"
-            large
-            block
-            depressed
-            class="rounded-md text-capitalize font-weight-semibold py-3"
-            @click="submitProgram"
-          >
-            Continue
-          </v-btn>
-        </div>
+            <div class="mb-6">
+              <v-icon size="64" color="grey darken-2"
+                >mdi-check-circle-outline</v-icon
+              >
+            </div>
+            <h2
+              class="text-h5 font-weight-bold mb-6 black--text text--darken-2"
+            >
+              Verification Email Sent
+            </h2>
+            <p
+              class="text-body-1 grey--text text--darken-2 mb-8 line-height-relaxed"
+            >
+              Please check your inbox at
+              <b class="black--text font-weight-semibold">{{ form.email }}</b>
+              and click "Verify" to continue. Email verification is required to
+              submit your program.
+            </p>
+            <v-btn
+              color="primary"
+              large
+              block
+              depressed
+              class="rounded-md text-capitalize font-weight-semibold py-3"
+              @click="submitProgram"
+            >
+              Continue
+            </v-btn>
+          </div>
+        </v-card>
       </v-card>
     </v-dialog>
   </v-container>
 </template>
 
 <script>
+import AOS from "aos";
+import Recaptcha from "@nuxtjs/recaptcha/lib/Recaptcha.vue";
+
+import "aos/dist/aos.css";
 import axios from "axios";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
 import { required, email } from "vee-validate/dist/rules";
@@ -272,6 +294,7 @@ export default {
   components: {
     ValidationObserver,
     ValidationProvider,
+    Recaptcha,
   },
   props: {
     visible: {
@@ -281,8 +304,11 @@ export default {
   },
   data() {
     return {
-      confirmationDialog: false,
-      menu: false,
+      step: 1,
+      recaptchaToken: null,
+      recaptchaError: false,
+      menuStart: false,
+      menuEnd: false,
       programTypes: ["Workshop", "Webinar", "Seminar"],
       programCategories: ["Technology", "Education", "Health"],
       form: {
@@ -299,65 +325,47 @@ export default {
       },
     };
   },
+  watch: {
+    visible(val) {
+      if (!val) this.step = 1;
+    },
+  },
   methods: {
-    openConfirmation() {
-      const formData = new FormData();
-      formData.append("programTitle", this.form.programTitle);
-      formData.append("email", this.form.email);
-      formData.append("programType", this.form.programType);
-      formData.append("programCategory", this.form.programCategory);
-      formData.append("thumbnail", this.form.thumbnail);
-      formData.append("startDate", this.form.startDate);
-      formData.append("endDate", this.form.endDate);
-      formData.append("url", this.form.url);
-      formData.append("description", this.form.description);
-      formData.append("content", this.form.content);
-      for (let pair of formData.entries()) {
-        console.log(`${pair[0]}:`, pair[1]);
+    onCaptchaVerified(token) {
+      console.log("Token received:", token); // ✅ You should see this in browser console
+      this.recaptchaToken = token;
+      this.recaptchaError = false;
+    },
+    onCaptchaExpired() {
+      this.recaptchaToken = null;
+      this.recaptchaError = true;
+    },
+
+    goToStep2() {
+      if (!this.recaptchaToken) {
+        this.recaptchaError = true;
+        return; // ⛔️ Stop here if not verified
       }
-      this.$emit("close");
-      this.confirmationDialog = true;
-    },
 
+      this.recaptchaError = false;
+
+      alert("Captcha verified, form submitted!");
+
+      const formData = new FormData();
+      for (const key in this.form) {
+        formData.append(key, this.form[key]);
+      }
+
+      console.log("Form submitted:", Object.fromEntries(formData));
+      this.step = 2;
+    },
+    // Simulate form submission
     submitProgram() {
-      this.confirmationDialog = false;
       alert("Program submitted successfully!");
-      // Optional: Reset the form
       this.resetForm();
+      this.$emit("close");
+      this.step = 1;
     },
-    //   async submitProgram() {
-    //   try {
-    //     this.confirmationDialog = false;
-
-    //     const formData = new FormData();
-    //     formData.append("programTitle", this.form.programTitle);
-    //     formData.append("email", this.form.email);
-    //     formData.append("programType", this.form.programType);
-    //     formData.append("programCategory", this.form.programCategory);
-    //     formData.append("thumbnail", this.form.thumbnail); // assuming File object
-    //     formData.append("date", this.form.date);
-    //     formData.append("url", this.form.url);
-    //     formData.append("description", this.form.description);
-    //     formData.append("content", this.form.content);
-
-    //     const response = await axios.post("https://your-backend.com/api/programs/", formData, {
-    //       headers: {
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     });
-
-    //     console.log("API Response:", response.data);
-    //     alert("Program submitted successfully!");
-
-    //     // Optional: reset form
-    //     this.resetForm();
-
-    //   } catch (error) {
-    //     console.error("Submission error:", error.response?.data || error.message);
-    //     alert("Failed to submit program. Please try again.");
-    //   }
-    // },
-
     resetForm() {
       this.form = {
         programTitle: "",
@@ -365,12 +373,20 @@ export default {
         programType: null,
         programCategory: null,
         thumbnail: null,
-        date: "",
+        startDate: "",
+        endDate: "",
         url: "",
         description: "",
         content: "",
       };
+      this.recaptchaToken = null;
     },
+  },
+  mounted() {
+    AOS.init({ once: false });
+    this.$nextTick(() => {
+      AOS.refresh();
+    });
   },
 };
 </script>
@@ -391,5 +407,13 @@ export default {
 }
 .input-card1 {
   border: 1px solid #b0b0b0 !important;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

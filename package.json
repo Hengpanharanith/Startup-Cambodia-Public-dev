@@ -22,6 +22,7 @@
     "@nuxtjs/google-analytics": "^2.4.0",
     "@nuxtjs/moment": "^1.6.1",
     "@nuxtjs/proxy": "^2.1.0",
+    "@nuxtjs/recaptcha": "^1.1.2",
     "@nuxtjs/robots": "^2.5.0",
     "@nuxtjs/toast": "^3.3.1",
     "@volar-plugins/vetur": "^0.1.0",
