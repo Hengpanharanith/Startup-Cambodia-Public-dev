@@ -189,27 +189,34 @@
                       <v-text-field v-model="form.url" label="URL" />
                     </v-col>
                   </v-row>
-
                   <!-- Description & Content -->
-                  <v-textarea
-                    v-model="form.description"
-                    label="Description"
-                    auto-grow
-                    rows="2"
-                  />
-                  <v-textarea
-                    v-model="form.content"
-                    label="Content"
-                    auto-grow
-                    rows="4"
-                  />
+
+                  <div class="mt-4">
+                    <label class="editor-label font-weight-light"
+                      >Description</label
+                    >
+                    <Editor
+                      class="editor-textarea mt-2"
+                      :detail="form.description"
+                      @editorDetail="form.description = $event"
+                    />
+                  </div>
+                  <div class="editor-textarea mb-2">
+                    <label class="editor-label font-weight-light"
+                      >Content</label
+                    >
+                    <Editor
+                      class="editor-textarea mt-2"
+                      :detail="form.content"
+                      @editorDetail="form.content = $event"
+                    />
+                  </div>
                 </v-form>
                 <div>
                   <recaptcha
                     @verify="onCaptchaVerified"
                     @expired="onCaptchaExpired"
                   />
-
                   <p
                     v-if="recaptchaError"
                     class="red--text"
@@ -286,7 +293,7 @@ import "aos/dist/aos.css";
 import axios from "axios";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
 import { required, email } from "vee-validate/dist/rules";
-
+import Editor from "@/components/inputs/Editor.vue";
 extend("required", required);
 extend("email", email);
 
@@ -295,6 +302,7 @@ export default {
     ValidationObserver,
     ValidationProvider,
     Recaptcha,
+    Editor,
   },
   props: {
     visible: {
@@ -408,12 +416,9 @@ export default {
 .input-card1 {
   border: 1px solid #b0b0b0 !important;
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.editor-label {
+  font-size: 18px;
+  color: #707070;
+  margin-top: 8px;
 }
 </style>

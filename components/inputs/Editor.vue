@@ -18,8 +18,7 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 export default {
-  components: {
-  },
+  components: {},
   props: {
     detail: { type: String, default: "" },
     editorInit: { type: Boolean, default: false },
