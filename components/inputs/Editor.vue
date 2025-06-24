@@ -1,14 +1,13 @@
 <template>
-  <div style="height: 680px">
+  <div>
     <quill-editor
-      style="height: 600px; z-index: 999999 !important"
-      class="program-detail__editor rounded blog-content"
+      style="height: 200px; z-index: 999999 !important"
+      class="program-detail__editor rounded blog-content custom-quill-bubble"
       :value="detail"
       :options="editorOption"
       ref="quillEdit"
       @change="onEditorChange"
-    >
-    </quill-editor>
+    />
   </div>
 </template>
 
@@ -28,7 +27,7 @@ export default {
     return {
       editorDetail: "",
       editorOption: {
-        // theme: "",
+        theme: "bubble",
         placeholder: "Please write blog content here!",
 
         modules: {
@@ -43,57 +42,6 @@ export default {
               ["link"],
             ],
           },
-
-          // imageCompress: {
-          //   quality: 0.9, // default
-          //   maxWidth: 1000, // default
-          //   maxHeight: 1000, // default
-          //   imageType: "image/jpeg", // default
-          //   debug: false, // default
-          //   suppressErrorLogging: false, // default
-          //   // keepImageTypes:['image/jpeg', 'image/png'],
-          //   insertIntoEditor: (imageBase64URL, imageBlob) => {
-          //     var file = new File([imageBlob], "image.jpg");
-          //     const formData = new FormData();
-          //     formData.append("upload", file);
-          //
-          //     const range = this.$refs.quillEdit.quill.getSelection();
-          //     this.$refs.quillEdit.quill.insertEmbed(
-          //       range.index,
-          //       "image",
-          //       imageBase64URL,
-          //       "user"
-          //     );
-          //    this.createMedia({
-          //         payload: formData,
-          //         options: { headers: { "Content-Type": "multipart/form-data" } },
-          //       })
-          //       .then((res) => {
-          //         this.$refs.quillEdit.quill.deleteText(
-          //           range.index,
-          //           range.length + 1,
-          //           "user"
-          //         );
-          //         this.$refs.quillEdit.quill.insertEmbed(
-          //           range.index,
-          //           "image",
-          //           `${res.url}`,
-          //           "user"
-          //         );
-          //       })
-          //       .catch((err) => {
-          //         this.sweetAlertError(err);
-          //         this.$refs.quillEdit.quill.deleteText(
-          //           range.index,
-          //           range.length + 1,
-          //           "user"
-          //         );
-          //       });
-          //   },
-          // },
-          clipboard: {
-            // matchers: [[Node.ELEMENT_NODE, this.customQuillClipboardMatcher]],
-          },
         },
       },
     };
@@ -104,16 +52,7 @@ export default {
     ...mapActions("media", {
       createMedia: "create",
     }),
-    // customQuillClipboardMatcher(node, delta) {
-    //   if (this.editorInit) {
-    //       const plaintext = node.innerText;
-    //       if(plaintext){
-    //       const Delta = Quill.import("delta");
-    //       return new Delta().insert(plaintext);
-    //       }
-    //   }
-    //   return delta;
-    // },
+
     onEditorChange(value) {
       this.eInit = true;
       this.$emit("editorDetail", value.html);
@@ -121,3 +60,29 @@ export default {
   },
 };
 </script>
+<style>
+.custom-quill-bubble .ql-editor {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+  font-size: 16px;
+  min-height: 200px;
+  color: #333;
+}
+
+.custom-quill-bubble .ql-editor::before {
+  font-style: italic;
+  color: #999;
+}
+.ql-bubble .ql-tooltip {
+  top: 40px !important;
+  width: 500px !important;
+}
+
+/* Example: Move it to the bottom of the editor */
+.program-detail__editor .ql-bubble .ql-tooltip {
+  left: 30% !important;
+  transform: translateX(-50%) !important;
+}
+</style>

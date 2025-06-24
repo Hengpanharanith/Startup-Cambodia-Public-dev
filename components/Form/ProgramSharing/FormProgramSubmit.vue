@@ -190,8 +190,7 @@
                     </v-col>
                   </v-row>
                   <!-- Description & Content -->
-
-                  <div class="mt-4">
+                  <div>
                     <label class="editor-label font-weight-light"
                       >Description</label
                     >
@@ -201,7 +200,8 @@
                       @editorDetail="form.description = $event"
                     />
                   </div>
-                  <div class="editor-textarea mb-2">
+
+                  <div class="mt-4">
                     <label class="editor-label font-weight-light"
                       >Content</label
                     >
@@ -212,7 +212,7 @@
                     />
                   </div>
                 </v-form>
-                <div>
+                <div class="mt-4">
                   <recaptcha
                     @verify="onCaptchaVerified"
                     @expired="onCaptchaExpired"
