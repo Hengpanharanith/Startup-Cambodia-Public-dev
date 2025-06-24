@@ -35,8 +35,10 @@
 
           <!-- Step 1: Form -->
           <div v-if="step === 1" data-aos="fade-right" data-aos-duration="500">
-            <v-card-title class="ml-4">Program Sharing Details</v-card-title>
-            <v-card-subtitle class="ml-4">
+            <v-card-title class="ml-4 font-weight-bold primary--text">
+              Program Sharing Details</v-card-title
+            >
+            <v-card-subtitle class="ml-4 font-weight-semibold pri">
               You can fill in a form to suggest your event. Events will be
               curated to be listed and are subjected to approval.
             </v-card-subtitle>
@@ -57,18 +59,35 @@
                     />
                   </ValidationProvider>
 
-                  <!-- Email -->
-                  <ValidationProvider
-                    name="Email"
-                    rules="required|email"
-                    v-slot="{ errors }"
-                  >
-                    <v-text-field
-                      v-model="form.email"
-                      label="Email"
-                      :error-messages="errors"
-                    />
-                  </ValidationProvider>
+                  <v-row>
+                    <v-col cols="6">
+                      <!-- Email -->
+                      <ValidationProvider
+                        name="Email"
+                        rules="required|email"
+                        v-slot="{ errors }"
+                      >
+                        <v-text-field
+                          v-model="form.email"
+                          label="Email"
+                          :error-messages="errors"
+                        />
+                      </ValidationProvider>
+                    </v-col>
+                    <v-col cols="6">
+                      <ValidationProvider
+                        name="Phone Number"
+                        rules="required|numeric"
+                        v-slot="{ errors }"
+                      >
+                        <v-text-field
+                          v-model="form.phoneNumber"
+                          label="Phone Number"
+                          :error-messages="errors"
+                        /> </ValidationProvider
+                    ></v-col>
+                    <!--phonenumber-->
+                  </v-row>
 
                   <!-- Program Type & Program Category -->
                   <v-row>
@@ -288,14 +307,14 @@
 <script>
 import AOS from "aos";
 import Recaptcha from "@nuxtjs/recaptcha/lib/Recaptcha.vue";
-
 import "aos/dist/aos.css";
 import axios from "axios";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
-import { required, email } from "vee-validate/dist/rules";
+import { required, email, numeric } from "vee-validate/dist/rules";
 import Editor from "@/components/inputs/Editor.vue";
 extend("required", required);
 extend("email", email);
+extend("numeric", numeric);
 
 export default {
   components: {
@@ -322,6 +341,7 @@ export default {
       form: {
         programTitle: "",
         email: "",
+        phoneNumber: "",
         programType: null,
         programCategory: null,
         thumbnail: null,
@@ -378,6 +398,7 @@ export default {
       this.form = {
         programTitle: "",
         email: "",
+        phonenumber: "",
         programType: null,
         programCategory: null,
         thumbnail: null,
