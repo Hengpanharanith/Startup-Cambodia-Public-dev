@@ -103,11 +103,11 @@
                           >
 
                           <v-radio-group
-                            v-model="form.programType"
+                            v-model="form.programCoverage"
                             class="custom-radio"
                           >
                             <v-radio
-                              v-for="type in programTypes"
+                              v-for="type in programCoverages"
                               :key="type"
                               :label="type"
                               :value="type"
@@ -360,7 +360,7 @@ export default {
       recaptchaError: false,
       menuStart: false,
       menuEnd: false,
-      programTypes: ["National", "International"],
+      programCoverages: ["National", "International"],
       programCategories: [
         "Entrepreneurship Education",
         "Angel Invester and Venure Capital Networks",
@@ -376,7 +376,7 @@ export default {
         programTitle: "",
         email: "",
         phoneNumber: "",
-        programType: null,
+        programCoverage: null,
         programCategory: null,
         thumbnail: null,
         startDate: "",
@@ -435,7 +435,7 @@ export default {
         programTitle: "",
         email: "",
         phoneNumber: "",
-        programType: null,
+        programCoverage: null,
         programCategory: null,
         thumbnail: null,
         startDate: "",
