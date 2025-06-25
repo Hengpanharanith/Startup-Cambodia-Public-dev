@@ -77,7 +77,7 @@
                     <v-col cols="6">
                       <ValidationProvider
                         name="Phone Number"
-                        rules="required|numeric"
+                        rules="numeric"
                         v-slot="{ errors }"
                       >
                         <v-text-field
@@ -91,15 +91,15 @@
 
                   <!-- Program Type & Program Category -->
                   <v-row>
-                    <v-col cols="6">
+                    <v-col cols="4">
                       <ValidationProvider
-                        name="Program Type"
+                        name="Program Coverage"
                         rules="required"
                         v-slot="{ errors }"
                       >
                         <div>
                           <label class="editor-label mb-2 font-weight-medium"
-                            >Program Type</label
+                            >Program Coverage</label
                           >
 
                           <v-radio-group
@@ -125,7 +125,7 @@
                         </div>
                       </ValidationProvider>
                     </v-col>
-                    <v-col cols="6">
+                    <v-col cols="4">
                       <ValidationProvider
                         name="Program Category"
                         rules="required"
@@ -136,6 +136,22 @@
                           v-model="form.programCategory"
                           :items="programCategories"
                           label="Program Category"
+                          :error-messages="errors"
+                          attach
+                        />
+                      </ValidationProvider>
+                    </v-col>
+                    <v-col cols="4">
+                      <ValidationProvider
+                        name="Program Type"
+                        rules="required"
+                        v-slot="{ errors }"
+                      >
+                        <v-select
+                          class="mt-2"
+                          v-model="form.programType"
+                          :items="programTypes"
+                          label="Program Type"
                           :error-messages="errors"
                           attach
                         />
