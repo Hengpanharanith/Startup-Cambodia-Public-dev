@@ -162,7 +162,7 @@ export default {
   ],
   recaptcha: {
     hideBadge: false, // for v3 only
-    siteKey: "6LdZw2krAAAAADEsYrWdnIR8Kz-CVSCVALrGWF3I", // reCAPTCHA v2 or v3 key
+    siteKey: "6LelmmwrAAAAABOmBXRYoP49dPc5AaLDbJZ2-hd1", // for laptop at office = 6LelmmwrAAAAABOmBXRYoP49dPc5AaLDbJZ2-hd1 // for laptop at home = 6LdZw2krAAAAADEsYrWdnIR8Kz-CVSCVALrGWF3I
     version: 2, // Use 2 or 3 depending on what you prefer
     size: "normal", // for v2: 'normal' or 'invisible'
   },

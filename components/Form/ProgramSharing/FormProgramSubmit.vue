@@ -35,7 +35,7 @@
 
           <!-- Step 1: Form -->
           <div v-if="step === 1" data-aos="fade-right" data-aos-duration="500">
-            <v-card-title class="ml-4 font-weight-bold primary--text">
+            <v-card-title class="ml-4 font-weight-bold primary--text text-h5">
               Program Sharing Details</v-card-title
             >
             <v-card-subtitle class="ml-4 font-weight-semibold pri">
@@ -97,12 +97,32 @@
                         rules="required"
                         v-slot="{ errors }"
                       >
-                        <v-select
-                          v-model="form.programType"
-                          :items="programTypes"
-                          label="Program Type"
-                          :error-messages="errors"
-                        />
+                        <div>
+                          <label class="editor-label mb-2 font-weight-medium"
+                            >Program Type</label
+                          >
+
+                          <v-radio-group
+                            v-model="form.programType"
+                            class="custom-radio"
+                          >
+                            <v-radio
+                              v-for="type in programTypes"
+                              :key="type"
+                              :label="type"
+                              :value="type"
+                              color="primary"
+                              class="mb-2"
+                            />
+                          </v-radio-group>
+
+                          <div
+                            v-if="errors && errors.length"
+                            class="error--text text-caption mt-1"
+                          >
+                            {{ errors[0] }}
+                          </div>
+                        </div>
                       </ValidationProvider>
                     </v-col>
                     <v-col cols="6">
@@ -112,10 +132,12 @@
                         v-slot="{ errors }"
                       >
                         <v-select
+                          class="mt-2"
                           v-model="form.programCategory"
                           :items="programCategories"
                           label="Program Category"
                           :error-messages="errors"
+                          attach
                         />
                       </ValidationProvider>
                     </v-col>
@@ -213,6 +235,7 @@
                     <label class="editor-label font-weight-light"
                       >Description</label
                     >
+
                     <Editor
                       class="editor-textarea mt-2"
                       :detail="form.description"
@@ -236,6 +259,7 @@
                     @verify="onCaptchaVerified"
                     @expired="onCaptchaExpired"
                   />
+
                   <p
                     v-if="recaptchaError"
                     class="red--text"
@@ -336,8 +360,18 @@ export default {
       recaptchaError: false,
       menuStart: false,
       menuEnd: false,
-      programTypes: ["Workshop", "Webinar", "Seminar"],
-      programCategories: ["Technology", "Education", "Health"],
+      programTypes: ["National", "International"],
+      programCategories: [
+        "Entrepreneurship Education",
+        "Angel Invester and Venure Capital Networks",
+        "Co-Working Spaces and Inovation Hubs",
+        "Startup Competitions and Pitching Events",
+        "Internationalization Startup Support",
+        "Startup Support Programs",
+        "Mentoship and Coaching Programs",
+        "Startup Incubator and Accelerator",
+        "Others",
+      ],
       form: {
         programTitle: "",
         email: "",
@@ -355,7 +389,11 @@ export default {
   },
   watch: {
     visible(val) {
-      if (!val) this.step = 1;
+      if (!val) {
+        this.step = 1;
+        this.resetForm();
+        this.recaptchaToken = null;
+      }
     },
   },
   methods: {
@@ -372,18 +410,15 @@ export default {
     goToStep2() {
       if (!this.recaptchaToken) {
         this.recaptchaError = true;
-        return; // ⛔️ Stop here if not verified
+        return;
+      } else if (this.recaptchaToken) {
+        this.recaptchaError = false;
       }
-
-      this.recaptchaError = false;
-
       alert("Captcha verified, form submitted!");
-
       const formData = new FormData();
       for (const key in this.form) {
         formData.append(key, this.form[key]);
       }
-
       console.log("Form submitted:", Object.fromEntries(formData));
       this.step = 2;
     },
@@ -395,10 +430,11 @@ export default {
       this.step = 1;
     },
     resetForm() {
+      this.recaptchaError = false;
       this.form = {
         programTitle: "",
         email: "",
-        phonenumber: "",
+        phoneNumber: "",
         programType: null,
         programCategory: null,
         thumbnail: null,
@@ -409,6 +445,11 @@ export default {
         content: "",
       };
       this.recaptchaToken = null;
+      this.$nextTick(() => {
+        if (this.$refs.observer) {
+          this.$refs.observer.reset();
+        }
+      });
     },
   },
   mounted() {
@@ -438,8 +479,16 @@ export default {
   border: 1px solid #b0b0b0 !important;
 }
 .editor-label {
-  font-size: 18px;
+  font-size: 16px;
   color: #707070;
   margin-top: 8px;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
