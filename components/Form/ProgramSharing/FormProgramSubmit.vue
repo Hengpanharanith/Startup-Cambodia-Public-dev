@@ -256,6 +256,7 @@
                       class="editor-textarea mt-2"
                       :detail="form.description"
                       @editorDetail="form.description = $event"
+                      :theme="'bubble'"
                     />
                   </div>
 
@@ -267,10 +268,11 @@
                       class="editor-textarea mt-2"
                       :detail="form.content"
                       @editorDetail="form.content = $event"
+                      :theme="'snow'"
                     />
                   </div>
                 </v-form>
-                <div class="mt-4">
+                <div class="mt-16">
                   <recaptcha
                     @verify="onCaptchaVerified"
                     @expired="onCaptchaExpired"
