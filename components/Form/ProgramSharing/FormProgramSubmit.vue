@@ -271,23 +271,22 @@
                       :theme="'snow'"
                     />
                   </div>
-                </v-form>
-                <div class="mt-16">
-                  <recaptcha
-                    @verify="onCaptchaVerified"
-                    @expired="onCaptchaExpired"
-                  />
+                  <div class="mt-16">
+                    <recaptcha
+                      @verify="onCaptchaVerified"
+                      @expired="onCaptchaExpired"
+                    />
 
-                  <p
-                    v-if="recaptchaError"
-                    class="red--text"
-                    data-aos="fade-right"
-                    data-aos-duration="500"
-                  >
-                    Please verify you are not a robot.
-                  </p>
-                </div>
-                <!-- Buttons -->
+                    <p
+                      v-if="recaptchaError"
+                      class="red--text"
+                      data-aos="fade-right"
+                      data-aos-duration="500"
+                    >
+                      Please verify you are not a robot.
+                    </p>
+                  </div>
+                </v-form>
                 <v-card-actions>
                   <v-spacer />
                   <v-btn text @click="$emit('close')">Cancel</v-btn>

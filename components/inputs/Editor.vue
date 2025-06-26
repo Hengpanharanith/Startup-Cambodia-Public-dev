@@ -77,16 +77,21 @@ export default {
 <style>
 .custom-quill-bubble .ql-editor {
   border: 1px solid #ccc;
-  border-radius: 8px;
+
   padding: 16px;
   background-color: #fff;
-  font-size: 16px;
+  /* font-size: px; */
   min-height: 200px;
-  color: #333;
-}
-.custom-quill-bubble .ql-editor::before {
-  font-style: italic;
   color: #999;
+}
+.custom-quill-snow .ql-editor {
+  min-height: 200px;
+  color: #999;
+}
+.custom-quill-bubble .ql-editor::before,
+.custom-quill-snow .ql-editor::before {
+  color: #999 !important; /* or any color you want */
+  opacity: 1; /* ensure it's visible */
 }
 .ql-bubble .ql-tooltip {
   top: 40px !important;
