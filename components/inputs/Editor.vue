@@ -1,14 +1,13 @@
 <template>
-  <div style="height: 680px">
+  <div>
     <quill-editor
-      style="height: 600px; z-index: 999999 !important"
-      class="program-detail__editor rounded blog-content"
+      style="height: 200px; z-index: 999999 !important"
+      :class="editorClass"
       :value="detail"
       :options="editorOption"
       ref="quillEdit"
       @change="onEditorChange"
-    >
-    </quill-editor>
+    />
   </div>
 </template>
 
@@ -18,103 +17,56 @@ import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 export default {
-  components: {
-  },
+  components: {},
   props: {
+    theme: { type: String, default: "bubble" },
     detail: { type: String, default: "" },
     editorInit: { type: Boolean, default: false },
   },
-  data() {
-    let _this = this;
-    return {
-      editorDetail: "",
-      editorOption: {
-        // theme: "",
+  computed: {
+    editorOption() {
+      let toolbar;
+      if (this.theme == "bubble") {
+        toolbar = [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          ["clean"],
+        ];
+      } else if (this.theme == "snow") {
+        toolbar = [
+          [{ header: [1, 2, 3, false] }],
+          ["bold", "italic", "underline", "strike"],
+          ["clean"],
+          [{ color: [] }],
+          [{ list: "ordered" }, { list: "bullet" }],
+          [{ align: [] }],
+          ["link"],
+        ];
+      }
+      return {
+        theme: this.theme,
         placeholder: "Please write blog content here!",
-
         modules: {
-          toolbar: {
-            container: [
-              [{ header: [1, 2, 3, false] }],
-              ["bold", "italic", "underline", "strike"],
-              ["clean"],
-              [{ color: [] }],
-              [{ list: "ordered" }, { list: "bullet" }],
-              [{ align: [] }],
-              ["link"],
-            ],
-          },
-
-          // imageCompress: {
-          //   quality: 0.9, // default
-          //   maxWidth: 1000, // default
-          //   maxHeight: 1000, // default
-          //   imageType: "image/jpeg", // default
-          //   debug: false, // default
-          //   suppressErrorLogging: false, // default
-          //   // keepImageTypes:['image/jpeg', 'image/png'],
-          //   insertIntoEditor: (imageBase64URL, imageBlob) => {
-          //     var file = new File([imageBlob], "image.jpg");
-          //     const formData = new FormData();
-          //     formData.append("upload", file);
-          //
-          //     const range = this.$refs.quillEdit.quill.getSelection();
-          //     this.$refs.quillEdit.quill.insertEmbed(
-          //       range.index,
-          //       "image",
-          //       imageBase64URL,
-          //       "user"
-          //     );
-          //    this.createMedia({
-          //         payload: formData,
-          //         options: { headers: { "Content-Type": "multipart/form-data" } },
-          //       })
-          //       .then((res) => {
-          //         this.$refs.quillEdit.quill.deleteText(
-          //           range.index,
-          //           range.length + 1,
-          //           "user"
-          //         );
-          //         this.$refs.quillEdit.quill.insertEmbed(
-          //           range.index,
-          //           "image",
-          //           `${res.url}`,
-          //           "user"
-          //         );
-          //       })
-          //       .catch((err) => {
-          //         this.sweetAlertError(err);
-          //         this.$refs.quillEdit.quill.deleteText(
-          //           range.index,
-          //           range.length + 1,
-          //           "user"
-          //         );
-          //       });
-          //   },
-          // },
-          clipboard: {
-            // matchers: [[Node.ELEMENT_NODE, this.customQuillClipboardMatcher]],
-          },
+          toolbar: { container: toolbar },
         },
-      },
-    };
+      };
+    },
+    editorClass() {
+      return {
+        "program-detail__editor": true,
+        rounded: true,
+        "blog-content": true,
+        "custom-quill-bubble": this.theme === "bubble",
+        "custom-quill-snow": this.theme === "snow",
+      };
+    },
   },
-  computed: {},
   watch: {},
   methods: {
     ...mapActions("media", {
       createMedia: "create",
     }),
-    // customQuillClipboardMatcher(node, delta) {
-    //   if (this.editorInit) {
-    //       const plaintext = node.innerText;
-    //       if(plaintext){
-    //       const Delta = Quill.import("delta");
-    //       return new Delta().insert(plaintext);
-    //       }
-    //   }
-    //   return delta;
-    // },
+
     onEditorChange(value) {
       this.eInit = true;
       this.$emit("editorDetail", value.html);
@@ -122,3 +74,29 @@ export default {
   },
 };
 </script>
+<style>
+.custom-quill-bubble .ql-editor {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+  font-size: 16px;
+  min-height: 200px;
+  color: #333;
+}
+.custom-quill-bubble .ql-editor::before {
+  font-style: italic;
+  color: #999;
+}
+.ql-bubble .ql-tooltip {
+  top: 40px !important;
+  width: 300px !important;
+  align-content: center !important;
+}
+
+/* Example: Move it to the bottom of the editor */
+.program-detail__editor .ql-bubble .ql-tooltip {
+  left: 30% !important;
+  transform: translateX(-50%) !important;
+}
+</style>
