@@ -252,12 +252,12 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import Editor from "@/components/inputs/Editor.vue";
+
 export default {
   components: {
     ValidationObserver,
     ValidationProvider,
     Editor,
-
   },
   props: {
     form: Object,
@@ -274,7 +274,6 @@ export default {
       }
     },
     resetForm() {
-   
       this.form = {
         programTitle: "",
         email: "",

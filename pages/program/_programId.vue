@@ -24,7 +24,7 @@
               />
               <v-chip
                 v-text="programDetail?.category?.name"
-                color="primaryD"
+                color="primary"
                 label
                 small
               />
