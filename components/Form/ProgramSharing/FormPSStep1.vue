@@ -3,9 +3,9 @@
     <v-card-title class="ml-4 font-weight-bold primary--text text-h5">
       Program Sharing Details
     </v-card-title>
-    <v-card-subtitle class="ml-4 font-weight-semibold pri">
-      You can fill in a form to suggest your event. Events will be
-      curated to be listed and are subjected to approval.
+    <v-card-subtitle class="ml-4 font-weight-semibold text-subtitle-h6">
+      You can fill in a form to suggest your event. Events will be curated to be
+      listed and are subjected to approval.
     </v-card-subtitle>
     <v-card-text class="px-8">
       <ValidationObserver ref="observer" v-slot="{ validate }">
@@ -199,49 +199,51 @@
               <v-text-field v-model="form.url" label="URL" />
             </v-col>
           </v-row>
-          <div>
-            <label class="editor-label font-weight-light">Description</label>
-            <Editor
-              class="editor-textarea mt-2"
-              :detail="form.description"
-              @editorDetail="form.description = $event"
-              :theme="'bubble'"
-            />
-          </div>
-          <div class="mt-4">
-            <label class="editor-label font-weight-light">Content</label>
-            <Editor
-              class="editor-textarea mt-2"
-              :detail="form.content"
-              @editorDetail="form.content = $event"
-              :theme="'snow'"
-            />
-          </div>
+          <v-row>
+            <v-col cols="12">
+              <div>
+                <label class="editor-label font-weight-light"
+                  >Description</label
+                >
+                <Editor
+                  class="editor-textarea mt-2"
+                  :detail="form.description"
+                  @editorDetail="form.description = $event"
+                  :theme="'bubble'"
+                />
+              </div>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <div class="mt-4 mb-8">
+                <label class="editor-label font-weight-light">Content</label>
+                <Editor
+                  class="editor-textarea mt-2"
+                  :detail="form.content"
+                  @editorDetail="form.content = $event"
+                  :theme="'snow'"
+                />
+              </div>
+            </v-col>
+          </v-row>
+
+          <v-row class="mt-8 mb-4">
+            <v-col cols="12" class="d-flex justify-end">
+              <v-btn large text @click="$emit('close')">Cancel</v-btn>
+              <v-btn
+                large
+                color="primary"
+                class="ml-2"
+                @click="
+                  () => validate().then((valid) => valid && $emit('submit'))
+                "
+              >
+                Submit
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-form>
-        <div class="mt-16">
-          <recaptcha
-            @verify="onCaptchaVerified"
-            @expired="onCaptchaExpired"
-          />
-          <p
-            v-if="recaptchaError"
-            class="red--text"
-            data-aos="fade-right"
-            data-aos-duration="500"
-          >
-            Please verify you are not a robot.
-          </p>
-        </div>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn text @click="$emit('close')">Cancel</v-btn>
-          <v-btn
-            color="primary"
-            @click="() => validate().then((valid) => valid && $emit('submit'))"
-          >
-            Submit
-          </v-btn>
-        </v-card-actions>
       </ValidationObserver>
     </v-card-text>
   </div>
@@ -250,13 +252,12 @@
 <script>
 import { ValidationObserver, ValidationProvider } from "vee-validate";
 import Editor from "@/components/inputs/Editor.vue";
-import Recaptcha from "@nuxtjs/recaptcha/lib/Recaptcha.vue";
 export default {
   components: {
     ValidationObserver,
     ValidationProvider,
     Editor,
-    Recaptcha,
+
   },
   props: {
     form: Object,
@@ -265,9 +266,35 @@ export default {
     programCoverages: Array,
     programCategories: Array,
     programTypes: Array,
-    recaptchaError: Boolean,
   },
   methods: {
+    resetValidation() {
+      if (this.$refs.observer) {
+        this.$refs.observer.reset();
+      }
+    },
+    resetForm() {
+   
+      this.form = {
+        programTitle: "",
+        email: "",
+        phoneNumber: "",
+        programCoverage: null,
+        programCategory: null,
+        thumbnail: null,
+        startDate: "",
+        endDate: "",
+        url: "",
+        description: "",
+        content: "",
+      };
+      this.recaptchaToken = null;
+      this.$nextTick(() => {
+        if (this.$refs.observer) {
+          this.$refs.observer.reset();
+        }
+      });
+    },
     onCaptchaVerified(token) {
       this.$emit("captcha-verified", token);
     },
