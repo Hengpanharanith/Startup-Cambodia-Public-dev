@@ -91,11 +91,12 @@
                 v-slot="{ errors }"
               >
                 <v-select
-                  class="mt-2"
+                  class="category-dropdown mt-2"
                   v-model="form.programCategory"
                   :items="programCategories"
                   label="Program Category"
                   :error-messages="errors"
+                  :menu-props="{ maxWidth: '550', offsetY: true }"
                   attach
                 />
               </ValidationProvider>
@@ -107,7 +108,8 @@
                 v-slot="{ errors }"
               >
                 <v-select
-                  class="mt-2"
+                  class="category-dropdown mt-2"
+                  :menu-props="{ maxWidth: '400', offsetY: true }"
                   v-model="form.programType"
                   :items="programTypes"
                   label="Program Type"
@@ -303,3 +305,8 @@ export default {
   },
 };
 </script>
+<style>
+.category-dropdown .v-list-item__title {
+  font-size: 14px !important; /* or your desired size */
+}
+</style>

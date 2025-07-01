@@ -109,14 +109,11 @@ export default {
         "Others",
       ],
       programTypes: [
-        "Workshop",
-        "Seminar",
-        "Webinar",
-        "Bootcamp",
+        "Incubator",
+        "Accelerator",
         "Hackathon",
-        "Meetup",
-        "Conference",
-        "Other",
+        "Startup Competition and Award",
+        "Mentorship Program",
       ],
       form: {
         programTitle: "",

@@ -77,7 +77,6 @@ export default {
 <style>
 .custom-quill-bubble .ql-editor {
   border: 1px solid #ccc;
-
   padding: 16px;
   background-color: #fff;
   /* font-size: px; */

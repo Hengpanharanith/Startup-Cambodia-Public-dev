@@ -1,4 +1,4 @@
-<template>
+      <template>
   <div
     class="d-flex justify-center align-center fill-height"
     style="background: #f8f9fa"
