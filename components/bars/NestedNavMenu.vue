@@ -11,6 +11,8 @@
     rounded="lg"
     bottom
     right
+    origin="center center"
+    transition="scale-transition"
   >
     <template v-slot:activator="{ on, attrs }">
       <v-tab v-if="prevent" v-bind="attrs" v-on="on" :to="to" :block="block">
@@ -24,7 +26,9 @@
           :block="block"
           :class="{ 'hover-effect': hover }"
         >
-          <v-list-item-content>{{ label }}</v-list-item-content>
+          <v-list-item-content 
+            >{{ label }}</v-list-item-content
+          >
           <v-list-item-action>
             <v-icon right>mdi-menu-right</v-icon>
           </v-list-item-action>
@@ -32,17 +36,12 @@
       </v-hover>
     </template>
 
-    <v-list
-      class="overflow-auto"
-      style="max-height: 35rem; z-index: 200"
-      nav
-      dense
-    >
+    <v-list class="overflow-auto" style="max-height: 35rem; z-index: 200" nav>
       <template v-for="(subitem, key) in items">
         <v-list-item
           :key="'nested-' + key"
           v-if="subitem.subitems"
-          class="px-0 nested-item"
+          class="nested-item"
           @click.stop
         >
           <NestedNavMenu
@@ -180,7 +179,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .v-app-bar.v-app-bar--fixed.main-navbar {
   z-index: 100;
 }
@@ -210,7 +209,10 @@ export default {
 /* Ensure menu items are clickable */
 .v-list-item {
   cursor: pointer;
+  padding-left: 8px !important; /* Adjust padding as needed */
+  font-size: 1.2rem;
 }
+.v-list-item
 
 /* Prevent menu from closing during transitions */
 .v-menu__content {
