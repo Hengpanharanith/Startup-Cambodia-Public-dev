@@ -8,22 +8,7 @@
     "
   >
     <v-container>
-      <v-row justify="center">
-        <v-col cols="12" md="8" lg="6" class="align-self-center">
-          <!-- Loading Spinner -->
-          <v-card v-if="loading" class="pa-8 text-center" elevation="2">
-            <v-progress-circular indeterminate color="primary" size="40" />
-            <div class="mt-4">Verifying token...</div>
-          </v-card>
-
-          <!-- <InvalidToken v-else-if="isInvalid" /> -->
-
-          <!-- Invalid Token -->
-
-          <!-- Success Component -->
-          <ValidToken v-if="isInvalid" />
-        </v-col>
-      </v-row>
+      <ValidToken v-if="isInvalid" />
     </v-container>
   </div>
 </template>
