@@ -150,7 +150,7 @@ export default {
   },
 };
 </script>
-<style>
+<style scoped>
 .thumnail {
   max-width: 400px;
   height: auto;

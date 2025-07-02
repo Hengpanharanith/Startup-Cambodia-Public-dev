@@ -74,6 +74,7 @@
           <v-card-title class="font-weight-bold text-h6">
             Edit Program Detail
           </v-card-title>
+          <v-card-subtitle class="text-subtitle-2 black--text"></v-card-subtitle>
           <v-divider></v-divider>
           <v-card-text>
             <FormPSStep1
