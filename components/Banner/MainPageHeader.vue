@@ -91,6 +91,16 @@
         </div>
       </div>
     </div>
+
+    <!-- Scroll Down Icon with Title -->
+    <div class="scroll-down-indicator">
+      <v-icon large style="opacity: 1" class="white--text"
+        >mdi-chevron-down</v-icon
+      >
+      <div class="scroll-down-title white--text font-weight-regular">
+        Scroll Down
+      </div>
+    </div>
   </header>
 </template>
 
@@ -289,6 +299,46 @@ export default {
 .v-window--show-arrows-on-hover.v-carousel.header-carousel .v-window__next,
 .v-window--show-arrows-on-hover.v-carousel.header-carousel .v-window__prev {
   transition: 0.2s transform cubic-bezier(0.25, 0.8, 0.5, 1);
+}
+
+.scroll-down-indicator {
+  position: absolute;
+  left: 50%;
+  bottom: 32px;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10000;
+}
+
+.scroll-down-indicator .v-icon {
+  animation: bounce 1.2s infinite;
+  font-size: 2.5rem;
+}
+
+.scroll-down-title {
+  margin-top: 4px;
+  font-size: 1.1rem;
+  color: #000000;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(10px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  70% {
+    transform: translateY(10px);
+  }
 }
 
 @media screen and (min-width: 768px) {
