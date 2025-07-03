@@ -1,147 +1,80 @@
 <template>
   <section>
     <v-container>
-      <p class="justify-md-center block-title__text text-break">
+      <!-- Title -->
+      <p class="text-center text-h5 font-weight-bold mb-8">
         {{ $t("about.section.onboarding.title") }}
       </p>
-      <v-card flat>
-        <v-card-text>
-          <v-stepper
-            v-model="currentStep"
-            non-linear
-            flat
-            style="font-size: 16px"
-            class="pa-8"
-          >
-            <v-stepper-header class="font-weight-bold" style="box-shadow: none">
-              <v-stepper-step editable step="1" @click="currentStep = 1">
-                {{ $t("about.section.onboarding.signup") }}
+
+      <!-- Stepper Card -->
+      <v-card elevation="1" class="pa-4 pa-md-8">
+        <v-stepper v-model="currentStep" non-linear flat>
+          <!-- Stepper Header -->
+          <v-stepper-header class="font-weight-bold">
+            <template v-for="n in 5">
+              <v-stepper-step
+                :key="n"
+                :step="n"
+                editable
+                @click="currentStep = n"
+              >
+                {{ getStepLabel(n) }}
               </v-stepper-step>
+              <v-divider v-if="n < 5" :key="`divider-${n}`" />
+            </template>
+          </v-stepper-header>
 
-              <v-divider></v-divider>
+          <!-- Stepper Content -->
+          <v-stepper-items>
+            <v-stepper-content v-for="n in 5" :key="n" :step="n" class="pa-4">
+              <v-card outlined class="pa-4 pa-md-6 mb-8 rounded-lg">
+                <v-row wrap align="center">
+                  <!-- Text Section -->
+                  <v-col cols="12" md="6" class="pb-4 pb-md-0">
+                    <h3 class="text-h6 font-weight-bold mb-2">
+                      {{ getStepTitle(n) }}
+                    </h3>
+                    <p class="text-body-1 grey--text text--darken-1">
+                      {{ getStepDescription(n) }}
+                    </p>
 
-              <v-stepper-step editable step="2" @click="currentStep = 2">
-                {{ $t("about.section.onboarding.create_profile") }}
-              </v-stepper-step>
-
-              <v-divider></v-divider>
-
-              <v-stepper-step step="3" editable @click="currentStep = 3">
-                {{ $t("about.section.onboarding.fill_info") }}
-              </v-stepper-step>
-
-              <v-divider></v-divider>
-
-              <v-stepper-step step="4" editable @click="currentStep = 4">
-                {{ $t("about.section.onboarding.submit") }}
-              </v-stepper-step>
-
-              <v-divider></v-divider>
-
-              <v-stepper-step step="5" editable @click="currentStep = 5">
-                {{ $t("about.section.onboarding.start_connect") }}
-              </v-stepper-step>
-            </v-stepper-header>
-
-            <v-stepper-items class="d-none">
-              <v-stepper-content step="1">
-                <v-card
-                  class="mb-12"
-                  flat
-                  height="100px"
-                  title="Create Camdigikey account"
-                >
-                  <v-card-title> Create Camdigikey Account </v-card-title>
-                  <v-card-text>
-                    To log into Startup Cambodia users are required to have a
-                    Camdigikey account. If you don't have one, you can create
-                    one. See
-                    <a
-                      href="https://camdigikey.gov.kh/file/007_CAMDIGIKEY_V2_USER_GUILDE_.pdf"
-                      >CamDigikey user guide</a
-                    >
-                    for more detail.
-                  </v-card-text>
-                </v-card>
-              </v-stepper-content>
-
-              <v-stepper-content step="2">
-                <v-card class="mb-12" flat height="100px">
-                  <v-card-title> Profile creation </v-card-title>
-                  <v-card-text>
-                    Once you have an account, navigate to profile page and click
-                    on profile tab (Startup, Mentor, Investor) and click on
-                    create profile button.
-                  </v-card-text>
-                </v-card>
-              </v-stepper-content>
-
-              <v-stepper-content step="3">
-                <v-card class="mb-12" flat height="100px">
-                  <v-card-title> Fill in info </v-card-title>
-                  <v-card-text>
-                    Fill in the required information for your profile.
-                  </v-card-text>
-                </v-card>
-              </v-stepper-content>
-
-              <v-stepper-content step="4">
-                <v-card class="mb-12" flat height="100px">
-                  <v-card-title> Application Submission </v-card-title>
-                  <v-card-text>
-                    Review and submit your application.
-                  </v-card-text>
-                </v-card>
-              </v-stepper-content>
-
-              <v-stepper-content step="5">
-                <v-card class="mb-12" flat height="100px">
-                  <v-card-text>
-                    <v-card-actions class="justify-center">
-                      <nuxt-link
-                        to="/ecosystem/discover/category/startup"
-                        class="mx-auto"
-                      >
-                        <ButtonPrimary
-                          :title="$t('landing.ecosystem.button.explore')"
-                        />
+                    <div v-if="n === 5" class="mt-4">
+                      <nuxt-link to="/programsharing">
+                        <ButtonPrimary :title="$t('button.startnow')" />
                       </nuxt-link>
-                    </v-card-actions>
-                  </v-card-text>
-                </v-card>
-              </v-stepper-content>
-            </v-stepper-items>
-          </v-stepper>
-        </v-card-text>
-      </v-card>
+                    </div>
+                  </v-col>
 
-      <!-- Image Display Container -->
-      <v-container class="text-center mt-8">
-        <v-card flat style="background: transparent">
-          <div class="image-container">
-            <v-img
-              :key="currentStep"
-              class="fit-image"
-              :src="stepImages[currentStep]"
-              :alt="`Step ${currentStep} illustration`"
-              contain
-              rounded="lg"
-              data-aos="fade-zoom-in"
-              data-aos-duration="700"
-              data-aos-easing="ease-in-out"
-            >
-              <template v-slot:placeholder>
-                <v-row class="fill-height ma-0" align="center" justify="center">
-                  <v-progress-circular
-                    indeterminate
-                    color="grey lighten-5"
-                  ></v-progress-circular>
+                  <!-- Image Section -->
+                  <v-col cols="12" md="6" class="text-center">
+                    <v-img
+                      :src="stepImages[n]"
+                      :alt="`Step ${n} illustration`"
+                      max-width="100%"
+                      max-height="300"
+                      contain
+                      rounded="lg"
+                      class="elevation-0"
+                      data-aos="fade-zoom-in"
+                      data-aos-duration="1000"
+                    >
+                      <template v-slot:placeholder>
+                        <v-row
+                          class="fill-height ma-0"
+                          align="center"
+                          justify="center"
+                        >
+                          <v-progress-circular indeterminate color="primary" />
+                        </v-row>
+                      </template>
+                    </v-img>
+                  </v-col>
                 </v-row>
-              </template>
-            </v-img>
-          </div>
-        </v-card>
-      </v-container>
+              </v-card>
+            </v-stepper-content>
+          </v-stepper-items>
+        </v-stepper>
+      </v-card>
     </v-container>
   </section>
 </template>
@@ -163,6 +96,38 @@ export default {
       },
     };
   },
+  methods: {
+    getStepLabel(n) {
+      const labels = [
+        this.$t("about.section.onboarding.signup"),
+        this.$t("about.section.onboarding.create_profile"),
+        this.$t("about.section.onboarding.fill_info"),
+        this.$t("about.section.onboarding.submit"),
+        this.$t("about.section.onboarding.start_connect"),
+      ];
+      return labels[n - 1];
+    },
+    getStepTitle(n) {
+      const titles = [
+        "Create Camdigikey Account",
+        "Profile Creation",
+        "Fill In Information",
+        "Submit Application",
+        "Start Connecting",
+      ];
+      return titles[n - 1];
+    },
+    getStepDescription(n) {
+      const descriptions = [
+        "To log into Startup Cambodia, you must have a Camdigikey account. If you don’t have one yet, you can create one. See the user guide for help.",
+        "After logging in, go to the profile page and click the 'Create Profile' button under your role: Startup, Mentor, or Investor.",
+        "Fill out all the required fields in the profile form with accurate and complete information.",
+        "Review your application details carefully before submitting.",
+        "You're all set! Start exploring the Startup Cambodia ecosystem and connect with others.",
+      ];
+      return descriptions[n - 1];
+    },
+  },
   mounted() {
     AOS.init({ once: false });
     AOS.refresh();
@@ -171,17 +136,10 @@ export default {
 </script>
 
 <style scoped>
-.image-container {
-  width: 100%;
-  height: 600px;
-  position: relative;
-}
-.fit-image {
-  width: 100%;
-  height: 600px;
-  border-radius: 12px;
+h3 {
+  line-height: 1.4;
 }
 .v-img {
-  transition: all 0.3s ease-in-out;
+  border-radius: 12px;
 }
 </style>

@@ -782,7 +782,8 @@
   "button": {
     "done": "រួចរាល់",
     "more": "បន្ថែម",
-    "filter": "ច្រោះព័ត៌មាន"
+    "filter": "ច្រោះព័ត៌មាន",
+    "startnow": "ចាប់ផ្ដើមឥឡូវនេះ"
   },
   "programSharing": {
     "programsharing_landing_title": "ផ្ញើយោបល់កម្មវិធីរបស់អ្នកមកយើង",

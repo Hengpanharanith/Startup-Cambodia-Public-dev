@@ -829,7 +829,8 @@
   "button": {
     "done": "Done",
     "more": "More",
-    "filter": "Filter"
+    "filter": "Filter",
+    "startnow": "Start Now"
   },
   "programSharing": {
     "programsharing_landing_title": "Send Us Your Program Suggestion",
