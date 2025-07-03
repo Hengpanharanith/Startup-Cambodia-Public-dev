@@ -68,26 +68,27 @@
     </v-card>
 
     <!-- Edit Dialog -->
-    <v-container class="pa-8">
-      <v-dialog v-model="editDialog" max-width="700px">
-        <v-card>
-          <v-card-title class="font-weight-bold text-h6">
-            Edit Program Detail
-          </v-card-title>
-          <v-card-subtitle class="text-subtitle-2 black--text"></v-card-subtitle>
-          <v-divider></v-divider>
-          <v-card-text>
-            <FormPSStep1
-              :form="editForm"
-              :programCoverages="programCoverages"
-              :programCategories="programCategories"
-              :programTypes="programTypes"
-              :menuStart="menuStart"
-              :menuEnd="menuEnd"
-              @submit="saveEdit"
-              @close="editDialog = false"
-            />
-          </v-card-text>
+    <v-container>
+      <v-dialog v-model="editDialog" max-width="900px">
+        <v-card class="pa-8" elevation="0">
+          <v-card class="form-card rounded-md" elevation="0">
+            <v-card-title class="font-weight-bold text-h5 pb-2 black--text">
+              Edit Program Detail
+            </v-card-title>
+            <v-divider class="mb-4"></v-divider>
+            <v-card-text>
+              <FormPSStep1
+                :form="editForm"
+                :programCoverages="programCoverages"
+                :programCategories="programCategories"
+                :programTypes="programTypes"
+                :menuStart="menuStart"
+                :menuEnd="menuEnd"
+                @submit="saveEdit"
+                @close="editDialog = false"
+              />
+            </v-card-text>
+          </v-card>
         </v-card>
       </v-dialog>
     </v-container>
@@ -216,3 +217,8 @@ export default {
   },
 };
 </script>
+<style>
+.form-card {
+  border: 1px solid #b0b0b0 !important;
+}
+</style>
