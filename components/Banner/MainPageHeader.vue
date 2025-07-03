@@ -309,7 +309,7 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 10000;
+  z-index: 1;
 }
 
 .scroll-down-indicator .v-icon {
