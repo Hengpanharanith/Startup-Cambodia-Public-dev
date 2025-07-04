@@ -6,9 +6,19 @@
     <v-card class="pa-6 elevation-3">
       <!-- Title -->
       <v-card-title
-        class="text-h4 font-weight-bold primary--text justify-space-between"
+        class="d-flex align-center justify-space-between text-h4 font-weight-bold primary--text"
       >
-        Program Submission Verification
+        <span>Program Submission Verification</span>
+        <v-btn
+          elevation="1"
+          outlined
+          color="black"
+          @click="editDialog = true"
+          class="ml-4"
+        >
+          <v-icon left>mdi-pencil</v-icon>
+          Edit
+        </v-btn>
       </v-card-title>
       <v-card-subtitle>
         <div class="text-subtitle-2 black--text">
@@ -47,9 +57,6 @@
             :thumbnail="program.thumbnail"
           />
         </div>
-        <v-btn block elevation="1" outlined @click="editDialog = true"
-          ><v-icon left dark>mdi-pencil</v-icon>Edit</v-btn
-        >
       </v-card-text>
 
       <!-- Card Footer Buttons -->
@@ -85,6 +92,7 @@
                 :menuStart="menuStart"
                 :menuEnd="menuEnd"
                 @submit="saveEdit"
+                :showFields="false"
                 @close="editDialog = false"
               />
             </v-card-text>
@@ -105,7 +113,7 @@ export default {
   components: { CardProgramSubmissionDetail, FormPSStep1 },
   data() {
     return {
-      loading: false, // set to false to show content immediately
+      loading: true,
       submitting: false,
       program: {
         programTitle: "Startup Bootcamp 2025",
@@ -183,18 +191,20 @@ export default {
       this.editDialog = true;
     },
     async saveEdit() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
-      const id = this.$route.params.programId;
-      try {
-        await axios.put(`${API_BASE}/${id}`, this.editForm, {
-          params: { token },
-        });
-        this.program = { ...this.editForm };
-        this.editDialog = false;
-      } catch (e) {
-        alert("Failed to save changes.");
-      }
+      this.program = { ...this.editForm };
+      this.editDialog = false;
+      // const urlParams = new URLSearchParams(window.location.search);
+      // const token = urlParams.get("token");
+      // const id = this.$route.params.programId;
+      // try {
+      //   await axios.put(`${API_BASE}/${id}`, this.editForm, {
+      //     params: { token },
+      //   });
+      //   this.program = { ...this.editForm };
+      //   this.editDialog = false;
+      // } catch (e) {
+      //   alert("Failed to save changes.");
+      // }
     },
     async confirmSubmit() {
       this.submitting = true;

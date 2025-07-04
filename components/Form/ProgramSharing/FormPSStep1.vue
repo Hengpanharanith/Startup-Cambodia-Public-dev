@@ -23,8 +23,7 @@
             />
           </ValidationProvider>
           <v-row>
-            <v-col cols="6">
-              <!-- Email -->
+            <v-col cols="6" v-if="showFields">
               <ValidationProvider
                 name="Email"
                 rules="required|email"
@@ -37,7 +36,7 @@
                 />
               </ValidationProvider>
             </v-col>
-            <v-col cols="6">
+            <v-col cols="6" v-if="showFields">
               <ValidationProvider
                 name="Phone Number"
                 rules="numeric"
@@ -268,6 +267,10 @@ export default {
     programCoverages: Array,
     programCategories: Array,
     programTypes: Array,
+    showFields: {
+      type: Boolean,
+      default: true,
+    },
   },
   methods: {
     resetValidation() {
