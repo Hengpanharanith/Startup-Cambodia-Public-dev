@@ -58,7 +58,9 @@ export default {
     },
     navMenu() {
       return [
+        // About tab
         { text: this.$t("about"), to: "/about" },
+        // Program tab
         {
           text: this.$t("programSharing.navbar_title"),
           to: "/programsharing",
@@ -70,7 +72,9 @@ export default {
             },
           ],
         },
+        // Event Tab
         { text: this.$t("event.title"), to: "/event" },
+        // Resource Tab
         {
           text: this.$t("resource"),
           type: "group",
@@ -80,6 +84,7 @@ export default {
             text: this.$t(`menu.resource.${e.slug}`),
           })),
         },
+        // Ecosystem tab
         {
           text: this.$t("ecosystem"),
           to: "/ecosystem",
@@ -101,47 +106,49 @@ export default {
               text: this.$t("eso.title"),
               to: "/ecosystem/discover/category/eso",
             },
+          ],
+        },
+        // Stakeholders tab as a main tab
+        {
+          text: this.$t("menu.other_stakeholders"),
+          to: "",
+          type: "group",
+          subitems: [
             {
-              to: "",
-              text: this.$t("menu.other_stakeholders"),
-              subitems: [
-                {
-                  to: "/ecosystem/discover/category/academic-institution",
-                  text: this.$t("menu.academic-institution"),
-                },
-                {
-                  to: "/ecosystem/discover/category/co-working-space",
-                  text: this.$t("menu.co-working-space"),
-                },
-                {
-                  to: "/ecosystem/discover/category/community-and-association",
-                  text: this.$t("menu.community-and-association"),
-                },
-                {
-                  to: "/ecosystem/discover/category/corporate",
-                  text: this.$t("menu.corporate"),
-                },
-                {
-                  to: "/ecosystem/discover/category/development-partner",
-                  text: this.$t("menu.development-partner"),
-                },
-                {
-                  to: "/ecosystem/discover/category/government-institution",
-                  text: this.$t("menu.government-institution"),
-                },
-                {
-                  to: "/ecosystem/discover/category/incubator-and-accelerator",
-                  text: this.$t("menu.incubator-and-accelerator"),
-                },
-                {
-                  to: "/ecosystem/discover/category/service-provider",
-                  text: this.$t("menu.service-provider"),
-                },
-                {
-                  to: "/ecosystem/discover/category/media",
-                  text: this.$t("menu.media"),
-                },
-              ],
+              to: "/ecosystem/discover/category/academic-institution",
+              text: this.$t("menu.academic-institution"),
+            },
+            {
+              to: "/ecosystem/discover/category/co-working-space",
+              text: this.$t("menu.co-working-space"),
+            },
+            {
+              to: "/ecosystem/discover/category/community-and-association",
+              text: this.$t("menu.community-and-association"),
+            },
+            {
+              to: "/ecosystem/discover/category/corporate",
+              text: this.$t("menu.corporate"),
+            },
+            {
+              to: "/ecosystem/discover/category/development-partner",
+              text: this.$t("menu.development-partner"),
+            },
+            {
+              to: "/ecosystem/discover/category/government-institution",
+              text: this.$t("menu.government-institution"),
+            },
+            {
+              to: "/ecosystem/discover/category/incubator-and-accelerator",
+              text: this.$t("menu.incubator-and-accelerator"),
+            },
+            {
+              to: "/ecosystem/discover/category/service-provider",
+              text: this.$t("menu.service-provider"),
+            },
+            {
+              to: "/ecosystem/discover/category/media",
+              text: this.$t("menu.media"),
             },
           ],
         },
