@@ -1,78 +1,34 @@
 <template>
-  <v-container
-    class="d-flex justify-center align-center fill-height"
-    style="background-color: transparent"
-  >
-    <v-card class="pa-6 elevation-3">
-      <!-- Title -->
-      <v-card-title
-        class="d-flex align-center justify-space-between text-h4 font-weight-bold primary--text"
-      >
-        <span>Program Submission Verification</span>
-        <v-btn
-          elevation="1"
-          outlined
-          color="black"
-          @click="editDialog = true"
-          class="ml-4"
-        >
-          <v-icon left>mdi-pencil</v-icon>
-          Edit
-        </v-btn>
-      </v-card-title>
-      <v-card-subtitle>
-        <div class="text-subtitle-2 black--text">
-          Please review the program details below before submitting. You may
-          edit any information if needed.
+  <v-container class="d-flex justify-center align-center fill-height">
+    <!-- Card Body -->
+    <v-card-text>
+      <div v-if="loading" class="text-center py-6">
+        <v-progress-circular indeterminate color="primary" size="40" />
+        <div class="mt-4 grey--text text-subtitle-1">
+          Loading program details...
         </div>
-      </v-card-subtitle>
+      </div>
 
-      <v-divider class="mb-4"></v-divider>
-
-      <!-- Card Body -->
-      <v-card-text>
-        <div v-if="loading" class="text-center py-6">
-          <v-progress-circular indeterminate color="primary" size="40" />
-          <div class="mt-4 grey--text text-subtitle-1">
-            Loading program details...
-          </div>
-        </div>
-
-        <div v-else>
-          <!-- Program Detail View -->
-          <CardProgramSubmissionDetail
-            :programTitle="program.programTitle"
-            :email="program.email"
-            :phoneNumber="program.phoneNumber"
-            :programCoverage="program.programCoverage"
-            :programCategory="program.programCategory"
-            :programType="program.programType"
-            :startDate="program.startDate"
-            :endDate="program.endDate"
-            :address="program.address"
-            :status="program.status"
-            :url="program.url"
-            :description="program.description"
-            :content="program.content"
-            :thumbnail="program.thumbnail"
-          />
-        </div>
-      </v-card-text>
-
-      <!-- Card Footer Buttons -->
-      <v-divider class="my-2"></v-divider>
-      <v-card-actions class="justify-end pt-4">
-        <v-btn @click="cancelSubmit" elevation="1">Cancel</v-btn>
-        <v-btn
-          elevation="1"
-          color="primary"
-          @click="confirmSubmit"
-          :loading="submitting"
-        >
-          Confirm Submit
-        </v-btn>
-      </v-card-actions>
-    </v-card>
+      <div v-else>
+        <!-- Program Detail View -->
+        <CardProgramSubmissionDetail
+          :programTitle="program.programTitle"
+          :email="program.email"
+          :phoneNumber="program.phoneNumber"
+          :programCoverage="program.programCoverage"
+          :programCategory="program.programCategory"
+          :programType="program.programType"
+          :startDate="program.startDate"
+          :endDate="program.endDate"
+          :address="program.address"
+          :status="program.status"
+          :url="program.url"
+          :description="program.description"
+          :content="program.content"
+          :thumbnail="program.thumbnail"
+        />
+      </div>
+    </v-card-text>
 
     <!-- Edit Dialog -->
     <v-container>
@@ -93,7 +49,7 @@
                 :menuEnd="menuEnd"
                 @submit="saveEdit"
                 :showFields="false"
-                @close="editDialog = false"
+                @close="handleClose"
               />
             </v-card-text>
           </v-card>
@@ -113,7 +69,7 @@ export default {
   components: { CardProgramSubmissionDetail, FormPSStep1 },
   data() {
     return {
-      loading: true,
+      loading: false,
       submitting: false,
       program: {
         programTitle: "Startup Bootcamp 2025",
@@ -125,7 +81,12 @@ export default {
         startDate: "2025-08-01",
         endDate: "2025-08-10",
         address: "Phnom Penh, Cambodia",
-        status: "Pending",
+        status: "success",
+        //status:
+        // pending_confirm,
+        // rejected
+        // under_review
+        // success
         url: "https://www.facebook.com/panharanith.heng.1/",
         thumbnail:
           "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg",
@@ -171,6 +132,7 @@ export default {
       programTypes: ["Workshop"],
     };
   },
+
   async mounted() {
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
@@ -185,10 +147,29 @@ export default {
       this.loading = false;
     }
   },
+  watch: {
+    "$route.query.edit"(newVal) {
+      if (newVal === "true") {
+        this.editDialog = true;
+      } else {
+        this.editDialog = false;
+      }
+    },
+  },
+  mounted() {
+    const editMode = this.$route.query.edit === "true";
+    if (editMode) {
+      this.editDialog = true; // or call method to open dialog
+    }
+  },
   methods: {
-    editProgram() {
-      this.editForm = { ...this.program };
-      this.editDialog = true;
+    // editProgram() {
+    //   this.editForm = { ...this.program };
+    //   this.editDialog = true;
+    // },
+    handleClose() {
+      this.editDialog = false;
+      this.$router.replace({ path: this.$route.path, query: {} });
     },
     async saveEdit() {
       this.program = { ...this.editForm };
