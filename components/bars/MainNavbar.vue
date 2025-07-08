@@ -3,7 +3,6 @@
     :color="isTop ? 'transparent' : 'black'"
     class="main-navbar"
     height="75px"
-    
     fixed
     dark
     flat
@@ -33,15 +32,20 @@
         <!--          </v-hover>-->
         <!--        </template> -->
         <v-tabs
-          class="navigator-hidden flex-grow-1 flex-shrink-1"
+          class="navigator-hidden flex-grow-1 flex-shrink-1 py-0"
           background-color="transparent"
           active-class="primary--text"
           hide-slider
           optional
           right
+          height="36"
         >
           <template v-for="(item, key) in navMenu">
-            <v-tab v-if="item.type != 'group'" :key="'tab-' + key" :to="item.to"
+            <v-tab
+              v-if="item.type != 'group'"
+              :key="'tab-' + key"
+              :to="item.to"
+              class="text-body-1 px-2"
               >{{ item.text }}
             </v-tab>
             <NestedNavMenu
@@ -50,6 +54,7 @@
               :to="item.to"
               :items="item.subitems"
               :label="item.text"
+              class="text-body-1 px-2"
               prevent
             />
           </template>

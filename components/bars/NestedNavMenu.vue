@@ -2,8 +2,8 @@
   <v-menu
     v-model="visible"
     @input="onInputMenu"
-    open-on-hover="!visible"
-    close-on-content-click="false"
+    :open-on-hover="!visible"
+    :close-on-content-click="false"
     :offset-y="prevent"
     :offset-x="!prevent"
     :z-index="200"
@@ -26,12 +26,10 @@
           :block="block"
           :class="{ 'hover-effect': hover }"
         >
-          <!-- <v-list-item-content 
-            >{{ label }}</v-list-item-content
-          >
+          <v-list-item-content>{{ label }}</v-list-item-content>
           <v-list-item-action>
             <v-icon right>mdi-menu-right</v-icon>
-          </v-list-item-action> -->
+          </v-list-item-action>
         </v-list-item>
       </v-hover>
     </template>
@@ -185,7 +183,8 @@ export default {
 }
 
 .v-app-bar.main-navbar .v-tab {
-  font-family: Arial, Helvetica, KantumruyPro-Bold, sans-serif;
+ 
+  font-size: 16px;
 }
 
 .v-app-bar.main-navbar
@@ -209,7 +208,7 @@ export default {
 .v-list-item {
   cursor: pointer;
   padding-left: 8px !important; /* Adjust padding as needed */
-  font-size: 1rem;
+  font-size: 16px;
 }
 .v-list-item
 
