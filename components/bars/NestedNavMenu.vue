@@ -183,7 +183,6 @@ export default {
 }
 
 .v-app-bar.main-navbar .v-tab {
- 
   font-size: 16px;
 }
 

@@ -101,6 +101,7 @@ export default {
             {
               to: "",
               text: this.$t("menu.other_stakeholders"),
+              type: "group",
               subitems: [
                 {
                   to: "/ecosystem/discover/category/academic-institution",

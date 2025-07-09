@@ -163,8 +163,11 @@ export default {
 }
 
 .v-app-bar.main-navbar .v-tab {
-  font-family: Arial, Helvetica, "KantumruyPro-Bold", sans-serif;
-  font-size: 1.2rem;
+  font-family: "KantumruyPro-Regular", sans-serif !important;
+  /* font-size: 1.2rem; */
+  font-size: 20px !important;
+  text-transform: none !important;
+  padding: 20px !important;
 }
 
 .v-app-bar.main-navbar
