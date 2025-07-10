@@ -17,7 +17,7 @@
             v-slot="{ errors }"
           >
             <v-text-field
-              v-model="form.programTitle"
+              v-model="form.title"
               label="Program Title"
               :error-messages="errors"
             />
@@ -43,7 +43,7 @@
                 v-slot="{ errors }"
               >
                 <v-text-field
-                  v-model="form.phoneNumber"
+                  v-model="form.phone"
                   label="Phone Number"
                   :error-messages="errors"
                 />
@@ -51,7 +51,7 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="4">
+            <v-col cols="12" md="4" class="mt-6">
               <ValidationProvider
                 name="Program Coverage"
                 rules="required"
@@ -62,69 +62,71 @@
                     >Program Coverage</label
                   >
                   <v-radio-group
-                    v-model="form.programCoverage"
+                    v-model="form.is_local"
                     class="custom-radio"
+                    :error-messages="errors"
                   >
                     <v-radio
                       v-for="type in programCoverages"
-                      :key="type"
-                      :label="type"
-                      :value="type"
+                      :key="type.value"
+                      :label="type.label"
+                      :value="type.value"
                       color="primary"
                       class="mb-2"
                     />
                   </v-radio-group>
-                  <div
-                    v-if="errors && errors.length"
-                    class="error--text text-caption mt-1"
-                  >
-                    {{ errors[0] }}
-                  </div>
                 </div>
               </ValidationProvider>
             </v-col>
-            <v-col cols="4">
-              <ValidationProvider
-                name="Program Category"
-                rules="required"
-                v-slot="{ errors }"
-              >
-                <v-select
-                  class="category-dropdown mt-2"
-                  v-model="form.programCategory"
-                  :items="programCategories"
-                  label="Program Category"
-                  :error-messages="errors"
-                  :menu-props="{ maxWidth: '550', offsetY: true }"
-                  attach
-                />
-              </ValidationProvider>
-            </v-col>
-            <v-col cols="4">
-              <ValidationProvider
-                name="Program Type"
-                rules="required"
-                v-slot="{ errors }"
-              >
-                <v-select
-                  class="category-dropdown mt-2"
-                  :menu-props="{ maxWidth: '400', offsetY: true }"
-                  v-model="form.programType"
-                  :items="programTypes"
-                  label="Program Type"
-                  :error-messages="errors"
-                  attach
-                />
-              </ValidationProvider>
+            <v-col cols="12" md="8">
+              <v-row>
+                <v-col cols="12">
+                  <ValidationProvider
+                    name="Program Type"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
+                    <v-select
+                      v-model="form.program_type"
+                      :items="programTypes"
+                      item-text="label"
+                      item-value="value"
+                      label="Program Type"
+                      :error-messages="errors"
+                      :loading="loadingProgramTypes"
+                      :disabled="loadingProgramTypes"
+                      attach
+                      class="category-dropdown"
+                    />
+                  </ValidationProvider>
+                </v-col>
+                <v-col cols="12">
+                  <ValidationProvider
+                    name="Program Category"
+                    rules="required"
+                    v-slot="{ errors }"
+                  >
+                    <v-select
+                      v-model="form.category"
+                      :items="programCategories"
+                      item-text="label"
+                      item-value="value"
+                      label="Program Category"
+                      :error-messages="errors"
+                      attach
+                      class="category-dropdown"
+                      :loading="loadingProgramCategories"
+                      :disabled="loadingProgramCategories"
+                    />
+                  </ValidationProvider>
+                </v-col>
+              </v-row>
+              <v-row> </v-row>
             </v-col>
           </v-row>
-          <ValidationProvider
-            name="Thumbnail"
-            rules="required"
-            v-slot="{ errors }"
-          >
+          <ValidationProvider name="Thumbnail" v-slot="{ errors }">
             <v-file-input
-              v-model="form.thumbnail"
+              v-model="form.image"
               label="Upload Thumbnail"
               prepend-icon="mdi-upload"
               accept="image/*"
@@ -144,10 +146,11 @@
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
+                  attach
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="form.startDate"
+                      v-model="form.start_date"
                       label="Start Date"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -157,7 +160,7 @@
                     />
                   </template>
                   <v-date-picker
-                    v-model="form.startDate"
+                    v-model="form.start_date"
                     @input="menuStart = false"
                   />
                 </v-menu>
@@ -175,10 +178,11 @@
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
+                  attach
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
-                      v-model="form.endDate"
+                      v-model="form.end_date"
                       label="End Date"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -188,7 +192,7 @@
                     />
                   </template>
                   <v-date-picker
-                    v-model="form.endDate"
+                    v-model="form.end_date"
                     @input="menuEnd = false"
                   />
                 </v-menu>
@@ -197,7 +201,17 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <v-text-field v-model="form.url" label="URL" />
+              <ValidationProvider
+                name="URL"
+                rules="required|max:255"
+                v-slot="{ errors }"
+              >
+                <v-text-field
+                  v-model="form.apply_url"
+                  label="URL"
+                  :error-messages="errors"
+                />
+              </ValidationProvider>
             </v-col>
           </v-row>
           <v-row>
@@ -206,12 +220,31 @@
                 <label class="editor-label font-weight-light"
                   >Description</label
                 >
-                <Editor
-                  class="editor-textarea mt-2"
-                  :detail="form.description"
-                  @editorDetail="form.description = $event"
-                  :theme="'bubble'"
-                />
+                <ValidationProvider
+                  name="Description"
+                  rules="required"
+                  v-slot="{ errors, validate }"
+                >
+                  <Editor
+                    ref="descriptionProvider"
+                    class="editor-textarea mt-2"
+                    :detail="form.description"
+                    @editorDetail="
+                      (val) => {
+                        form.description = val;
+                        validate(val); // trigger VeeValidate manually
+                      }
+                    "
+                    :theme="'bubble'"
+                  />
+
+                  <span
+                    v-if="errors.length && !form.description"
+                    class="red--text text-sm mt-2 d-block"
+                  >
+                    {{ errors[0] }}
+                  </span>
+                </ValidationProvider>
               </div>
             </v-col>
           </v-row>
@@ -219,12 +252,31 @@
             <v-col cols="12">
               <div class="mt-4 mb-8">
                 <label class="editor-label font-weight-light">Content</label>
-                <Editor
-                  class="editor-textarea mt-2"
-                  :detail="form.content"
-                  @editorDetail="form.content = $event"
-                  :theme="'snow'"
-                />
+                <ValidationProvider
+                  name="Content"
+                  rules="required"
+                  v-slot="{ errors, validate }"
+                  ref="contentProvider"
+                >
+                  <Editor
+                    class="editor-textarea mt-2"
+                    :detail="form.content"
+                    @editorDetail="
+                      (val) => {
+                        form.content = val;
+                        validate(val); // manually trigger validation
+                      }
+                    "
+                    :theme="'snow'"
+                  />
+
+                  <span
+                    v-if="errors.length && !form.content"
+                    class="red--text text-sm mt-2 d-block"
+                  >
+                    {{ errors[0] }}
+                  </span>
+                </ValidationProvider>
               </div>
             </v-col>
           </v-row>
@@ -236,9 +288,7 @@
                 large
                 color="primary"
                 class="ml-2"
-                @click="
-                  () => validate().then((valid) => valid && $emit('submit'))
-                "
+                @click="handleSubmit(validate)"
               >
                 Submit
               </v-btn>
@@ -260,10 +310,37 @@ export default {
     ValidationProvider,
     Editor,
   },
+  data() {
+    return {
+      step: 1,
+    };
+  },
   props: {
     form: Object,
-    menuStart: Boolean,
-    menuEnd: Boolean,
+    menuEnd: {
+      type: Boolean,
+      default: false,
+    },
+    menuStart: {
+      type: Boolean,
+      default: false,
+    },
+    programTypes: {
+      type: Array,
+      default: () => [],
+    },
+    programCategories: {
+      type: Array,
+      default: () => [],
+    },
+    loadingProgramTypes: {
+      type: Boolean,
+      default: false,
+    },
+    loadingProgramCategories: {
+      type: Boolean,
+      default: false,
+    },
     programCoverages: Array,
     programCategories: Array,
     programTypes: Array,
@@ -273,11 +350,17 @@ export default {
     },
   },
   methods: {
+    handleSubmit(validate) {
+      validate().then((valid) => {
+        if (valid) this.$emit("submit");
+      });
+    },
     resetValidation() {
       if (this.$refs.observer) {
         this.$refs.observer.reset();
       }
     },
+
     resetForm() {
       this.form = {
         programTitle: "",
@@ -286,7 +369,7 @@ export default {
         programCoverage: null,
         programCategory: null,
         thumbnail: null,
-        startDate: "",
+        start_date: "",
         endDate: "",
         url: "",
         description: "",
@@ -299,17 +382,11 @@ export default {
         }
       });
     },
-    onCaptchaVerified(token) {
-      this.$emit("captcha-verified", token);
-    },
-    onCaptchaExpired() {
-      this.$emit("captcha-expired");
-    },
   },
 };
 </script>
 <style>
 .category-dropdown .v-list-item__title {
-  font-size: 14px !important; /* or your desired size */
+  font-size: 16px !important; /* or your desired size */
 }
 </style>

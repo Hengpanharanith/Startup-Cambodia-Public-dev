@@ -81,7 +81,7 @@ export default {
         startDate: "2025-08-01",
         endDate: "2025-08-10",
         address: "Phnom Penh, Cambodia",
-        status: "success",
+        status: "rejected",
         //status:
         // pending_confirm,
         // rejected
@@ -89,7 +89,7 @@ export default {
         // success
         url: "https://www.facebook.com/panharanith.heng.1/",
         thumbnail:
-          "https://letsenhance.io/static/73136da51c245e80edc6ccfe44888a99/1015f/MainBefore.jpg",
+          "https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.",
         content:

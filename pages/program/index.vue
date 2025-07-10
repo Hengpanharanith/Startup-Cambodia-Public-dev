@@ -173,7 +173,14 @@
       />
     </v-container>
 
-    <FormProgramSubmit :visible="dialog" @close="closeDialog" />
+    <FormProgramSubmit
+      :visible="dialog"
+      @close="closeDialog"
+      :programTypes="programTypes"
+      :programCategories="programCategories"
+      :loadingProgramTypes="loadingProgramTypes"
+      :loadingProgramCategories="loadingProgramCategories"
+    />
   </div>
 </template>
 
@@ -204,6 +211,10 @@ export default {
         program_type: "",
       },
       dialog: false,
+      programType: [],
+      programCategory: [],
+      loadingProgramTypes: false,
+      loadingProgramCategories: false,
     };
   },
   head() {
@@ -438,6 +449,8 @@ export default {
     this.filter.program_type = program_type;
   },
   mounted() {
+    this.fetchProgramTypes();
+    this.fetchProgramCategories();
     const { category, program_type } = this.$route.query;
     this.filter.program_type = program_type;
     this.filter.category = category;
@@ -463,6 +476,41 @@ export default {
         this.preview = Object.assign({}, result);
       });
       return detail;
+    },
+    async fetchProgramTypes() {
+      this.loadingProgramTypes = true;
+      try {
+        const res = await this.$axios.get(
+          "public/api/v1/startup-program-type/"
+        );
+        console.log({ d: res.data.data });
+        this.programTypes = res.data.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch program types:", error);
+      } finally {
+        this.loadingProgramTypes = false;
+      }
+    },
+    async fetchProgramCategories() {
+      this.loadingProgramCategories = true;
+      try {
+        // const res = await axios.get("public/api/v1/startup-program-type/");
+        const res = await this.$axios.get(
+          "public/api/v1/startup-program-category/"
+        );
+        console.log({ d: res.data.data });
+        this.programCategories = res.data.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch program types:", error);
+      } finally {
+        this.loadingProgramCategories = false;
+      }
     },
     closeDialog() {
       this.dialog = false;

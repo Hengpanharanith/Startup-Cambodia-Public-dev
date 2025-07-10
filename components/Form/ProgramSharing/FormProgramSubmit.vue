@@ -6,7 +6,12 @@
           <!-- Stepper Header -->
           <v-row no-gutters class="py-8" align="center" justify="space-between">
             <!-- Step 1 -->
-            <v-col cols="5" class="text-center">
+            <v-col
+              cols="5"
+              class="text-center"
+              style="cursor: pointer"
+              @click="goToStep1"
+            >
               <v-avatar
                 size="40"
                 :color="step === 1 ? 'primary' : 'grey lighten-1'"
@@ -40,23 +45,25 @@
               </div>
             </v-col>
           </v-row>
+          <v-divider></v-divider>
           <!-- <v-divider></v-divider> -->
           <!-- Step 1: Form -->
           <FormPSStep1
             ref="step1"
             v-if="step === 1"
             :form="form"
-            :menuStart="menuStart"
-            :menuEnd="menuEnd"
             :programCoverages="programCoverages"
-            :programCategories="programCategories"
-            :programTypes="programTypes"
+            :loadingProgramCategories="loadingProgramCategories"
             @close="$emit('close')"
             @submit="goToStep2"
+            :loadingProgramTypes="loadingProgramTypes"
+            :programCategories="programCategories"
+            :programTypes="programTypes"
           />
 
           <!-- Step 2: Confirmation -->
           <FormPSStep2
+            ref="step2"
             v-if="step === 2"
             :form="form"
             @continue="submitProgram"
@@ -72,13 +79,14 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import axios from "axios";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
-import { required, email, numeric } from "vee-validate/dist/rules";
+import { required, email, numeric, max, min } from "vee-validate/dist/rules";
 import FormPSStep1 from "./FormPSStep1.vue";
 import FormPSStep2 from "./FormPSStep2.vue";
 extend("required", required);
 extend("email", email);
 extend("numeric", numeric);
-
+extend("min", min);
+extend("max", max);
 export default {
   components: {
     ValidationObserver,
@@ -91,44 +99,39 @@ export default {
       type: Boolean,
       default: false,
     },
+    programTypes: Array,
+    loadingProgramTypes: Boolean,
+    programCategories: Array,
+    loadingProgramCategories: Boolean,
   },
   data() {
     return {
       step: 1,
       menuStart: false,
       menuEnd: false,
-      programCoverages: ["National", "International"],
-      programCategories: [
-        "Entrepreneurship Education",
-        "Angel Invester and Venure Capital Networks",
-        "Co-Working Spaces and Inovation Hubs",
-        "Startup Competitions and Pitching Events",
-        "Internationalization Startup Support",
-        "Startup Support Programs",
-        "Mentoship and Coaching Programs",
-        "Startup Incubator and Accelerator",
-        "Others",
+      programCoverages: [
+        { label: "National", value: true },
+        { label: "International", value: false },
       ],
-      programTypes: [
-        "Incubator",
-        "Accelerator",
-        "Hackathon",
-        "Startup Competition and Award",
-        "Mentorship Program",
-      ],
+      programCategories: [],
+      programTypes: [],
+      loadingProgramTypes: false,
+      loadingProgramCategories: false,
+
       form: {
-        programTitle: "",
         email: "",
-        phoneNumber: "",
-        programCoverage: null,
-        programCategory: null,
-        programType: null,
-        thumbnail: null,
-        startDate: "",
-        endDate: "",
-        url: "",
-        description: "",
+        phone: "", // phone instead of phoneNumber
+        title: "", // title instead of programTitle
         content: "",
+        description: "",
+        program_type: null, // number expected
+        category: null, // number expected
+        is_local: null, // boolean
+        start_date: "", // format YYYY-MM-DD
+        end_date: "",
+        address: "", // add if you have an address field
+        apply_url: "",
+        image: null,
       },
     };
   },
@@ -141,6 +144,21 @@ export default {
     },
   },
   methods: {
+    goToStep1() {
+      this.step = 1;
+
+      this.$nextTick(() => {
+        if (this.$refs.step1?.resetValidation) {
+          this.$refs.step1.resetValidation();
+        }
+
+        // Also reset the individual fields for rich text editors
+        const step1 = this.$refs.step1;
+
+        step1?.$refs.descriptionProvider?.reset?.();
+        step1?.$refs.contentProvider?.reset?.();
+      });
+    },
     onCaptchaVerified(token) {
       console.log("Token received:", token); // ✅ You should see this in browser console
       this.recaptchaToken = token;
@@ -152,39 +170,73 @@ export default {
     },
 
     goToStep2() {
-      const formData = new FormData();
-      for (const key in this.form) {
-        formData.append(key, this.form[key]);
-      }
-      console.log("Form submitted:", Object.fromEntries(formData));
+      console.log("Form valid, moving to step 2");
       this.step = 2;
     },
-    // Simulate form submission
-    submitProgram() {
-      alert("Program submitted successfully!");
-      this.resetForm();
-      this.$emit("close");
-      this.step = 1;
+
+    async submitProgram() {
+      try {
+        const formData = new FormData();
+
+        // Append regular fields
+        for (const key in this.form) {
+          if (key !== "image") {
+            formData.append(key, this.form[key] ?? "");
+          }
+        }
+
+        // Append image file if available
+        if (this.form.image) {
+          formData.append("image", this.form.image);
+        }
+
+        const response = await axios.post(
+          "/api/v1/program/submission/",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log("Submission successful");
+
+        // ✅ Show success alert
+        alert("Your program was submitted successfully!");
+
+        // ✅ Reset step and form
+        this.step = 1;
+        this.resetForm();
+
+        // ✅ Close dialog (emit close event)
+        this.$emit("close");
+      } catch (err) {
+        console.error(
+          "API submission error:",
+          err.response?.data || err.message
+        );
+      }
     },
+
     resetForm() {
-      this.recaptchaError = false;
       this.form = {
-        programTitle: "",
         email: "",
-        phoneNumber: "",
-        programCoverage: null,
-        programCategory: null,
-        programType: null,
-        thumbnail: null,
-        startDate: "",
-        endDate: "",
-        url: "",
-        description: "",
+        phone: "",
+        title: "",
         content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
       };
-      this.recaptchaToken = null;
+
       this.$nextTick(() => {
-        // Call the child component's resetValidation method
         if (this.$refs.step1 && this.$refs.step1.resetValidation) {
           this.$refs.step1.resetValidation();
         }
