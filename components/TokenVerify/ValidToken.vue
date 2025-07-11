@@ -12,6 +12,7 @@
       <div v-else>
         <!-- Program Detail View -->
         <CardProgramSubmissionDetail
+          :program="program"
           :title="program.title"
           :is_local="program.is_local"
           :category="program.category?.name"
@@ -55,9 +56,6 @@ export default {
   components: { CardProgramSubmissionDetail, FormPSEdit },
   data() {
     return {
-      props: {
-        program: Object,
-      },
       loading: false,
       submitting: false,
       program: {},

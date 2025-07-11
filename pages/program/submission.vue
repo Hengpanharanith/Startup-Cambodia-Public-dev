@@ -45,10 +45,10 @@ export default {
       },
     };
   },
-  async mounted() {
+  mounted() {
     const token = this.$route.params.token || this.$route.query.token;
     if (token) {
-      await this.fetchProgramSubmission(token);
+      this.fetchProgramSubmission(token);
     }
   },
   methods: {
