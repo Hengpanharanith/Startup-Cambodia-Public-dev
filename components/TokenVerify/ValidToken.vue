@@ -92,29 +92,7 @@ export default {
       this.editDialog = true;
     }
   },
-  async mounted() {
-    const token = this.$route.params.token || this.$route.query.token;
-    console.log("Token:", token);
-    if (token) {
-      await this.fetchProgramSubmission(token);
-    }
-  },
-  methods: {
-    async fetchProgramSubmission(token) {
-      try {
-        const res = await this.$axios.get(
-          `public/api/v1/program/submission/${encodeURIComponent(token)}/`
-        );
-
-        console.log(res.data.data);
-        if (res && res.data && res.data.status) {
-          this.program = res.data.data;
-        }
-      } catch (error) {
-        console.error("Failed to fetch program data:", error);
-      }
-    },
-  },
+  
   // editProgram() {
   //   this.editForm = { ...this.program };
   //   this.editDialog = true;
