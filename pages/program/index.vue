@@ -176,6 +176,8 @@
     <FormProgramSubmit
       :visible="dialog"
       @close="closeDialog"
+      :form="form"
+      @submitProgram="handleProgramSubmit"
       :programTypes="programTypes"
       :programCategories="programCategories"
       :loadingProgramTypes="loadingProgramTypes"
@@ -211,10 +213,25 @@ export default {
         program_type: "",
       },
       dialog: false,
-      programType: [],
-      programCategory: [],
+      programTypes: [],
+      programCategories: [],
       loadingProgramTypes: false,
       loadingProgramCategories: false,
+      form: {
+        email: "",
+        phone: "",
+        title: "",
+        content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
+      },
     };
   },
   head() {
@@ -477,13 +494,65 @@ export default {
       });
       return detail;
     },
+    async handleProgramSubmit() {
+      try {
+        const formData = new FormData();
+
+        for (const key in this.form) {
+          if (key !== "image") {
+            formData.append(key, this.form[key] ?? "");
+          }
+        }
+
+        if (this.form.image) {
+          formData.append("image", this.form.image);
+        }
+
+        await this.$axios.post("/api/v1/program/submission/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        alert("Your program was submitted successfully!");
+        this.resetForm(); // ← make sure this resets `this.form`
+      } catch (err) {
+        console.error(
+          "API submission error:",
+          err.response?.data || err.message
+        );
+      }
+    },
+    resetForm() {
+      this.form = {
+        email: "",
+        phone: "",
+        title: "",
+        content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
+      };
+
+      this.$nextTick(() => {
+        if (this.$refs.step1 && this.$refs.step1.resetValidation) {
+          this.$refs.step1.resetValidation();
+        }
+      });
+    },
     async fetchProgramTypes() {
       this.loadingProgramTypes = true;
       try {
         const res = await this.$axios.get(
           "public/api/v1/startup-program-type/"
         );
-        console.log({ d: res.data.data });
+
         this.programTypes = res.data.data.map((item) => ({
           label: item.name,
           value: item.id,
@@ -497,11 +566,10 @@ export default {
     async fetchProgramCategories() {
       this.loadingProgramCategories = true;
       try {
-        // const res = await axios.get("public/api/v1/startup-program-type/");
         const res = await this.$axios.get(
           "public/api/v1/startup-program-category/"
         );
-        console.log({ d: res.data.data });
+
         this.programCategories = res.data.data.map((item) => ({
           label: item.name,
           value: item.id,

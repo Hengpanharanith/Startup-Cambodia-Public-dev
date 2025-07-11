@@ -17,6 +17,7 @@
             v-slot="{ errors }"
           >
             <v-text-field
+              :value="form.title"
               v-model="form.title"
               label="Program Title"
               :error-messages="errors"
@@ -342,8 +343,6 @@ export default {
       default: false,
     },
     programCoverages: Array,
-    programCategories: Array,
-    programTypes: Array,
     showFields: {
       type: Boolean,
       default: true,

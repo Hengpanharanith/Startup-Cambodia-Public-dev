@@ -53,9 +53,9 @@
             v-if="step === 1"
             :form="form"
             :programCoverages="programCoverages"
-            :loadingProgramCategories="loadingProgramCategories"
             @close="$emit('close')"
             @submit="goToStep2"
+            :loadingProgramCategories="loadingProgramCategories"
             :loadingProgramTypes="loadingProgramTypes"
             :programCategories="programCategories"
             :programTypes="programTypes"
@@ -77,7 +77,7 @@
 <script>
 import AOS from "aos";
 import "aos/dist/aos.css";
-import axios from "axios";
+
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
 import { required, email, numeric, max, min } from "vee-validate/dist/rules";
 import FormPSStep1 from "./FormPSStep1.vue";
@@ -95,14 +95,30 @@ export default {
     FormPSStep2,
   },
   props: {
+    programTypes: {
+      type: Array,
+      default: () => [],
+    },
+    programCategories: {
+      type: Array,
+      default: () => [],
+    },
+    loadingProgramTypes: {
+      type: Boolean,
+      default: false,
+    },
+    loadingProgramCategories: {
+      type: Boolean,
+      default: false,
+    },
+    form: {
+      type: Object,
+      required: true,
+    },
     visible: {
       type: Boolean,
       default: false,
     },
-    programTypes: Array,
-    loadingProgramTypes: Boolean,
-    programCategories: Array,
-    loadingProgramCategories: Boolean,
   },
   data() {
     return {
@@ -113,26 +129,6 @@ export default {
         { label: "National", value: true },
         { label: "International", value: false },
       ],
-      programCategories: [],
-      programTypes: [],
-      loadingProgramTypes: false,
-      loadingProgramCategories: false,
-
-      form: {
-        email: "",
-        phone: "", // phone instead of phoneNumber
-        title: "", // title instead of programTitle
-        content: "",
-        description: "",
-        program_type: null, // number expected
-        category: null, // number expected
-        is_local: null, // boolean
-        start_date: "", // format YYYY-MM-DD
-        end_date: "",
-        address: "", // add if you have an address field
-        apply_url: "",
-        image: null,
-      },
     };
   },
   watch: {
@@ -174,49 +170,8 @@ export default {
       this.step = 2;
     },
 
-    async submitProgram() {
-      try {
-        const formData = new FormData();
-
-        // Append regular fields
-        for (const key in this.form) {
-          if (key !== "image") {
-            formData.append(key, this.form[key] ?? "");
-          }
-        }
-
-        // Append image file if available
-        if (this.form.image) {
-          formData.append("image", this.form.image);
-        }
-
-        const response = await axios.post(
-          "/api/v1/program/submission/",
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-
-        console.log("Submission successful");
-
-        // ✅ Show success alert
-        alert("Your program was submitted successfully!");
-
-        // ✅ Reset step and form
-        this.step = 1;
-        this.resetForm();
-
-        // ✅ Close dialog (emit close event)
-        this.$emit("close");
-      } catch (err) {
-        console.error(
-          "API submission error:",
-          err.response?.data || err.message
-        );
-      }
+    submitProgram() {
+      this.$emit("submitProgram", this.form);
     },
 
     resetForm() {
