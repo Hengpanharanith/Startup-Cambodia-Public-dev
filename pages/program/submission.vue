@@ -20,7 +20,7 @@ import ValidToken from "../../components/TokenVerify/ValidToken.vue";
 // import SuccessComponent from "@/components/Success.vue";
 
 export default {
-  name: "ProgramSubmitVerify",
+  name: "submission",
   layout: "blank", // Nuxt 2 specific
   components: {
     InvalidToken,
