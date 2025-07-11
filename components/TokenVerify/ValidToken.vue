@@ -12,7 +12,6 @@
       <div v-else>
         <!-- Program Detail View -->
         <CardProgramSubmissionDetail
-          :program="program"
           :title="program.title"
           :is_local="program.is_local"
           :category="program.category?.name"
@@ -92,6 +91,29 @@ export default {
     if (editMode) {
       this.editDialog = true;
     }
+  },
+  async mounted() {
+    const token = this.$route.params.token || this.$route.query.token;
+    console.log("Token:", token);
+    if (token) {
+      await this.fetchProgramSubmission(token);
+    }
+  },
+  methods: {
+    async fetchProgramSubmission(token) {
+      try {
+        const res = await this.$axios.get(
+          `public/api/v1/program/submission/${encodeURIComponent(token)}/`
+        );
+
+        console.log(res.data.data);
+        if (res && res.data && res.data.status) {
+          this.program = res.data.data;
+        }
+      } catch (error) {
+        console.error("Failed to fetch program data:", error);
+      }
+    },
   },
   // editProgram() {
   //   this.editForm = { ...this.program };

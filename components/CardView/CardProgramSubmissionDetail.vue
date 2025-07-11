@@ -284,7 +284,6 @@
 export default {
   name: "CardProgramSubmissionDetail",
   props: {
-    program: Object,
     title: String,
     is_local: [Boolean, String],
     category: String,
