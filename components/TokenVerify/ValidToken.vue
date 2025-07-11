@@ -12,20 +12,18 @@
       <div v-else>
         <!-- Program Detail View -->
         <CardProgramSubmissionDetail
-          :programTitle="program.programTitle"
-          :email="program.email"
-          :phoneNumber="program.phoneNumber"
-          :programCoverage="program.programCoverage"
-          :programCategory="program.programCategory"
-          :programType="program.programType"
-          :startDate="program.startDate"
-          :endDate="program.endDate"
+          :title="program.title"
+          :is_local="program.is_local"
+          :category="program.category?.name"
+          :program_type="program.program_type?.name"
+          :startDate="program.start_date"
+          :endDate="program.end_date"
           :address="program.address"
           :status="program.status"
-          :url="program.url"
+          :applyUrl="program.apply_url"
           :description="program.description"
           :content="program.content"
-          :thumbnail="program.thumbnail"
+          :image="program.image"
         />
       </div>
     </v-card-text>
@@ -40,17 +38,7 @@
             </v-card-title>
             <v-divider class="mb-4"></v-divider>
             <v-card-text>
-              <FormPSStep1
-                :form="editForm"
-                :programCoverages="programCoverages"
-                :programCategories="programCategories"
-                :programTypes="programTypes"
-                :menuStart="menuStart"
-                :menuEnd="menuEnd"
-                @submit="saveEdit"
-                :showFields="false"
-                @close="handleClose"
-              />
+              <!-- Form edit  -->
             </v-card-text>
           </v-card>
         </v-card>
@@ -60,93 +48,38 @@
 </template>
 
 <script>
-import axios from "axios";
 import CardProgramSubmissionDetail from "@/components/CardView/CardProgramSubmissionDetail.vue";
-import FormPSStep1 from "@/components/Form/ProgramSharing/FormPSStep1.vue";
-// const API_BASE = "/public/api/v1/startup-program";
+import FormPSEdit from "@/components/Form/ProgramSharing/FormPSEdit.vue";
 
 export default {
-  components: { CardProgramSubmissionDetail, FormPSStep1 },
+  components: { CardProgramSubmissionDetail, FormPSEdit },
   data() {
     return {
+      props: {
+        program: Object,
+      },
       loading: false,
       submitting: false,
-      program: {
-        programTitle: "Startup Bootcamp 2025",
-        by: "Startup Cambodia",
-        date: "2025-07-02",
-        programCategory: "Entrepreneurship Education",
-        programCoverage: true,
-        programType: "Workshop",
-        startDate: "2025-08-01",
-        endDate: "2025-08-10",
-        address: "Phnom Penh, Cambodia",
-        status: "rejected",
-        //status:
-        // pending_confirm,
-        // rejected
-        // under_review
-        // success
-        url: "https://www.facebook.com/panharanith.heng.1/",
-        thumbnail:
-          "https://helpx.adobe.com/content/dam/help/en/photoshop/using/convert-color-image-black-white/jcr_content/main-pars/before_and_after/image-before/Landscape-Color.jpg",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.",
-        content:
-          "Join us for a 10-day intensive program to kickstart your startup journey.",
-      },
+      program: {},
       editDialog: false,
       editForm: {
-        programTitle: "Startup Bootcamp 2025",
-        by: "Startup Cambodia",
-        date: "2025-07-02",
-        programCategory: "Entrepreneurship Education",
-        programCoverage: true,
-        programType: "Workshop",
-        startDate: "2025-08-01",
-        endDate: "2025-08-10",
-        address: "Phnom Penh, Cambodia",
-        status: "Pending",
-        url: "https://www.facebook.com/panharanith.heng.1/",
-        thumbnail:
-          "https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D",
-        description:
-          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.",
-        content:
-          "Join us for a 10-day intensive program to kickstart your startup journey.",
+        email: "",
+        phone: "",
+        title: "",
+        content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
       },
-      menuStart: false,
-      menuEnd: false,
-      programCoverages: true,
-      programCategories: [
-        "Entrepreneurship Education",
-        "Angel Invester and Venure Capital Networks",
-        "Co-Working Spaces and Inovation Hubs",
-        "Startup Competitions and Pitching Events",
-        "Internationalization Startup Support",
-        "Startup Support Programs",
-        "Mentoship and Coaching Programs",
-        "Startup Incubator and Accelerator",
-        "Others",
-      ],
-      programTypes: ["Workshop"],
     };
   },
 
-  async mounted() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get("token");
-    const id = this.$route.params.programId;
-    try {
-      const res = await axios.get(`${API_BASE}/${id}`, { params: { token } });
-      this.program = res.data;
-      this.editForm = { ...res.data };
-    } catch (e) {
-      // this.$router.replace("/invalid-token");
-    } finally {
-      this.loading = false;
-    }
-  },
   watch: {
     "$route.query.edit"(newVal) {
       if (newVal === "true") {
@@ -159,52 +92,16 @@ export default {
   mounted() {
     const editMode = this.$route.query.edit === "true";
     if (editMode) {
-      this.editDialog = true; // or call method to open dialog
+      this.editDialog = true;
     }
   },
-  methods: {
-    // editProgram() {
-    //   this.editForm = { ...this.program };
-    //   this.editDialog = true;
-    // },
-    handleClose() {
-      this.editDialog = false;
-      this.$router.replace({ path: this.$route.path, query: {} });
-    },
-    async saveEdit() {
-      this.program = { ...this.editForm };
-      this.editDialog = false;
-      // const urlParams = new URLSearchParams(window.location.search);
-      // const token = urlParams.get("token");
-      // const id = this.$route.params.programId;
-      // try {
-      //   await axios.put(`${API_BASE}/${id}`, this.editForm, {
-      //     params: { token },
-      //   });
-      //   this.program = { ...this.editForm };
-      //   this.editDialog = false;
-      // } catch (e) {
-      //   alert("Failed to save changes.");
-      // }
-    },
-    async confirmSubmit() {
-      this.submitting = true;
-      const urlParams = new URLSearchParams(window.location.search);
-      const token = urlParams.get("token");
-      const id = this.$route.params.programId;
-      try {
-        await axios.post(`${API_BASE}/${id}/verify`, { token });
-        alert("Program verified and submitted!");
-        this.$router.replace("/success");
-      } catch (e) {
-        alert("Verification failed.");
-      } finally {
-        this.submitting = false;
-      }
-    },
-    cancelSubmit() {
-      this.$router.replace("/");
-    },
+  // editProgram() {
+  //   this.editForm = { ...this.program };
+  //   this.editDialog = true;
+  // },
+  handleClose() {
+    this.editDialog = false;
+    this.$router.replace({ path: this.$route.path, query: {} });
   },
 };
 </script>

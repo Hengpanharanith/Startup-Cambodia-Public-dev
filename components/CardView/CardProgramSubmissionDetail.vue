@@ -155,10 +155,12 @@
         <v-col cols="12" md="12">
           <!-- Title + Edit Button -->
           <div class="d-flex align-center justify-space-between mb-6">
-            <h2 class="text-h4 font-weight-bold orange--text">Program Title</h2>
+            <h2 class="text-h4 font-weight-bold orange--text">
+              {{ program.title }}
+            </h2>
             <nuxt-link
               :to="{
-                path: '/programsharing/ProgramSubmitVerify',
+                path: '/program/submission',
                 query: { edit: true },
               }"
             >
@@ -177,8 +179,8 @@
 
           <!-- Thumbnail -->
           <v-img
-            v-if="thumbnail"
-            :src="thumbnail"
+            v-if="program?.image"
+            :src="program?.image"
             class="rounded-lg mb-6"
             height="350"
             gradient="to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%"
@@ -197,13 +199,7 @@
 
           <div class="mb-6 d-flex flex-wrap">
             <v-chip color="orange" text-color="white" label small class="px-3">
-              {{
-                programCoverage === true
-                  ? "International"
-                  : programCoverage === false
-                  ? "National"
-                  : programCoverage
-              }}
+              {{ program?.is_local ? "National" : "International" }}
             </v-chip>
             <v-chip
               color="green"
@@ -212,7 +208,7 @@
               small
               class="px-3 ml-2"
             >
-              {{ programCategory }}
+              {{ program.category?.name }}
             </v-chip>
             <v-chip
               color="green"
@@ -221,7 +217,7 @@
               small
               class="px-3 ml-2"
             >
-              {{ programType }}
+              {{ program.program_type?.name }}
             </v-chip>
           </div>
           <div class="mb-6">
@@ -229,21 +225,25 @@
               <v-icon class="mr-3" small color="orange"
                 >mdi-calendar-range</v-icon
               >
-              <span class="text-body-1">{{ startDate }} To {{ endDate }}</span>
+              <span class="text-body-1"
+                >{{ program.start_date }} To {{ program.end_date }}</span
+              >
             </div>
             <div class="d-flex align-center mb-3">
               <v-icon class="mr-3" small color="orange">mdi-map-marker</v-icon>
-              <span class="text-body-1">{{ address }}</span>
+              <span class="text-body-1">{{
+                program?.address || "Not provided"
+              }}</span>
             </div>
             <div class="d-flex align-center mb-3">
               <v-icon class="mr-3" small color="orange"
                 >mdi-link-variant</v-icon
               >
               <a
-                :href="url"
+                :href="program?.apply_url"
                 target="_blank"
                 class="text-body-1 text-decoration-none grey--text text--darken-2"
-                >{{ url }}</a
+                >{{ program.apply_url }}</a
               >
             </div>
           </div>
@@ -251,21 +251,14 @@
           <!-- Description and Content -->
           <div class="mb-8">
             <span class="text-h6 orange--text mb-3 font-weight-bold">
-              Description:
+              - Description
             </span>
 
-            <div
-              class="text-body-1 grey--text text--darken-2 mb-6 line-height-1-6"
-            >
-              {{ description }}
-            </div>
-
+            <div v-if="program?.description" v-html="program.description" />
             <span class="text-h6 orange--text mb-3 font-weight-bold">
-              Content:
+              - Content
             </span>
-            <div class="text-body-1 grey--text text--darken-2 line-height-1-6">
-              {{ content }}
-            </div>
+            <div v-if="program?.content" v-html="program.content" />
           </div>
           <v-divider></v-divider>
           <!-- Confirm Submit Button -->
@@ -284,8 +277,6 @@
         </v-col>
       </v-row>
     </v-container>
-
-    <!-- Program Info Section -->
   </div>
 </template>
 
@@ -293,40 +284,25 @@
 export default {
   name: "CardProgramSubmissionDetail",
   props: {
-    programTitle: String,
-    email: String,
-    phoneNumber: String,
-    programCoverage: [String, Boolean],
-    programCategory: String,
-    programType: String,
-    startDate: {
-      type: String,
-      default: "2025-08-01",
-    },
-    endDate: {
-      type: String,
-      default: "2025-08-10",
-    },
-    address: {
-      type: String,
-      default: "2 College Ave W, Stephen Riady Centre Singapore 138607",
-    },
+    title: String,
+    is_local: [Boolean, String],
+    category: String,
+    program_type: String,
+    startDate: String,
+    endDate: String,
+    address: String,
     status: String,
-    url: {
-      type: String,
-      default: "your-url.com",
-    },
-    description: {
-      type: String,
-      default:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam varius, turpis et commodo pharetra.",
-    },
+    applyUrl: String,
+    description: String,
     content: String,
-    thumbnail: String,
+    image: String,
   },
   data() {
     return {
-      editDialog: false,
+      program: {},
+      loading: false,
+      error: null,
+      editForm: false,
     };
   },
 };

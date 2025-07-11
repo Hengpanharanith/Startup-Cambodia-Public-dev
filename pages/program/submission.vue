@@ -8,16 +8,14 @@
     "
   >
     <v-container>
-      <ValidToken v-if="isInvalid" />
+      <ValidToken :program="program" v-if="isInvalid" />
     </v-container>
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import InvalidToken from "@/components/TokenVerify/InvalidToken.vue";
 import ValidToken from "../../components/TokenVerify/ValidToken.vue";
-// import SuccessComponent from "@/components/Success.vue";
 
 export default {
   name: "submission",
@@ -30,28 +28,43 @@ export default {
     return {
       loading: false,
       isInvalid: true,
+      program: {
+        email: "",
+        phone: "",
+        title: "",
+        content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
+      },
     };
   },
-  // mounted() {
-  //   const token = new URLSearchParams(window.location.search).get("token");
-
-  //   if (!token) {
-  //     this.isInvalid = true;
-  //     this.loading = false;
-  //     return;
-  //   }
-
-  //   axios
-  //     .post("/api/verify-token", { token })
-  //     .then(() => {
-  //       this.isInvalid = false;
-  //     })
-  //     .catch(() => {
-  //       this.isInvalid = true;
-  //     })
-  //     .finally(() => {
-  //       this.loading = false;
-  //     });
-  // },
+  async mounted() {
+    const token = this.$route.params.token || this.$route.query.token;
+    if (token) {
+      await this.fetchProgramSubmission(token);
+    }
+  },
+  methods: {
+    async fetchProgramSubmission(token) {
+      try {
+        const res = await this.$axios.get(
+          `/api/v1/program/submission/${token}`
+        );
+        console.log(res.data.data);
+        if (res && res.data && res.data.status) {
+          this.program = res.data.data;
+        }
+      } catch (error) {
+        console.error("Failed to fetch program data:", error);
+      }
+    },
+  },
 };
 </script>
