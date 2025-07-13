@@ -8,7 +8,14 @@
     "
   >
     <v-container>
-      <ValidToken :program="program" v-if="isInvalid" />
+      <div v-if="loading" class="text-center py-6">
+        <v-progress-circular indeterminate color="primary" size="40" />
+        <div class="mt-4 grey--text text-subtitle-1">
+          Loading program details...
+        </div>
+      </div>
+      <ValidToken v-if="!isInvalid && !loading" :program="program" />
+      <InvalidToken v-if="isInvalid" />
     </v-container>
   </div>
 </template>
@@ -24,10 +31,11 @@ export default {
     InvalidToken,
     ValidToken,
   },
+
   data() {
     return {
       loading: false,
-      isInvalid: true,
+      isInvalid: false, // true = token invalid, false = token valid
       program: {
         email: "",
         phone: "",
@@ -45,6 +53,7 @@ export default {
       },
     };
   },
+
   async mounted() {
     const token = this.$route.params.token || this.$route.query.token;
     console.log("Token:", token);
@@ -54,19 +63,24 @@ export default {
   },
   methods: {
     async fetchProgramSubmission(token) {
+      this.loading = true;
       try {
         const res = await this.$axios.get(
-          `/api/v1/program/submission/${encodeURIComponent(
-            token
-          )}/`
+          `/api/v1/program/submission/${encodeURIComponent(token)}`
         );
+        console.log("API response:", res.data);
 
-        console.log(res.data.data);
-        if (res && res.data && res.data.status) {
+        if (res && res.data && res.data.status === true && res.data.data) {
           this.program = res.data.data;
+          this.isInvalid = false;
+        } else {
+          this.isInvalid = true;
         }
       } catch (error) {
         console.error("Failed to fetch program data:", error);
+        this.isInvalid = true;
+      } finally {
+        this.loading = false;
       }
     },
   },

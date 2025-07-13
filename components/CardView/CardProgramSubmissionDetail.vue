@@ -32,7 +32,7 @@
           </h2>
 
           <!-- Text for Under Review status -->
-          <v-row v-if="status === 'under_review'">
+          <v-row v-if="program?.status === 'PENDING_APPROVAL'">
             <v-col cols="10" md="10">
               <p
                 class="text-body-1 font-weight-regular grey--text text--darken-1 mb-4"
@@ -60,7 +60,7 @@
             </v-col>
           </v-row>
           <!-- Text for Rejected status -->
-          <v-row v-if="status === 'rejected'">
+          <v-row v-if="program?.status === 'REJECTED'">
             <v-col cols="10" md="10">
               <p
                 class="text-body-1 font-weight-regular grey--text text--darken-1 mb-4"
@@ -86,7 +86,7 @@
             </v-col>
           </v-row>
           <!-- Text for Pending Confirm status -->
-          <v-row v-if="status === 'pending_confirm'">
+          <v-row v-if="program?.status === 'PENDING_CONFIRM_EMAIL'">
             <v-col cols="10" md="10">
               <p
                 class="text-body-1 font-weight-regular grey--text text--darken-1 mb-4"
@@ -110,7 +110,7 @@
           </v-row>
 
           <!-- Text for Successfully -->
-          <v-row v-if="status === 'success'">
+          <v-row v-if="program?.status === 'SUCCESS'">
             <v-col cols="10" md="10">
               <p
                 class="text-body-1 font-weight-regular grey--text text--darken-1 mb-4"
@@ -155,9 +155,7 @@
         <v-col cols="12" md="12">
           <!-- Title + Edit Button -->
           <div class="d-flex align-center justify-space-between mb-6">
-            <h2 class="text-h4 font-weight-bold orange--text">
-              {{ program.title }}
-            </h2>
+            <h2 class="text-h4 font-weight-bold orange--text"></h2>
             <nuxt-link
               :to="{
                 path: '/program/submission',
@@ -284,22 +282,10 @@
 export default {
   name: "CardProgramSubmissionDetail",
   props: {
-    title: String,
-    is_local: [Boolean, String],
-    category: String,
-    program_type: String,
-    startDate: String,
-    endDate: String,
-    address: String,
-    status: String,
-    applyUrl: String,
-    description: String,
-    content: String,
-    image: String,
+    program: Object,
   },
   data() {
     return {
-      program: {},
       loading: false,
       error: null,
       editForm: false,

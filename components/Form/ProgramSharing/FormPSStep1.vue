@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div data-aos="fade-right" data-aos-duration="500">
     <v-card-title class="ml-4 font-weight-bold primary--text text-h5">
       Program Sharing Details

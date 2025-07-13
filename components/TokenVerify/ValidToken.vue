@@ -11,20 +11,7 @@
 
       <div v-else>
         <!-- Program Detail View -->
-        <CardProgramSubmissionDetail
-          :title="program.title"
-          :is_local="program.is_local"
-          :category="program.category?.name"
-          :program_type="program.program_type?.name"
-          :startDate="program.start_date"
-          :endDate="program.end_date"
-          :address="program.address"
-          :status="program.status"
-          :applyUrl="program.apply_url"
-          :description="program.description"
-          :content="program.content"
-          :image="program.image"
-        />
+        <CardProgramSubmissionDetail :program="program" />
       </div>
     </v-card-text>
 
@@ -53,11 +40,13 @@ import FormPSEdit from "@/components/Form/ProgramSharing/FormPSEdit.vue";
 
 export default {
   components: { CardProgramSubmissionDetail, FormPSEdit },
+  props: {
+    program: Object,
+  },
   data() {
     return {
       loading: false,
       submitting: false,
-      program: {},
       editDialog: false,
       editForm: {
         email: "",
@@ -92,7 +81,7 @@ export default {
       this.editDialog = true;
     }
   },
-  
+
   // editProgram() {
   //   this.editForm = { ...this.program };
   //   this.editDialog = true;
