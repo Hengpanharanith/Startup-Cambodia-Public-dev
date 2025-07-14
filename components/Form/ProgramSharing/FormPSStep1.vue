@@ -1,4 +1,4 @@
-  <template>
+<template>
   <div data-aos="fade-right" data-aos-duration="500">
     <v-card-title class="ml-4 font-weight-bold primary--text text-h5">
       Program Sharing Details
@@ -215,6 +215,18 @@
               </ValidationProvider>
             </v-col>
           </v-row>
+          <v-row>
+            <v-col cols="12">
+              <ValidationProvider name="Address" v-slot="{ errors }">
+                <v-text-field
+                  v-model="form.address"
+                  label="Address"
+                  :error-messages="errors"
+                />
+              </ValidationProvider>
+            </v-col>
+          </v-row>
+
           <v-row>
             <v-col cols="12">
               <div>

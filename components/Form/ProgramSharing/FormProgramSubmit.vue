@@ -176,6 +176,7 @@ export default {
 
     resetForm() {
       this.form = {
+        address: "",
         email: "",
         phone: "",
         title: "",
