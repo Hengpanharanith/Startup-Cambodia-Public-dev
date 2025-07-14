@@ -516,6 +516,8 @@ export default {
 
         alert("Your program was submitted successfully!");
         this.resetForm(); // ← make sure this resets `this.form`
+        this.dialog = false;
+        this.$router.replace({ path: this.$route.path });
       } catch (err) {
         console.error(
           "API submission error:",
