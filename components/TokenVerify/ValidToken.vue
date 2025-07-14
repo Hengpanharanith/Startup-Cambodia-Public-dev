@@ -1,6 +1,5 @@
 <template>
   <v-container class="d-flex justify-center align-center fill-height">
-    <!-- Card Body -->
     <v-card-text>
       <div v-if="loading" class="text-center py-6">
         <v-progress-circular indeterminate color="primary" size="40" />
@@ -10,22 +9,33 @@
       </div>
 
       <div v-else>
-        <!-- Program Detail View -->
-        <CardProgramSubmissionDetail :program="program" />
+        <CardProgramSubmissionDetail
+          :program="program"
+          @confirm-submit="$emit('confirm-submit')"
+          @edit="gotoEditForm"
+        />
       </div>
     </v-card-text>
 
-    <!-- Edit Dialog -->
+    <!-- Edit Form Dialog -->
     <v-container>
       <v-dialog v-model="editDialog" max-width="900px">
         <v-card class="pa-8" elevation="0">
           <v-card class="form-card rounded-md" elevation="0">
-            <v-card-title class="font-weight-bold text-h5 pb-2 black--text">
-              Edit Program Detail
-            </v-card-title>
-            <v-divider class="mb-4"></v-divider>
             <v-card-text>
-              <!-- Form edit  -->
+              <FormPSEdit
+                :form.sync="editForm"
+                :programTypes="programTypes"
+                :programCategories="programCategories"
+                :programCoverages="programCoverages"
+                :loadingProgramTypes="loadingProgramTypes"
+                :loadingProgramCategories="loadingProgramCategories"
+                :menuStart.sync="menuStart"
+                :menuEnd.sync="menuEnd"
+                :showFields="showFields"
+                @submit="handleEditSubmit"
+                @close="handleClose"
+              />
             </v-card-text>
           </v-card>
         </v-card>
@@ -42,57 +52,65 @@ export default {
   components: { CardProgramSubmissionDetail, FormPSEdit },
   props: {
     program: Object,
+    token: String,
+    edit: Boolean,
   },
   data() {
     return {
+      editDialog: false,
+      editForm: {},
+      menuStart: false,
+      menuEnd: false,
+      showFields: true,
       loading: false,
       submitting: false,
-      editDialog: false,
-      editForm: {
-        email: "",
-        phone: "",
-        title: "",
-        content: "",
-        description: "",
-        program_type: null,
-        category: null,
-        is_local: null,
-        start_date: "",
-        end_date: "",
-        address: "",
-        apply_url: "",
-        image: null,
-      },
+      programTypes: [],
+      programCategories: [],
+      programCoverages: [],
+      loadingProgramTypes: false,
+      loadingProgramCategories: false,
     };
   },
-
   watch: {
-    "$route.query.edit"(newVal) {
-      if (newVal === "true") {
-        this.editDialog = true;
+    edit(val) {
+      if (val) {
+        this.openEditDialog();
       } else {
         this.editDialog = false;
       }
     },
   },
   mounted() {
-    const editMode = this.$route.query.edit === "true";
-    if (editMode) {
-      this.editDialog = true;
+    if (this.edit) {
+      this.openEditDialog();
     }
   },
-
-  // editProgram() {
-  //   this.editForm = { ...this.program };
-  //   this.editDialog = true;
-  // },
-  handleClose() {
-    this.editDialog = false;
-    this.$router.replace({ path: this.$route.path, query: {} });
+  methods: {
+    openEditDialog() {
+      this.editForm = { ...this.program };
+      this.editDialog = true;
+    },
+    handleClose() {
+      this.editDialog = false;
+      this.$router.replace({ path: this.$route.path, query: {} });
+    },
+    gotoEditForm() {
+      this.$router.push({
+        path: `/program/submission/${this.token}`,
+        query: { edit: "true" },
+      });
+    },
+    handleEditSubmit(editedData) {
+      this.program = { ...editedData };
+      this.editDialog = false;
+      this.$router.replace({ path: this.$route.path, query: {} });
+      this.$toast.success("Program details updated!");
+    },
   },
 };
 </script>
-<style>
+
+<style scoped>
 .form-card {
   border: 1px solid #b0b0b0 !important;
 }

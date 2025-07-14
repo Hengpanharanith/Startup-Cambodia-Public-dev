@@ -110,7 +110,7 @@
           </v-row>
 
           <!-- Text for Successfully -->
-          <v-row v-if="program?.status === 'SUCCESS'">
+          <v-row v-if="program?.status === 'APPROVED'">
             <v-col cols="10" md="10">
               <p
                 class="text-body-1 font-weight-regular grey--text text--darken-1 mb-4"
@@ -124,14 +124,15 @@
               <p class="text-body-1 grey--text text--darken-1">
                 <span class="font-weight-regular">*Note:</span>Your program has
                 been submitted successfully and is now published. Please click
-                <a href="https://startupcambodia.gov.kh/program/428">
+                <nuxt-link :to="`/program/${program.ref_id}`">
                   <span
                     class="orange--text font-weight-bold"
                     style="text-decoration: underline"
                   >
                     Your Program
                   </span>
-                </a>
+                </nuxt-link>
+
                 to view it in the program list.
               </p>
             </v-col>
@@ -154,25 +155,23 @@
       <v-row class="mt-8">
         <v-col cols="12" md="12">
           <!-- Title + Edit Button -->
-          <div class="d-flex align-center justify-space-between mb-6">
-            <h2 class="text-h4 font-weight-bold orange--text"></h2>
-            <nuxt-link
-              :to="{
-                path: '/program/submission',
-                query: { edit: true },
-              }"
+
+          <div class="d-flex justify-space-between mb-6">
+            <h2 class="text-h4 font-weight-bold orange--text">
+              {{ program?.title }}
+            </h2>
+
+            <v-btn
+              v-if="program?.status === 'PENDING_CONFIRM_EMAIL'"
+              elevation="0"
+              outlined
+              color="grey-darken-2"
+              @click="$emit('edit')"
+              class="text-capitalize"
             >
-              <v-btn
-                elevation="0"
-                outlined
-                color="grey-darken-2"
-                @click="$emit('open-edit', editForm)"
-                class="text-capitalize"
-              >
-                <v-icon left small>mdi-pencil</v-icon>
-                Edit
-              </v-btn>
-            </nuxt-link>
+              <v-icon left small>mdi-pencil</v-icon>
+              Edit
+            </v-btn>
           </div>
 
           <!-- Thumbnail -->
@@ -263,10 +262,12 @@
           <v-row class="mt-8">
             <v-col cols="12" class="d-flex justify-end">
               <v-btn
+                v-if="program?.status === 'PENDING_CONFIRM_EMAIL'"
                 color="primary"
                 class="white--text text-capitalize font-weight-bold px-8 py-3 d-flex"
                 large
                 elevation="0"
+                @click="$emit('confirm-submit')"
               >
                 CONFIRM SUBMIT
               </v-btn>
@@ -290,6 +291,14 @@ export default {
       error: null,
       editForm: false,
     };
+  },
+  method: {
+    gotoEditForm() {
+      this.$router.push({
+        path: `/program/submission/${this.token}`,
+        query: { edit: "true" },
+      });
+    },
   },
 };
 </script>

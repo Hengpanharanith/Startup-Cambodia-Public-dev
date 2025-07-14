@@ -4,8 +4,8 @@
       Program Sharing Details
     </v-card-title>
     <v-card-subtitle class="ml-4 font-weight-semibold text-subtitle-h6">
-      You can fill in a form to suggest your event. Events will be curated to be
-      listed and are subjected to approval.
+      You can edit the details of your submitted event. Changes will be reviewed
+      and are subject to approval.
     </v-card-subtitle>
     <v-card-text class="px-8">
       <ValidationObserver ref="observer" v-slot="{ validate }">
@@ -362,19 +362,20 @@ export default {
 
     resetForm() {
       this.form = {
-        programTitle: "",
         email: "",
-        phoneNumber: "",
-        programCoverage: null,
-        programCategory: null,
-        thumbnail: null,
-        start_date: "",
-        endDate: "",
-        url: "",
-        description: "",
+        phone: "",
+        title: "",
         content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
       };
-      this.recaptchaToken = null;
       this.$nextTick(() => {
         if (this.$refs.observer) {
           this.$refs.observer.reset();
