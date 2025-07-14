@@ -26,6 +26,22 @@
 
       <InvalidToken v-if="isInvalid" />
     </v-container>
+
+    <!-- Vuetify Snackbar for notifications -->
+    <v-snackbar
+      v-model="snackbar.show"
+      :timeout="snackbar.timeout"
+      :color="snackbar.color"
+      bottom
+      right
+    >
+      {{ snackbar.message }}
+      <template v-slot:action="{ attrs }">
+        <v-btn color="white" text v-bind="attrs" @click="snackbar.show = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -60,6 +76,12 @@ export default {
         apply_url: "",
         image: null,
       },
+      snackbar: {
+        show: false,
+        message: "",
+        color: "success",
+        timeout: 3000,
+      },
     };
   },
   computed: {
@@ -74,6 +96,12 @@ export default {
     }
   },
   methods: {
+    showSnackbar(message, color = "success", timeout = 1500) {
+      this.snackbar.message = message;
+      this.snackbar.color = color;
+      this.snackbar.timeout = timeout;
+      this.snackbar.show = true;
+    },
     async fetchProgramSubmission(token) {
       this.loading = true;
       try {
@@ -95,27 +123,31 @@ export default {
     },
     async handleConfirmSubmit() {
       this.loading = true;
-      if (!this.token) return this.$toast.error("Missing token");
+      if (!this.token) {
+        this.showSnackbar("Missing token", "error");
+        this.loading = false;
+        return;
+      }
       try {
         await this.$axios.put(
           `/api/v1/program/submission/${encodeURIComponent(this.token)}/`
         );
-        this.$toast.success("Confirmed!");
-        setTimeout(() => this.$router.push("/"), 1000);
+        this.showSnackbar("Confirmed!", "success");
+        setTimeout(() => this.$router.push("/"), 1500);
         await this.fetchProgramSubmission(this.token);
       } catch (err) {
         console.error(err);
-        this.$toast.error("Failed to confirm.");
+        this.showSnackbar("Failed to confirm.", "error");
       } finally {
         this.loading = false;
       }
     },
     async handleEditSubmit(updatedForm) {
-      // handle saving logic here
-      this.program = { ...updatedForm }; // update local data so card updates
-      this.editDialog = false; // close the edit dialog
+      this.program = { ...updatedForm };
+      this.editDialog = false; // assuming you have this; if not, remove or handle accordingly
       this.$router.replace({ query: {} });
-      // optionally make PUT request here if you want to auto-save
+      this.showSnackbar("Changes saved.", "success");
+      // Optional: make a PUT request here to save changes automatically if needed
     },
   },
 };
