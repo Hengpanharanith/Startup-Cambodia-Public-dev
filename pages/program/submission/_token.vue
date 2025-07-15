@@ -130,11 +130,6 @@ export default {
       this.editDialog = newVal === "true";
     },
   },
-  // computed: {
-  //   editMode() {
-  //     return this.$route.query.edit === "true";
-  //   },
-  // },
   async mounted() {
     this.fetchProgramTypes(),
       this.fetchProgramCategories(),
@@ -206,26 +201,46 @@ export default {
     },
     async handleConfirmSubmit() {
       this.loading = true;
+
       if (!this.token) {
         this.showSnackbar("Missing token", "error");
         this.loading = false;
         return;
       }
+
       try {
+        const formData = new FormData();
+        for (const [key, value] of Object.entries(this.editForm)) {
+          if (key === "program_type" || key === "category") {
+            formData.append(key, value?.value ?? value ?? "");
+          } else if (key !== "image" && key !== "imageFile") {
+            formData.append(key, value ?? "");
+          }
+        }
+        if (this.editForm.imageFile) {
+          formData.append("image", this.editForm.imageFile);
+        }
         await this.$axios.put(
-          `/api/v1/program/submission/${encodeURIComponent(this.token)}/`
+          `/api/v1/program/submission/${encodeURIComponent(this.token)}/`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
         );
         this.showSnackbar("Confirmed!", "success");
+
         setTimeout(() => this.$router.push("/"), 1500);
         await this.fetchProgramSubmission(this.token);
       } catch (err) {
-        console.error(err);
+        console.error("Error response data:", err.response?.data);
         this.showSnackbar("Failed to confirm.", "error");
       } finally {
         this.loading = false;
       }
     },
     handleEditForm() {
+      // Populate editForm with current program data,
+      // but do NOT copy the image file here, just the URL if needed for preview
       this.editForm = {
         ...this.program,
         program_type:
@@ -243,6 +258,9 @@ export default {
           ) ?? null,
 
         is_local: this.program.is_local ?? null,
+
+        // For the file input, keep a separate field for selected file, initially null
+        imageFile: null,
       };
 
       this.editDialog = true;
@@ -254,14 +272,34 @@ export default {
     },
 
     handleConfirmEdit() {
+      const programType = this.editForm.program_type;
+      const category = this.editForm.category;
+
       this.program = {
         ...this.editForm,
-        // Already full objects, no need to map again
-        program_type: this.editForm.program_type ?? null,
-        category: this.editForm.category ?? null,
+        program_type:
+          typeof programType === "object" && programType !== null
+            ? programType
+            : this.programTypes.find(
+                (item) => item.value === programType || item.id === programType
+              ) ?? null,
+
+        category:
+          typeof category === "object" && category !== null
+            ? category
+            : this.programCategories.find(
+                (item) => item.value === category || item.id === category
+              ) ?? null,
+        // Preserve original image URL if no new file selected,
+        // otherwise do not overwrite image URL here
+        image: this.editForm.imageFile
+          ? this.program.image
+          : this.editForm.image,
       };
-      this.editDialog = false;
+
+      console.log("Normalized program:", this.program);
       this.showSnackbar("Changes saved", "success", 1500);
+      this.editDialog = false;
       this.$router.replace({ query: {} });
     },
 

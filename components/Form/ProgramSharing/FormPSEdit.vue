@@ -126,7 +126,7 @@
             </v-col>
           </v-row>
           <ValidationProvider name="Thumbnail" v-slot="{ errors }">
-            <div v-if="showFields">
+            <div>
               <!-- Show preview if existing image is a URL -->
               <v-img
                 v-if="typeof form.image === 'string'"
@@ -136,13 +136,14 @@
                 class="mb-2"
               />
               <v-file-input
-                v-model="form.image"
+                v-model="form.imageFile"
                 label="Upload Thumbnail"
                 prepend-icon="mdi-upload"
                 accept="image/*"
                 :error-messages="errors"
                 placeholder="Select a file"
                 show-size
+                clearable
               />
             </div>
           </ValidationProvider>
@@ -357,14 +358,8 @@ export default {
   },
   methods: {
     async handleSubmit() {
-      // const isValid = await this.$refs.observer.validate();
-      // if (isValid) {
-      //   this.$emit("submit-edit"); 
-      // } else {
-      //   console.warn("Validation failed", this.form);
-      // }
       this.$emit("submit-edit");
-      console.warn("Validation failed", this.form);
+      console.log(this.form);
     },
 
     resetValidation() {
