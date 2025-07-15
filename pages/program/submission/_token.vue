@@ -19,9 +19,8 @@
         v-else-if="!isInvalid"
         :program="program"
         :token="token"
-        :edit="editMode"
+        @edit="handleEditForm"
         @confirm-submit="handleConfirmSubmit"
-        @submit-edit="handleEditSubmit"
       />
 
       <InvalidToken v-if="isInvalid" />
@@ -42,25 +41,62 @@
         </v-btn>
       </template>
     </v-snackbar>
+    <v-dialog v-model="editDialog" max-width="900px">
+      <v-card class="pa-8" elevation="0">
+        <v-card class="form-card rounded-md" elevation="0">
+          <v-card-text>
+            <FormPSEdit
+              ref="formEdit"
+              :form.sync="editForm"
+              :programTypes="programTypes"
+              :programCategories="programCategories"
+              :programCoverages="programCoverages"
+              :loadingProgramTypes="loadingProgramTypes"
+              :loadingProgramCategories="loadingProgramCategories"
+              :menuStart.sync="menuStart"
+              :menuEnd.sync="menuEnd"
+              :showFields="showFields"
+              @submit-edit="handleConfirmEdit"
+              @close="handleClose"
+            />
+          </v-card-text>
+        </v-card>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import InvalidToken from "~/components/TokenVerify/InvalidToken.vue";
 import ValidToken from "~/components/TokenVerify/ValidToken.vue";
-
+import FormPSEdit from "~/components/Form/ProgramSharing/FormPSEdit.vue";
 export default {
   name: "submission",
   layout: "blank",
   components: {
     InvalidToken,
     ValidToken,
+    FormPSEdit,
   },
   data() {
     return {
+      editDialog: false,
+      editForm: {},
       token: null,
+      image: null,
       loading: false,
       isInvalid: false,
+      menuStart: false,
+      menuEnd: false,
+      showFields: false,
+      programTypes: [],
+      programCategories: [],
+      programCoverages: [
+        { label: "National", value: true },
+        { label: "International", value: false },
+      ],
+      loadingProgramTypes: false,
+      loadingProgramCategories: false,
       program: {
         email: "",
         phone: "",
@@ -84,13 +120,25 @@ export default {
       },
     };
   },
-  computed: {
-    editMode() {
-      return this.$route.query.edit === "true";
+  watch: {
+    editDialog(val) {
+      if (!val) {
+        this.$router.replace({ query: {} }); // remove ?edit=true
+      }
+    },
+    "$route.query.edit"(newVal) {
+      this.editDialog = newVal === "true";
     },
   },
+  // computed: {
+  //   editMode() {
+  //     return this.$route.query.edit === "true";
+  //   },
+  // },
   async mounted() {
-    this.token = this.$route.params.token || this.$route.query.token;
+    this.fetchProgramTypes(),
+      this.fetchProgramCategories(),
+      (this.token = this.$route.params.token || this.$route.query.token);
     if (this.token) {
       await this.fetchProgramSubmission(this.token);
     }
@@ -110,6 +158,7 @@ export default {
         );
         if (res?.data?.status === true && res.data.data) {
           this.program = res.data.data;
+
           this.isInvalid = false;
         } else {
           this.isInvalid = true;
@@ -119,6 +168,40 @@ export default {
         this.isInvalid = true;
       } finally {
         this.loading = false;
+      }
+    },
+    async fetchProgramTypes() {
+      this.loadingProgramTypes = true;
+      try {
+        const res = await this.$axios.get(
+          "public/api/v1/startup-program-type/"
+        );
+
+        this.programTypes = res.data.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch program types:", error);
+      } finally {
+        this.loadingProgramTypes = false;
+      }
+    },
+    async fetchProgramCategories() {
+      this.loadingProgramCategories = true;
+      try {
+        const res = await this.$axios.get(
+          "public/api/v1/startup-program-category/"
+        );
+
+        this.programCategories = res.data.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch program types:", error);
+      } finally {
+        this.loadingProgramCategories = false;
       }
     },
     async handleConfirmSubmit() {
@@ -142,12 +225,49 @@ export default {
         this.loading = false;
       }
     },
-    async handleEditSubmit(updatedForm) {
-      this.program = { ...updatedForm };
-      this.editDialog = false; // assuming you have this; if not, remove or handle accordingly
+    handleEditForm() {
+      this.editForm = {
+        ...this.program,
+        program_type:
+          this.programTypes.find(
+            (item) =>
+              item.id === this.program.program_type?.id ||
+              item.value === this.program.program_type?.id
+          ) ?? null,
+
+        category:
+          this.programCategories.find(
+            (item) =>
+              item.id === this.program.category?.id ||
+              item.value === this.program.category?.id
+          ) ?? null,
+
+        is_local: this.program.is_local ?? null,
+      };
+
+      this.editDialog = true;
+      this.$router.replace({ query: { edit: "true" } });
+
+      this.$nextTick(() => {
+        this.$refs.formEdit?.$refs?.observer?.validate();
+      });
+    },
+
+    handleConfirmEdit() {
+      this.program = {
+        ...this.editForm,
+        // Already full objects, no need to map again
+        program_type: this.editForm.program_type ?? null,
+        category: this.editForm.category ?? null,
+      };
+      this.editDialog = false;
+      this.showSnackbar("Changes saved", "success", 1500);
       this.$router.replace({ query: {} });
-      this.showSnackbar("Changes saved.", "success");
-      // Optional: make a PUT request here to save changes automatically if needed
+    },
+
+    handleClose() {
+      this.editDialog = false;
+      this.$router.replace({ query: {} });
     },
   },
 };

@@ -126,13 +126,25 @@
             </v-col>
           </v-row>
           <ValidationProvider name="Thumbnail" v-slot="{ errors }">
-            <v-file-input
-              v-model="form.image"
-              label="Upload Thumbnail"
-              prepend-icon="mdi-upload"
-              accept="image/*"
-              :error-messages="errors"
-            />
+            <div v-if="showFields">
+              <!-- Show preview if existing image is a URL -->
+              <v-img
+                v-if="typeof form.image === 'string'"
+                :src="form.image"
+                height="120"
+                contain
+                class="mb-2"
+              />
+              <v-file-input
+                v-model="form.image"
+                label="Upload Thumbnail"
+                prepend-icon="mdi-upload"
+                accept="image/*"
+                :error-messages="errors"
+                placeholder="Select a file"
+                show-size
+              />
+            </div>
           </ValidationProvider>
           <v-row>
             <v-col cols="6">
@@ -285,12 +297,7 @@
           <v-row class="mt-8 mb-4">
             <v-col cols="12" class="d-flex justify-end">
               <v-btn large text @click="$emit('close')">Cancel</v-btn>
-              <v-btn
-                large
-                color="primary"
-                class="ml-2"
-                @click="handleSubmit(validate)"
-              >
+              <v-btn large color="primary" class="ml-2" @click="handleSubmit">
                 Submit
               </v-btn>
             </v-col>
@@ -349,11 +356,17 @@ export default {
     },
   },
   methods: {
-    handleSubmit(validate) {
-      validate().then((valid) => {
-        if (valid) this.$emit("submit");
-      });
+    async handleSubmit() {
+      // const isValid = await this.$refs.observer.validate();
+      // if (isValid) {
+      //   this.$emit("submit-edit"); 
+      // } else {
+      //   console.warn("Validation failed", this.form);
+      // }
+      this.$emit("submit-edit");
+      console.warn("Validation failed", this.form);
     },
+
     resetValidation() {
       if (this.$refs.observer) {
         this.$refs.observer.reset();

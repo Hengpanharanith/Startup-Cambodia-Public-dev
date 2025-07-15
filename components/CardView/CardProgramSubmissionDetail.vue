@@ -211,7 +211,7 @@
               color="green"
               text-color="white"
               label
-              small
+              small 
               class="px-3 ml-2"
             >
               {{ program.program_type?.name }}
