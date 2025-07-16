@@ -132,6 +132,8 @@
               prepend-icon="mdi-upload"
               accept="image/*"
               :error-messages="errors"
+              show-size
+              clearable
             />
           </ValidationProvider>
           <v-row>

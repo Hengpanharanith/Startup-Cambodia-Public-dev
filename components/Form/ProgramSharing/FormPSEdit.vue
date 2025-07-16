@@ -127,7 +127,6 @@
           </v-row>
           <ValidationProvider name="Thumbnail" v-slot="{ errors }">
             <div>
-              <!-- Show preview if existing image is a URL -->
               <v-img
                 v-if="typeof form.image === 'string'"
                 :src="form.image"
@@ -142,6 +141,7 @@
                 accept="image/*"
                 :error-messages="errors"
                 placeholder="Select a file"
+                @change="onImageChange"
                 show-size
                 clearable
               />
@@ -238,20 +238,19 @@
                   name="Description"
                   rules="required"
                   v-slot="{ errors, validate }"
+                  ref="descriptionProvider"
                 >
                   <Editor
-                    ref="descriptionProvider"
                     class="editor-textarea mt-2"
                     :detail="form.description"
                     @editorDetail="
                       (val) => {
                         form.description = val;
-                        validate(val); // trigger VeeValidate manually
+                        validate(val);
                       }
                     "
                     :theme="'bubble'"
                   />
-
                   <span
                     v-if="errors.length && !form.description"
                     class="red--text text-sm mt-2 d-block"
@@ -298,7 +297,12 @@
           <v-row class="mt-8 mb-4">
             <v-col cols="12" class="d-flex justify-end">
               <v-btn large text @click="$emit('close')">Cancel</v-btn>
-              <v-btn large color="primary" class="ml-2" @click="handleSubmit">
+              <v-btn
+                large
+                color="primary"
+                class="ml-2"
+                @click="handleSubmit(validate)"
+              >
                 Submit
               </v-btn>
             </v-col>
@@ -357,9 +361,44 @@ export default {
     },
   },
   methods: {
-    async handleSubmit() {
-      this.$emit("submit-edit");
-      console.log(this.form);
+    handleSubmit(validate) {
+      console.log("Form data before validation:", this.form); // Debug log
+
+      validate().then((valid) => {
+        console.log("Validation result:", valid); // Debug log
+
+        if (valid) {
+          this.$emit("submit-edit", this.form);
+        } else {
+          console.warn("Validation failed", this.form);
+          // Let's also check which fields are failing
+          this.$nextTick(() => {
+            const observer = this.$refs.observer;
+            if (observer) {
+              console.log("Validation errors:", observer.errors);
+            }
+          });
+        }
+      });
+    },
+    //Handle for image change in local and preview on Form 
+    onImageChange(file) {
+      if (!file) return;
+
+      // Clean old preview if exists
+      if (this.form._previewUrl) {
+        URL.revokeObjectURL(this.form._previewUrl);
+      }
+      const previewUrl = URL.createObjectURL(file);
+      this.form.image = previewUrl;
+      this.form._previewUrl = previewUrl;
+    },
+    // Add a method to manually validate the form
+    validateForm() {
+      if (this.$refs.observer) {
+        return this.$refs.observer.validate();
+      }
+      return Promise.resolve(false);
     },
 
     resetValidation() {

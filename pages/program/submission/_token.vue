@@ -70,6 +70,7 @@
 import InvalidToken from "~/components/TokenVerify/InvalidToken.vue";
 import ValidToken from "~/components/TokenVerify/ValidToken.vue";
 import FormPSEdit from "~/components/Form/ProgramSharing/FormPSEdit.vue";
+
 export default {
   name: "submission",
   layout: "blank",
@@ -131,9 +132,15 @@ export default {
     },
   },
   async mounted() {
-    this.fetchProgramTypes(),
+    this.token = this.$route.params.token || this.$route.query.token;
+
+    // Fetch program types and categories first
+    await Promise.all([
+      this.fetchProgramTypes(),
       this.fetchProgramCategories(),
-      (this.token = this.$route.params.token || this.$route.query.token);
+    ]);
+
+    // Then fetch program submission
     if (this.token) {
       await this.fetchProgramSubmission(this.token);
     }
@@ -153,7 +160,6 @@ export default {
         );
         if (res?.data?.status === true && res.data.data) {
           this.program = res.data.data;
-
           this.isInvalid = false;
         } else {
           this.isInvalid = true;
@@ -194,7 +200,7 @@ export default {
           value: item.id,
         }));
       } catch (error) {
-        console.error("Failed to fetch program types:", error);
+        console.error("Failed to fetch program categories:", error);
       } finally {
         this.loadingProgramCategories = false;
       }
@@ -239,65 +245,72 @@ export default {
       }
     },
     handleEditForm() {
-      // Populate editForm with current program data,
-      // but do NOT copy the image file here, just the URL if needed for preview
-      this.editForm = {
-        ...this.program,
-        program_type:
+      //Get the Data frrom program(api) => editfor{}
+      this.editForm = JSON.parse(JSON.stringify(this.program));
+      if (this.program.program_type) {
+        this.editForm.program_type =
           this.programTypes.find(
-            (item) =>
-              item.id === this.program.program_type?.id ||
-              item.value === this.program.program_type?.id
-          ) ?? null,
+            (item) => item.value === this.program.program_type?.id
+          )?.value || null;
+      }
 
-        category:
+      if (this.program.category) {
+        this.editForm.category =
           this.programCategories.find(
-            (item) =>
-              item.id === this.program.category?.id ||
-              item.value === this.program.category?.id
-          ) ?? null,
-
-        is_local: this.program.is_local ?? null,
-
-        // For the file input, keep a separate field for selected file, initially null
-        imageFile: null,
-      };
-
+            (item) => item.value === this.program.category?.id
+          )?.value || null;
+      }
+      // Set imageFile to null as it's for new uploads
+      this.editForm.imageFile = null;
       this.editDialog = true;
       this.$router.replace({ query: { edit: "true" } });
 
+      // Reset validation and then validate on next tick
       this.$nextTick(() => {
-        this.$refs.formEdit?.$refs?.observer?.validate();
+        if (this.$refs.formEdit?.$refs?.observer) {
+          this.$refs.formEdit.$refs.observer.reset();
+
+          // Allow some time for the form to be fully rendered
+          setTimeout(() => {
+            this.$refs.formEdit.$refs.observer.validate();
+            if (this.$refs.formEdit?.$refs?.contentProvider) {
+              this.$refs.formEdit.$refs.contentProvider.validate(
+                this.editForm.content
+              );
+            }
+            if (this.$refs.formEdit?.$refs?.descriptionProvider) {
+              this.$refs.formEdit.$refs.descriptionProvider.validate(
+                this.editForm.description
+              );
+            }
+          }, 100);
+        }
       });
     },
 
-    handleConfirmEdit() {
-      const programType = this.editForm.program_type;
-      const category = this.editForm.category;
+    handleConfirmEdit(updatedData) {
+      const programType = this.programTypes.find(
+        (item) => item.value === updatedData.program_type
+      );
 
+      const category = this.programCategories.find(
+        (item) => item.value === updatedData.category
+      );
+
+      // Update the program with the new data
       this.program = {
-        ...this.editForm,
-        program_type:
-          typeof programType === "object" && programType !== null
-            ? programType
-            : this.programTypes.find(
-                (item) => item.value === programType || item.id === programType
-              ) ?? null,
-
-        category:
-          typeof category === "object" && category !== null
-            ? category
-            : this.programCategories.find(
-                (item) => item.value === category || item.id === category
-              ) ?? null,
-        // Preserve original image URL if no new file selected,
-        // otherwise do not overwrite image URL here
-        image: this.editForm.imageFile
-          ? this.program.image
-          : this.editForm.image,
+        ...updatedData,
+        program_type: programType
+          ? { id: programType.value, name: programType.label }
+          : null,
+        category: category
+          ? { id: category.value, name: category.label }
+          : null,
+        image: updatedData.imageFile
+          ? URL.createObjectURL(updatedData.imageFile) // create preview URL
+          : updatedData.image,
       };
 
-      console.log("Normalized program:", this.program);
       this.showSnackbar("Changes saved", "success", 1500);
       this.editDialog = false;
       this.$router.replace({ query: {} });
