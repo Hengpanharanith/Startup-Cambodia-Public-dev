@@ -174,6 +174,16 @@
         </v-col>
       </v-row>
     </v-container>
+    <FormProgramSubmit
+      :visible="dialog"
+      @close="closeDialog"
+      :form="form"
+      @submitProgram="handleProgramSubmit"
+      :programTypes="programTypes"
+      :programCategories="programCategories"
+      :loadingProgramTypes="loadingProgramTypes"
+      :loadingProgramCategories="loadingProgramCategories"
+    />
   </div>
 </template>
 
@@ -183,7 +193,35 @@ import "aos/dist/aos.css";
 export default {
   name: "ProgramSharingPage",
   layout: "common",
-
+  data() {
+    return {
+      dialog: false,
+      form: {
+        email: "",
+        phone: "",
+        title: "",
+        content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
+      },
+      programTypes: [],
+      programCategories: [],
+      loadingProgramTypes: false,
+      loadingProgramCategories: false,
+    };
+  },
+  watch: {
+    "$route.query.showForm"(val) {
+      this.dialog = val === "true";
+    },
+  },
   computed: {
     benefits() {
       return [
@@ -235,12 +273,121 @@ export default {
   methods: {
     goToForm() {
       this.$router.push({
-        name: "program",
+        path: "/programsharing",
         query: { ...this.$route.query, showForm: "true" },
       });
+      this.dialog = true;
+    },
+    closeDialog() {
+      this.dialog = false;
+
+      const { query } = this.$route;
+      // Remove showForm from query
+      const newQuery = { ...query };
+      delete newQuery.showForm;
+      this.$router.replace({ query: newQuery });
+      this.resetForm();
+    },
+
+    // api call
+
+    async handleProgramSubmit() {
+      try {
+        const formData = new FormData();
+
+        for (const key in this.form) {
+          if (key !== "image") {
+            formData.append(key, this.form[key] ?? "");
+          }
+        }
+
+        if (this.form.image) {
+          formData.append("image", this.form.image);
+        }
+
+        await this.$axios.post("/api/v1/program/submission/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        alert("Your program was submitted successfully!");
+        this.resetForm(); // ← make sure this resets `this.form`
+        this.dialog = false;
+        this.$router.replace({ path: this.$route.path });
+      } catch (err) {
+        console.error(
+          "API submission error:",
+          err.response?.data || err.message
+        );
+      }
+    },
+    resetForm() {
+      this.form = {
+        email: "",
+        phone: "",
+        title: "",
+        content: "",
+        description: "",
+        program_type: null,
+        category: null,
+        is_local: null,
+        start_date: "",
+        end_date: "",
+        address: "",
+        apply_url: "",
+        image: null,
+        file: null,
+        programcoverage: null,
+      };
+
+      this.$nextTick(() => {
+        if (this.$refs.step1 && this.$refs.step1.resetValidation) {
+          this.$refs.step1.resetValidation();
+        }
+      });
+    },
+
+    async fetchProgramTypes() {
+      this.loadingProgramTypes = true;
+      try {
+        const res = await this.$axios.get(
+          "public/api/v1/startup-program-type/"
+        );
+
+        this.programTypes = res.data.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch program types:", error);
+      } finally {
+        this.loadingProgramTypes = false;
+      }
+    },
+    async fetchProgramCategories() {
+      this.loadingProgramCategories = true;
+      try {
+        const res = await this.$axios.get(
+          "public/api/v1/startup-program-category/"
+        );
+
+        this.programCategories = res.data.data.map((item) => ({
+          label: item.name,
+          value: item.id,
+        }));
+      } catch (error) {
+        console.error("Failed to fetch program types:", error);
+      } finally {
+        this.loadingProgramCategories = false;
+      }
     },
   },
+
   mounted() {
+    this.fetchProgramTypes();
+    this.fetchProgramCategories();
+    this.dialog = this.$route.query.showForm === "true";
     AOS.init({ once: false });
     this.$nextTick(() => {
       AOS.refresh();

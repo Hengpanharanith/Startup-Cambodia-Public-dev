@@ -1,50 +1,100 @@
 <template>
   <v-container class="pa-8">
-    <v-dialog :value="visible" max-width="800px" @input="$emit('close')">
+    <v-dialog
+      :value="visible"
+      max-width="800px"
+      @input="$emit('close')"
+      persistent
+    >
       <v-card class="pa-8" elevation="0">
-        <v-card class="input-card1" elevation="0">
+        <v-card class="input-card1" elevation="1">
           <!-- Stepper Header -->
-          <v-row no-gutters class="py-8" align="center" justify="space-between">
+          <v-row no-gutters class="py-8" align="center" justify="center">
             <!-- Step 1 -->
-            <v-col
-              cols="5"
-              class="text-center"
-              style="cursor: pointer"
-              @click="goToStep1"
-            >
-              <v-avatar
-                size="40"
-                :color="step === 1 ? 'primary' : 'grey lighten-1'"
-                class="mb-2"
+            <v-col cols="12" md="3" class="text-center">
+              <v-btn
+                fab
+                :color="step >= 1 ? 'primary' : 'grey lighten-2'"
+                :outlined="step === 1"
+                class="mb-3"
+                @click="goToStep1"
               >
-                <v-icon dark>mdi-pencil</v-icon>
-              </v-avatar>
+                <v-icon :color="step >= 1 ? 'black' : 'grey'">
+                  {{ step > 1 ? "mdi-check" : "mdi-pencil" }}
+                </v-icon>
+              </v-btn>
+
               <div
-                :class="
-                  step === 1 ? 'font-weight-medium primary--text' : 'grey--text'
-                "
+                class="body-2 font-weight-medium"
+                :class="step >= 1 ? 'primary--text' : 'grey--text'"
               >
-                Fill In
+                Describe Your Program
               </div>
             </v-col>
+
+            <!-- Connector -->
+            <v-col
+              cols="12"
+              md="1"
+              class="d-none d-md-flex justify-center align-center"
+            >
+              <v-divider></v-divider>
+            </v-col>
+
             <!-- Step 2 -->
-            <v-col cols="5" class="text-center">
-              <v-avatar
-                size="40"
-                :color="step === 2 ? 'primary' : 'grey lighten-1'"
-                class="mb-2"
+            <v-col cols="12" md="3" class="text-center">
+              <v-btn
+                fab
+                :color="step >= 2 ? 'primary' : 'grey lighten-2'"
+                :outlined="step === 2"
+                class="mb-3"
+                :disabled="step < 2"
               >
-                <v-icon dark>mdi-check</v-icon>
-              </v-avatar>
+                <v-icon :color="step >= 2 ? 'black' : 'grey'">
+                  {{ step > 2 ? "mdi-check" : "mdi-eye" }}
+                </v-icon>
+              </v-btn>
+
               <div
-                :class="
-                  step === 2 ? 'font-weight-medium primary--text' : 'grey--text'
-                "
+                class="body-2 font-weight-medium"
+                :class="step >= 2 ? 'primary--text' : 'grey--text'"
               >
-                Verify
+                Preview Your Program
+              </div>
+            </v-col>
+
+            <!-- Connector -->
+            <v-col
+              cols="12"
+              md="1"
+              class="d-none d-md-flex justify-center align-center"
+            >
+              <v-divider></v-divider>
+            </v-col>
+
+            <!-- Step 3 -->
+            <v-col cols="12" md="3" class="text-center">
+              <v-btn
+                fab
+                :color="step >= 3 ? 'primary' : 'grey lighten-2'"
+                :outlined="step === 3"
+                class="mb-3"
+                :disabled="step < 3"
+              >
+                <v-icon :color="step >= 3 ? 'black' : 'grey'">
+                  {{ step > 3 ? "mdi-check" : "mdi-magnify" }}
+                </v-icon>
+              </v-btn>
+
+              <div
+                class="body-2 font-weight-medium"
+                :class="step >= 3 ? 'primary--text' : 'grey--text'"
+              >
+                Checking
               </div>
             </v-col>
           </v-row>
+
           <v-divider></v-divider>
           <!-- <v-divider></v-divider> -->
           <!-- Step 1: Form -->
@@ -154,15 +204,6 @@ export default {
         step1?.$refs.descriptionProvider?.reset?.();
         step1?.$refs.contentProvider?.reset?.();
       });
-    },
-    onCaptchaVerified(token) {
-      console.log("Token received:", token); // ✅ You should see this in browser console
-      this.recaptchaToken = token;
-      this.recaptchaError = false;
-    },
-    onCaptchaExpired() {
-      this.recaptchaToken = null;
-      this.recaptchaError = true;
     },
 
     goToStep2() {

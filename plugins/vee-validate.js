@@ -1,5 +1,10 @@
 import Vue from "vue";
-import { ValidationProvider, ValidationObserver, extend, localize } from "vee-validate";
+import {
+  ValidationProvider,
+  ValidationObserver,
+  extend,
+  localize,
+} from "vee-validate";
 import { required, email, password, digits } from "vee-validate/dist/rules";
 import { en } from "./i18n/en.vee";
 import { km } from "./i18n/km.vee";
@@ -13,7 +18,34 @@ extend("email", {
   ...email,
   message: "Please provide valid email address.",
 });
+extend("startDateValid", {
+  message: "Start date must be today or a future date.",
+  validate(value) {
+    if (!value) return false;
+    const selectedDate = new Date(value);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // reset time part to midnight
+    return selectedDate >= today;
+  },
+});
+extend("maxSize", {
+  params: ["size"],
+  message: "File size must be less than {size} MB.",
+  validate(value, { size }) {
+    if (!value || typeof value === "string") return true; // allow empty or existing URL
 
+    const maxSizeInBytes = size * 1024 * 1024; // convert MB to bytes
+    return value instanceof File && value.size <= maxSizeInBytes;
+  },
+});
+extend("imageType", {
+  message: "Only JPEG and PNG files are allowed.",
+  validate(value) {
+    if (!value || typeof value === "string") return true; // Skip for existing image URLs
+    const allowedTypes = ["image/jpeg", "image/png"];
+    return value instanceof File && allowedTypes.includes(value.type);
+  },
+});
 extend("phone", {
   ...required,
   validate: (v) => {

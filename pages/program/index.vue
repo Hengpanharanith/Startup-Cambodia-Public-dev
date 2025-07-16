@@ -231,6 +231,7 @@ export default {
         address: "",
         apply_url: "",
         image: null,
+        programcoverage: null,
       },
     };
   },
@@ -540,6 +541,7 @@ export default {
         address: "",
         apply_url: "",
         image: null,
+        programCoverages: [],
       };
 
       this.$nextTick(() => {
@@ -584,11 +586,14 @@ export default {
     },
     closeDialog() {
       this.dialog = false;
+
       const { query } = this.$route;
-      // Remove showForm from query
       const newQuery = { ...query };
       delete newQuery.showForm;
       this.$router.replace({ query: newQuery });
+
+      // Reset the form here
+      this.resetForm();
     },
     toggleSearch() {
       const { query } = this.$route;

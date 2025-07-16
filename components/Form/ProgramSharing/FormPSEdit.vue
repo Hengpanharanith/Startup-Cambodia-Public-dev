@@ -125,7 +125,11 @@
               <v-row> </v-row>
             </v-col>
           </v-row>
-          <ValidationProvider name="Thumbnail" v-slot="{ errors }">
+          <ValidationProvider
+            name="Thumbnail"
+            rules="imageType|maxSize:1"
+            v-slot="{ errors }"
+          >
             <div>
               <v-img
                 v-if="typeof form.image === 'string'"
@@ -138,7 +142,6 @@
                 v-model="form.imageFile"
                 label="Upload Thumbnail"
                 prepend-icon="mdi-upload"
-                accept="image/*"
                 :error-messages="errors"
                 placeholder="Select a file"
                 @change="onImageChange"
@@ -217,7 +220,7 @@
             <v-col cols="12">
               <ValidationProvider
                 name="URL"
-                rules="required|max:255"
+                rules="required|web_url"
                 v-slot="{ errors }"
               >
                 <v-text-field
@@ -381,7 +384,7 @@ export default {
         }
       });
     },
-    //Handle for image change in local and preview on Form 
+    //Handle for image change in local and preview on Form
     onImageChange(file) {
       if (!file) return;
 

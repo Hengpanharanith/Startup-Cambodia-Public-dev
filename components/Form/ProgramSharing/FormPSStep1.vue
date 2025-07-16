@@ -52,33 +52,6 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" md="4" class="mt-6">
-              <ValidationProvider
-                name="Program Coverage"
-                rules="required"
-                v-slot="{ errors }"
-              >
-                <div>
-                  <label class="editor-label mb-2 font-weight-medium"
-                    >Program Coverage</label
-                  >
-                  <v-radio-group
-                    v-model="form.is_local"
-                    class="custom-radio"
-                    :error-messages="errors"
-                  >
-                    <v-radio
-                      v-for="type in programCoverages"
-                      :key="type.value"
-                      :label="type.label"
-                      :value="type.value"
-                      color="primary"
-                      class="mb-2"
-                    />
-                  </v-radio-group>
-                </div>
-              </ValidationProvider>
-            </v-col>
             <v-col cols="12" md="8">
               <v-row>
                 <v-col cols="12">
@@ -122,15 +95,59 @@
                   </ValidationProvider>
                 </v-col>
               </v-row>
-              <v-row> </v-row>
+            </v-col>
+            <v-col cols="12" md="4" class="mt-6">
+              <ValidationProvider
+                name="Program Coverage"
+                rules="required"
+                v-slot="{ errors }"
+              >
+                <div>
+                  <label class="editor-label mb-2 font-weight-medium"
+                    >Program Coverage</label
+                  >
+                  <v-radio-group
+                    v-model="form.is_local"
+                    class="custom-radio"
+                    :error-messages="errors"
+                  >
+                    <v-radio
+                      v-for="type in programCoverages"
+                      :key="type.value"
+                      :label="type.label"
+                      :value="type.value"
+                      color="primary"
+                      class="py-2"
+                    />
+                  </v-radio-group>
+                </div>
+              </ValidationProvider>
             </v-col>
           </v-row>
-          <ValidationProvider name="Thumbnail" v-slot="{ errors }">
+          <ValidationProvider
+            name="Thumbnail"
+            rules="required|imageType|maxSize:1"
+            v-slot="{ errors }"
+          >
+            <v-img
+              v-if="imagePreview"
+              :src="imagePreview"
+              height="200"
+              class="mb-2 w-100"
+              aspect-ratio="16/9"
+              gradient="to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.3) 100%"
+              contain
+            >
+              <template v-slot:placeholder>
+                <div class="d-flex align-center justify-center fill-height">
+                  <v-progress-circular indeterminate color="primary" />
+                </div>
+              </template>
+            </v-img>
             <v-file-input
               v-model="form.image"
               label="Upload Thumbnail"
               prepend-icon="mdi-upload"
-              accept="image/*"
               :error-messages="errors"
               show-size
               clearable
@@ -165,6 +182,7 @@
                   <v-date-picker
                     v-model="form.start_date"
                     @input="menuStart = false"
+                    :min="minDate"
                   />
                 </v-menu>
               </ValidationProvider>
@@ -197,6 +215,7 @@
                   <v-date-picker
                     v-model="form.end_date"
                     @input="menuEnd = false"
+                    :min="minDate"
                   />
                 </v-menu>
               </ValidationProvider>
@@ -206,7 +225,7 @@
             <v-col cols="12">
               <ValidationProvider
                 name="URL"
-                rules="required|max:255"
+                rules="required|web_url"
                 v-slot="{ errors }"
               >
                 <v-text-field
@@ -265,7 +284,7 @@
           </v-row>
           <v-row>
             <v-col cols="12">
-              <div class="mt-4 mb-8">
+              <div class="mt-2 mb-8">
                 <label class="editor-label font-weight-light">Content</label>
                 <ValidationProvider
                   name="Content"
@@ -287,7 +306,7 @@
 
                   <span
                     v-if="errors.length && !form.content"
-                    class="red--text text-sm mt-2 d-block"
+                    class="red--text text-sm mt-12 d-block"
                   >
                     {{ errors[0] }}
                   </span>
@@ -298,14 +317,16 @@
 
           <v-row class="mt-8 mb-4">
             <v-col cols="12" class="d-flex justify-end">
-              <v-btn large text @click="$emit('close')">Cancel</v-btn>
+              <v-btn outlined large text type="button" @click="$emit('close')"
+                >Cancel</v-btn
+              >
               <v-btn
                 large
                 color="primary"
                 class="ml-2"
                 @click="handleSubmit(validate)"
               >
-                Submit
+                Next
               </v-btn>
             </v-col>
           </v-row>
@@ -328,6 +349,8 @@ export default {
   data() {
     return {
       step: 1,
+      imagePreview: null,
+      minDate: new Date().toISOString().substr(0, 10),
     };
   },
   props: {
@@ -356,13 +379,36 @@ export default {
       type: Boolean,
       default: false,
     },
-    programCoverages: Array,
+    programCoverages: {
+      type: Array,
+      required: true,
+    },
     showFields: {
       type: Boolean,
       default: true,
     },
   },
+  watch: {
+    "form.image": {
+      handler(val) {
+        this.handleImageChange(val);
+      },
+      immediate: true,
+    },
+  },
+
   methods: {
+    handleImageChange(file) {
+      this.form.image = file;
+
+      if (!file) {
+        this.imagePreview = null;
+      } else if (file instanceof File) {
+        this.imagePreview = URL.createObjectURL(file);
+      } else if (typeof file === "string") {
+        this.imagePreview = file;
+      }
+    },
     handleSubmit(validate) {
       validate().then((valid) => {
         if (valid) this.$emit("submit");
