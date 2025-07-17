@@ -288,6 +288,9 @@ export default {
       this.$router.replace({ query: newQuery });
       this.resetForm();
     },
+    goHome() {
+      this.$router.replace("/");
+    },
 
     // api call
 
@@ -310,11 +313,6 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         });
-
-        alert("Your program was submitted successfully!");
-        this.resetForm(); // ← make sure this resets `this.form`
-        this.dialog = false;
-        this.$router.replace({ path: this.$route.path });
       } catch (err) {
         console.error(
           "API submission error:",
@@ -390,7 +388,7 @@ export default {
     this.dialog = this.$route.query.showForm === "true";
     AOS.init({ once: false });
     this.$nextTick(() => {
-      AOS.refresh();
+      AOS.refreshHard();
     });
   },
 };

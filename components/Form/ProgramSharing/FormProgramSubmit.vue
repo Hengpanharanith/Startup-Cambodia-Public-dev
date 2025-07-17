@@ -7,7 +7,7 @@
       persistent
     >
       <v-card class="pa-8" elevation="0">
-        <v-card class="input-card1" elevation="1">
+        <v-card class="input-card1" elevation="0">
           <!-- Stepper Header -->
           <v-row no-gutters class="py-8" align="center" justify="center">
             <!-- Step 1 -->
@@ -96,8 +96,7 @@
           </v-row>
 
           <v-divider></v-divider>
-          <!-- <v-divider></v-divider> -->
-          <!-- Step 1: Form -->
+
           <FormPSStep1
             ref="step1"
             v-if="step === 1"
@@ -109,14 +108,28 @@
             :loadingProgramTypes="loadingProgramTypes"
             :programCategories="programCategories"
             :programTypes="programTypes"
+            @update:imagePreview="imagePreview = $event"
+            :image-preview="imagePreview"
           />
-
-          <!-- Step 2: Confirmation -->
-          <FormPSStep2
+          <CardProgramSubmissionStep2
             ref="step2"
             v-if="step === 2"
+            :form="previewFormData"
+            :programCoverages="programCoverages"
+            @back="goToStep1"
+            @submit="submitProgram"
+            :loadingProgramCategories="loadingProgramCategories"
+            :loadingProgramTypes="loadingProgramTypes"
+            :programCategories="programCategories"
+            :programTypes="programTypes"
+            :image-preview="imagePreview"
+            :loading="loadingSubmit"
+          />
+          <FormPSStep3
+            ref="step3"
+            v-if="step === 3"
             :form="form"
-            @continue="submitProgram"
+            @continue="goHome"
           />
         </v-card>
       </v-card>
@@ -131,18 +144,22 @@ import "aos/dist/aos.css";
 import { ValidationObserver, ValidationProvider, extend } from "vee-validate";
 import { required, email, numeric, max, min } from "vee-validate/dist/rules";
 import FormPSStep1 from "./FormPSStep1.vue";
-import FormPSStep2 from "./FormPSStep2.vue";
+import FormPSStep3 from "./FormPSStep3.vue";
+import CardProgramSubmissionStep2 from "../../CardView/CardProgramSubmissionStep2.vue";
+
 extend("required", required);
 extend("email", email);
 extend("numeric", numeric);
 extend("min", min);
 extend("max", max);
+
 export default {
   components: {
     ValidationObserver,
     ValidationProvider,
     FormPSStep1,
-    FormPSStep2,
+    FormPSStep3,
+    CardProgramSubmissionStep2,
   },
   props: {
     programTypes: {
@@ -172,9 +189,12 @@ export default {
   },
   data() {
     return {
+      loadingSubmit: false,
       step: 1,
       menuStart: false,
+      imagePreview: null,
       menuEnd: false,
+      previewFormData: null, // Add this to store the resolved data
       programCoverages: [
         { label: "National", value: true },
         { label: "International", value: false },
@@ -185,6 +205,7 @@ export default {
     visible(val) {
       if (!val) {
         this.step = 1;
+        this.previewFormData = null; // Reset preview data
         this.resetForm();
       }
     },
@@ -192,31 +213,44 @@ export default {
   methods: {
     goToStep1() {
       this.step = 1;
-
-      this.$nextTick(() => {
-        if (this.$refs.step1?.resetValidation) {
-          this.$refs.step1.resetValidation();
-        }
-
-        // Also reset the individual fields for rich text editors
-        const step1 = this.$refs.step1;
-
-        step1?.$refs.descriptionProvider?.reset?.();
-        step1?.$refs.contentProvider?.reset?.();
-      });
     },
 
     goToStep2() {
-      console.log("Form valid, moving to step 2");
+      console.log("Form valid, moving to step 2", this.form);
+      console.log("Preview form data:", this.previewFormData);
+      // Find the category and program type objects
+      const categoryObj =
+        this.programCategories.find((c) => c.id === this.form.category) || null;
+      const programTypeObj =
+        this.programTypes.find((t) => t.id === this.form.program_type) || null;
+
+      // ✅ Keep this assignment, including imagePreview
+      this.previewFormData = {
+        ...this.form,
+        category: categoryObj,
+        program_type: programTypeObj,
+        imagePreview: this.imagePreview, // ✅ Add this line
+      };
+
+      this.previewFormData = JSON.parse(JSON.stringify(this.form));
       this.step = 2;
     },
 
-    submitProgram() {
-      this.$emit("submitProgram", this.form);
+   submitProgram() {
+      setTimeout(() => {
+        this.loadingSubmit = true;
+        this.step = 3;
+        this.$emit("submitProgram", this.form);
+      }, 2000);
+      this.loadingSubmit = false;
     },
-
+    goHome() {
+      this.resetForm();
+      this.$router.replace("/");
+    },
     resetForm() {
-      this.form = {
+      // Reset form to initial state
+      Object.assign(this.form, {
         address: "",
         email: "",
         phone: "",
@@ -228,10 +262,9 @@ export default {
         is_local: null,
         start_date: "",
         end_date: "",
-        address: "",
         apply_url: "",
         image: null,
-      };
+      });
 
       this.$nextTick(() => {
         if (this.$refs.step1 && this.$refs.step1.resetValidation) {

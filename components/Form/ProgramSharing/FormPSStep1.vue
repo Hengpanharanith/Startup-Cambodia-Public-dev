@@ -144,6 +144,7 @@
                 </div>
               </template>
             </v-img>
+
             <v-file-input
               v-model="form.image"
               label="Upload Thumbnail"
@@ -151,6 +152,7 @@
               :error-messages="errors"
               show-size
               clearable
+              @change="handleImageChange"
             />
           </ValidationProvider>
           <v-row>
@@ -215,7 +217,7 @@
                   <v-date-picker
                     v-model="form.end_date"
                     @input="menuEnd = false"
-                    :min="minDate"
+                    :min="form.start_date"
                   />
                 </v-menu>
               </ValidationProvider>
@@ -349,8 +351,8 @@ export default {
   data() {
     return {
       step: 1,
-      imagePreview: null,
       minDate: new Date().toISOString().substr(0, 10),
+      localImagePreview: this.imagePreview,
     };
   },
   props: {
@@ -387,13 +389,17 @@ export default {
       type: Boolean,
       default: true,
     },
+    imagePreview: String,
   },
   watch: {
-    "form.image": {
-      handler(val) {
-        this.handleImageChange(val);
-      },
-      immediate: true,
+    "form.image"(file) {
+      if (file instanceof File) {
+        this.imagePreview = URL.createObjectURL(file);
+      } else {
+        this.imagePreview = null;
+      }
+      this.$emit("update:form", this.form);
+      this.$emit("update:imagePreview", this.imagePreview);
     },
   },
 
