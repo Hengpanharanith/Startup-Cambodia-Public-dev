@@ -213,36 +213,39 @@ export default {
   methods: {
     goToStep1() {
       this.step = 1;
+      this.$nextTick(() => {
+        // Wait for step 1 form to render
+        setTimeout(() => {
+          const formStep1Ref = this.$refs.formStep1;
+          if (formStep1Ref && formStep1Ref.triggerEditorSync) {
+            formStep1Ref.triggerEditorSync();
+          }
+        }, 50);
+      });
     },
-
     goToStep2() {
-      console.log("Form valid, moving to step 2", this.form);
-      console.log("Preview form data:", this.previewFormData);
-      // Find the category and program type objects
+      // console.log("Form valid, moving to step 2", this.form);
+      // console.log("Preview form data:", this.previewFormData);
       const categoryObj =
         this.programCategories.find((c) => c.id === this.form.category) || null;
       const programTypeObj =
         this.programTypes.find((t) => t.id === this.form.program_type) || null;
-
-      // ✅ Keep this assignment, including imagePreview
       this.previewFormData = {
         ...this.form,
         category: categoryObj,
         program_type: programTypeObj,
-        imagePreview: this.imagePreview, // ✅ Add this line
+        imagePreview: this.imagePreview,
       };
-
       this.previewFormData = JSON.parse(JSON.stringify(this.form));
       this.step = 2;
     },
-
-   submitProgram() {
+    submitProgram() {
+      this.loadingSubmit = true;
       setTimeout(() => {
-        this.loadingSubmit = true;
         this.step = 3;
         this.$emit("submitProgram", this.form);
+        this.loadingSubmit = false;
       }, 2000);
-      this.loadingSubmit = false;
     },
     goHome() {
       this.resetForm();

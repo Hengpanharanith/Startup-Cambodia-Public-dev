@@ -15,19 +15,19 @@
       <div v-else>
         <v-row>
           <v-col cols="12">
-            <h2 class="font-weight-bold black--text text-h4 mb-8 mt-2">
+            <h2 class="font-weight-bold black--text text-h4 mt-2 mb-2">
               Program Submission Preview
             </h2>
           </v-col>
         </v-row>
-
-        <v-row class="mt-4">
+        <v-divider></v-divider>
+        <v-row class="mt-2">
           <v-col cols="12">
             <!-- Program Title -->
             <div class="d-flex justify-space-between align-center mb-6">
-              <h2 class="text-h4 font-weight-bold orange--text">
+              <h4 class="text-h4 font-weight-bold orange--text">
                 {{ form.title || "Program Title" }}
-              </h2>
+              </h4>
             </div>
 
             <!-- Program Image -->
@@ -166,12 +166,18 @@
               </p>
             </div>
 
-            <v-divider class="my-6"></v-divider>
-
+            <v-divider></v-divider>
+            <v-row>
+              <v-col cols="12">
+                <v-checkbox
+                  v-model="checked"
+                  :label="`Please confirm that this email ${form.email} exists and is your own.`"
+                />
+              </v-col>
+            </v-row>
             <!-- Action Buttons -->
-            <v-row class="mt-6">
+            <v-row class="mt-2">
               <v-col cols="12" class="d-flex justify-space-between">
-                <!-- Back Button -->
                 <v-btn
                   color="grey darken-2"
                   outlined
@@ -182,13 +188,13 @@
                   Back
                 </v-btn>
 
-                <!-- Confirm Submit Button -->
                 <v-btn
+                  :disabled="!checked || loading"
+                  :class="{ 'disabled-btn': !checked }"
                   color="primary"
                   class="white--text text-capitalize font-weight-bold px-8 py-3"
                   large
                   elevation="0"
-                  :disabled="loading"
                   @click="$emit('submit')"
                 >
                   <v-icon left small v-if="!loading">mdi-check</v-icon>
@@ -219,14 +225,12 @@
 export default {
   data() {
     return {
-      previewFormData: Object,
-      programCategories: Array,
-      programTypes: Array,
+      checked: false,
     };
   },
   name: "CardProgramSubmissionStep2",
   props: {
-    loadingSubmit: {
+    loading: {
       type: Boolean,
       default: false,
     },
@@ -432,5 +436,10 @@ a {
 .fade-enter-from,
 .fade-leave-to {
   opacity: 0;
+}
+.disabled-btn {
+  background-color: #b0bec5 !important;
+  color: #eceff1 !important;
+  cursor: not-allowed !important;
 }
 </style>

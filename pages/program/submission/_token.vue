@@ -16,11 +16,12 @@
       </div>
 
       <ValidToken
-        v-else-if="!isInvalid"
+        v-if="!isInvalid && !loading"
         :program="program"
         :token="token"
         @edit="handleEditForm"
         @confirm-submit="handleConfirmSubmit"
+        :loadingsubmit="loadingsubmitBtn"
       />
 
       <InvalidToken v-if="isInvalid" />
@@ -41,25 +42,27 @@
         </v-btn>
       </template>
     </v-snackbar>
-    <v-dialog v-model="editDialog" max-width="900px">
-      <v-card class="pa-8" elevation="0">
-        <v-card class="form-card rounded-md" elevation="0">
-          <v-card-text>
-            <FormPSEdit
-              ref="formEdit"
-              :form.sync="editForm"
-              :programTypes="programTypes"
-              :programCategories="programCategories"
-              :programCoverages="programCoverages"
-              :loadingProgramTypes="loadingProgramTypes"
-              :loadingProgramCategories="loadingProgramCategories"
-              :menuStart.sync="menuStart"
-              :menuEnd.sync="menuEnd"
-              :showFields="showFields"
-              @submit-edit="handleConfirmEdit"
-              @close="handleClose"
-            />
-          </v-card-text>
+    <v-dialog v-model="editDialog" max-width="900px" persistent>
+      <v-card class="pa-12 rounded-md">
+        <v-card class="rounded-md" elevation="0" style="border: 1px solid #ccc">
+          <v-card class="form-card rounded-md" elevation="0">
+            <v-card-text>
+              <FormPSEdit
+                ref="formEdit"
+                :form.sync="editForm"
+                :programTypes="programTypes"
+                :programCategories="programCategories"
+                :programCoverages="programCoverages"
+                :loadingProgramTypes="loadingProgramTypes"
+                :loadingProgramCategories="loadingProgramCategories"
+                :menuStart.sync="menuStart"
+                :menuEnd.sync="menuEnd"
+                :showFields="showFields"
+                @submit-edit="handleConfirmEdit"
+                @close="handleClose"
+              />
+            </v-card-text>
+          </v-card>
         </v-card>
       </v-card>
     </v-dialog>
@@ -81,12 +84,13 @@ export default {
   },
   data() {
     return {
+      loadingsubmitBtn: false,
       editDialog: false,
       editForm: {},
       token: null,
       image: null,
-      loading: false,
       isInvalid: false,
+      loading: true,
       menuStart: false,
       menuEnd: false,
       showFields: false,
@@ -112,6 +116,7 @@ export default {
         address: "",
         apply_url: "",
         image: null,
+        admin_note: "",
       },
       snackbar: {
         show: false,
@@ -127,20 +132,15 @@ export default {
         this.$router.replace({ query: {} }); // remove ?edit=true
       }
     },
-    "$route.query.edit"(newVal) {
-      this.editDialog = newVal === "true";
-    },
   },
   async mounted() {
     this.token = this.$route.params.token || this.$route.query.token;
 
-    // Fetch program types and categories first
     await Promise.all([
       this.fetchProgramTypes(),
       this.fetchProgramCategories(),
     ]);
 
-    // Then fetch program submission
     if (this.token) {
       await this.fetchProgramSubmission(this.token);
     }
@@ -206,8 +206,6 @@ export default {
       }
     },
     async handleConfirmSubmit() {
-      this.loading = true;
-
       if (!this.token) {
         this.showSnackbar("Missing token", "error");
         this.loading = false;
@@ -233,10 +231,15 @@ export default {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        this.showSnackbar("Confirmed!", "success");
-
-        setTimeout(() => this.$router.push("/"), 1500);
-        await this.fetchProgramSubmission(this.token);
+        this.loadingsubmitBtn = true;
+        // ✅ Wait 1.5s, then redirect and show alert
+        setTimeout(() => {
+          this.$router.push("/");
+          alert(
+            "✅ Program Submitted!\n\nPlease wait for admin approval.\nCheck your email for the tracking link."
+          );
+          this.loadingsubmitBtn = false;
+        }, 2000);
       } catch (err) {
         console.error("Error response data:", err.response?.data);
         this.showSnackbar("Failed to confirm.", "error");

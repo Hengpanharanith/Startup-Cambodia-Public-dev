@@ -1,18 +1,12 @@
 <template>
   <v-container class="d-flex justify-center align-center fill-height">
     <v-card-text>
-      <div v-if="loading" class="text-center py-6">
-        <v-progress-circular indeterminate color="primary" size="40" />
-        <div class="mt-4 grey--text text-subtitle-1">
-          Loading program details...
-        </div>
-      </div>
-
-      <div v-else>
+      <div>
         <CardProgramSubmissionDetail
           :program="program"
           @confirm-submit="$emit('confirm-submit')"
           @edit="$emit('edit')"
+          :loadingbtn="loadingsubmit"
         />
       </div>
     </v-card-text>
@@ -28,7 +22,10 @@ export default {
   props: {
     program: Object,
     token: String,
-
+    loadingsubmit: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {

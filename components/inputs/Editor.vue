@@ -62,11 +62,16 @@ export default {
     },
   },
   watch: {},
+  mounted() {
+    this.emitContent();
+  },
   methods: {
     ...mapActions("media", {
       createMedia: "create",
     }),
-
+    emitContent() {
+      this.$emit("editorDetail", this.detail); // or the editor content value directly
+    },
     onEditorChange(value) {
       this.eInit = true;
       this.$emit("editorDetail", value.html);

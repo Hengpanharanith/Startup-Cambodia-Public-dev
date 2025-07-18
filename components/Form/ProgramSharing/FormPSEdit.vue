@@ -127,7 +127,7 @@
           </v-row>
           <ValidationProvider
             name="Thumbnail"
-            rules="imageType|maxSize:1"
+            rules="imageType|imageType|maxSize:1"
             v-slot="{ errors }"
           >
             <div>
@@ -158,12 +158,13 @@
                 v-slot="{ errors }"
               >
                 <v-menu
-                  v-model="menuStart"
+                  v-model="localMenuStart"
                   :close-on-content-click="false"
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
                   attach
+                  @input="toggleMenuStart"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -178,7 +179,8 @@
                   </template>
                   <v-date-picker
                     v-model="form.start_date"
-                    @input="menuStart = false"
+                    @input="closeMenuStart"
+                    :min="minDate"
                   />
                 </v-menu>
               </ValidationProvider>
@@ -190,12 +192,13 @@
                 v-slot="{ errors }"
               >
                 <v-menu
-                  v-model="menuEnd"
+                  v-model="localMenuEnd"
                   :close-on-content-click="false"
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
                   attach
+                  @input="toggleMenuEnd"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -210,7 +213,8 @@
                   </template>
                   <v-date-picker
                     v-model="form.end_date"
-                    @input="menuEnd = false"
+                    @input="closeMenuEnd"
+                    :min="form.start_date"
                   />
                 </v-menu>
               </ValidationProvider>
@@ -306,7 +310,7 @@
                 class="ml-2"
                 @click="handleSubmit(validate)"
               >
-                Submit
+                Confirm Edit
               </v-btn>
             </v-col>
           </v-row>
@@ -328,7 +332,10 @@ export default {
   },
   data() {
     return {
+      localMenuEnd: this.menuEnd,
+      localMenuStart: this.menuStart,
       step: 1,
+      minDate: new Date().toISOString().substr(0, 10),
     };
   },
   props: {
@@ -363,18 +370,23 @@ export default {
       default: true,
     },
   },
+  watch: {
+    menuEnd(newVal) {
+      this.localMenuEnd = newVal;
+    },
+    menuStart(newVal) {
+      this.localMenuStart = newVal;
+    },
+  },
   methods: {
     handleSubmit(validate) {
-      console.log("Form data before validation:", this.form); // Debug log
-
+      // console.log("Form data before validation:", this.form);
       validate().then((valid) => {
-        console.log("Validation result:", valid); // Debug log
-
+        // console.log("Validation result:", valid);
         if (valid) {
           this.$emit("submit-edit", this.form);
         } else {
           console.warn("Validation failed", this.form);
-          // Let's also check which fields are failing
           this.$nextTick(() => {
             const observer = this.$refs.observer;
             if (observer) {
@@ -383,6 +395,22 @@ export default {
           });
         }
       });
+    },
+    toggleMenuStart(val) {
+      this.localMenuStart = val;
+      this.$emit("update:menuStart", val);
+    },
+    toggleMenuEnd(val) {
+      this.localMenuEnd = val;
+      this.$emit("update:menuEnd", val);
+    },
+    closeMenuEnd() {
+      this.localMenuEnd = false;
+      this.$emit("update:menuEnd", false);
+    },
+    closeMenuStart() {
+      this.localMenuStart = false;
+      this.$emit("update:menuStart", false);
     },
     //Handle for image change in local and preview on Form
     onImageChange(file) {

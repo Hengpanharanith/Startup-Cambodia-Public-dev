@@ -1,6 +1,7 @@
 <template>
   <div class="cardContainer pa-0" elevation="3">
     <!-- Header Bar with Centered Logo -->
+
     <v-app-bar
       color="black"
       height="112"
@@ -257,19 +258,35 @@
             </span>
             <div v-if="program?.content" v-html="program.content" />
           </div>
-          <v-divider></v-divider>
+          <v-divider
+            v-if="program?.status === 'PENDING_CONFIRM_EMAIL'"
+          ></v-divider>
           <!-- Confirm Submit Button -->
           <v-row class="mt-8">
-            <v-col cols="12" class="d-flex justify-end">
+            <v-col
+              cols="12"
+              class="d-flex justify-end"
+              v-if="program?.status === 'PENDING_CONFIRM_EMAIL'"
+            >
               <v-btn
-                v-if="program?.status === 'PENDING_CONFIRM_EMAIL'"
                 color="primary"
                 class="white--text text-capitalize font-weight-bold px-8 py-3 d-flex"
                 large
                 elevation="0"
                 @click="$emit('confirm-submit')"
               >
-                CONFIRM SUBMIT
+                <v-icon left small v-if="!loadingbtn">mdi-check</v-icon>
+                <template v-if="loadingbtn">
+                  <v-progress-circular
+                    indeterminate
+                    color="white"
+                    size="18"
+                    width="2"
+                    class="mr-2"
+                  />
+                  Submitting...
+                </template>
+                <template v-else> CONFIRM SUBMIT </template>
               </v-btn>
             </v-col>
           </v-row>
@@ -284,10 +301,13 @@ export default {
   name: "CardProgramSubmissionDetail",
   props: {
     program: Object,
+    loadingbtn: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
-      loading: false,
       error: null,
       editForm: false,
     };
@@ -373,5 +393,10 @@ a {
   .text-h6 {
     font-size: 1.125rem !important;
   }
+}
+.disabled-btn {
+  background-color: #b0bec5 !important;
+  color: #eceff1 !important;
+  cursor: not-allowed !important;
 }
 </style>
