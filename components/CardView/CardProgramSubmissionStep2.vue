@@ -186,6 +186,7 @@
                 <v-btn
                   color="grey darken-2"
                   outlined
+                  large
                   class="text-capitalize font-weight-medium px-8 py-3"
                   @click="$emit('back')"
                 >

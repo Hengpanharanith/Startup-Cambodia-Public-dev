@@ -305,7 +305,8 @@
             <v-col cols="12" class="d-flex justify-end">
               <v-btn
                 color="grey darken-2"
-                outlinedlarge
+                outlined
+                large
                 text
                 @click="$emit('close')"
                 >Cancel</v-btn
@@ -316,7 +317,7 @@
                 class="ml-2"
                 @click="handleSubmit(validate)"
               >
-                Confirm Edit
+                Update
               </v-btn>
             </v-col>
           </v-row>

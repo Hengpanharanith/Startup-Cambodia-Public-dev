@@ -54,7 +54,7 @@
                     style="text-decoration: underline"
                     class="text-underline orange--text font-weight-bold"
                   >
-                    Start now
+                    Submit Again
                   </span>
                 </nuxt-link>
               </p>
@@ -130,7 +130,7 @@
                     class="orange--text font-weight-bold"
                     style="text-decoration: underline"
                   >
-                    Your Program
+                    <br />Your Program
                   </span>
                 </nuxt-link>
 
@@ -240,7 +240,7 @@
               <a
                 :href="program?.apply_url"
                 target="_blank"
-                class="text-body-1 text-decoration-none grey--text text--darken-2"
+                class="text-body-1 text-decoration-underline primary--text"
                 >{{ program.apply_url }}</a
               >
             </div>
@@ -249,12 +249,12 @@
           <!-- Description and Content -->
           <div class="mb-8">
             <span class="text-h6 orange--text mb-3 font-weight-bold">
-              - Description
+              Description
             </span>
 
             <div v-if="program?.description" v-html="program.description" />
             <span class="text-h6 orange--text mb-3 font-weight-bold">
-              - Content
+              Content
             </span>
             <div v-if="program?.content" v-html="program.content" />
           </div>
