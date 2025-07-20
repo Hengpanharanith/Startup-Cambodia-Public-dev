@@ -1,5 +1,10 @@
 <template>
-  <div class="cardContainer pa-0" elevation="3">
+  <div
+    class="cardContainer pa-0"
+    elevation="3"
+    data-aos="fade-right"
+    data-aos-duration="250"
+  >
     <v-container class="pa-12" style="min-height: 430px">
       <!-- Loading State -->
       <div v-if="!form || loadingProgramCategories || loadingProgramTypes">
@@ -25,9 +30,9 @@
           <v-col cols="12">
             <!-- Program Title -->
             <div class="d-flex justify-space-between align-center mb-6">
-              <h4 class="text-h4 font-weight-bold orange--text">
+              <h5 class="text-h4 font-weight-bold orange--text">
                 {{ form.title || "Program Title" }}
-              </h4>
+              </h5>
             </div>
 
             <!-- Program Image -->

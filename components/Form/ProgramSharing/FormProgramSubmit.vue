@@ -9,7 +9,13 @@
       <v-card class="pa-8" elevation="0">
         <v-card class="input-card1" elevation="0">
           <!-- Stepper Header -->
-          <v-row no-gutters class="py-8" align="center" justify="center">
+          <v-row
+            no-gutters
+            class="py-8"
+            align="center"
+            justify="center"
+            ref="dialogTop"
+          >
             <!-- Step 1 -->
             <v-col cols="12" md="3" class="text-center">
               <v-btn
@@ -222,6 +228,7 @@ export default {
           }
         }, 50);
       });
+      this.scrollToTop();
     },
     goToStep2() {
       // console.log("Form valid, moving to step 2", this.form);
@@ -238,18 +245,29 @@ export default {
       };
       this.previewFormData = JSON.parse(JSON.stringify(this.form));
       this.step = 2;
+      this.scrollToTop();
     },
     submitProgram() {
       this.loadingSubmit = true;
       setTimeout(() => {
         this.step = 3;
+        this.scrollToTop;
         this.$emit("submitProgram", this.form);
         this.loadingSubmit = false;
       }, 2000);
     },
+
     goHome() {
       this.resetForm();
       this.$router.replace("/");
+    },
+    scrollToTop() {
+      this.$nextTick(() => {
+        const top = this.$refs.dialogTop;
+        if (top && typeof top.scrollIntoView === "function") {
+          top.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
     },
     resetForm() {
       // Reset form to initial state

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center pa-8" data-aos="fade-right" data-aos-duration="500">
+  <div class="text-center pa-8" data-aos="fade-right" data-aos-duration="250">
     <div class="mb-6">
       <v-icon size="64" color="grey darken-2">mdi-check-circle-outline</v-icon>
     </div>

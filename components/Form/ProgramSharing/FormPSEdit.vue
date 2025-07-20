@@ -303,7 +303,13 @@
 
           <v-row class="mt-8 mb-4">
             <v-col cols="12" class="d-flex justify-end">
-              <v-btn large text @click="$emit('close')">Cancel</v-btn>
+              <v-btn
+                color="grey darken-2"
+                outlinedlarge
+                text
+                @click="$emit('close')"
+                >Cancel</v-btn
+              >
               <v-btn
                 large
                 color="primary"
