@@ -126,13 +126,7 @@ export default {
       },
     };
   },
-  watch: {
-    editDialog(val) {
-      if (!val) {
-        this.$router.replace({ query: {} }); // remove ?edit=true
-      }
-    },
-  },
+
   async mounted() {
     this.token = this.$route.params.token || this.$route.query.token;
 
@@ -233,10 +227,14 @@ export default {
         );
         this.loadingsubmitBtn = true;
         // ✅ Wait 1.5s, then redirect and show alert
+
         setTimeout(() => {
-          this.$router.push("/");
-          alert(
-            "✅ Program Submitted!\n\nPlease wait for admin approval.\nCheck your email for the tracking link."
+          this.loadingsubmitBtn = false;
+
+          this.sweetAlertText(
+            1,
+            "Please wait for admin approval.Check your email for the tracking link.",
+            0
           );
           this.loadingsubmitBtn = false;
         }, 2000);
@@ -248,7 +246,6 @@ export default {
       }
     },
     handleEditForm() {
-      //Get the Data frrom program(api) => editfor{}
       this.editForm = JSON.parse(JSON.stringify(this.program));
       if (this.program.program_type) {
         this.editForm.program_type =

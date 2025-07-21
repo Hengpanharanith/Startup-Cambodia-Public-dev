@@ -10,26 +10,25 @@
         <v-card class="input-card1" elevation="0">
           <!-- Stepper Header -->
           <v-row
-            no-gutters
-            class="py-8"
+            class="py-6 px-4"
             align="center"
             justify="center"
             ref="dialogTop"
           >
             <!-- Step 1 -->
-            <v-col cols="12" md="3" class="text-center">
+            <v-col cols="12" sm="4" class="text-center">
               <v-btn
                 fab
                 :color="step >= 1 ? 'primary' : 'grey lighten-2'"
                 :outlined="step === 1"
-                class="mb-3"
+                class="mb-2"
                 @click="goToStep1"
+                :disabled="step !== 2"
               >
-                <v-icon :color="step >= 1 ? 'black' : 'grey'">
+                <v-icon :color="step >= 1 ? 'white' : 'grey'">
                   {{ step > 1 ? "mdi-check" : "mdi-pencil" }}
                 </v-icon>
               </v-btn>
-
               <div
                 class="body-2 font-weight-medium"
                 :class="step >= 1 ? 'primary--text' : 'grey--text'"
@@ -38,29 +37,20 @@
               </div>
             </v-col>
 
-            <!-- Connector -->
-            <v-col
-              cols="12"
-              md="1"
-              class="d-none d-md-flex justify-center align-center"
-            >
-              <v-divider></v-divider>
-            </v-col>
-
             <!-- Step 2 -->
-            <v-col cols="12" md="3" class="text-center">
+            <v-col cols="12" sm="4" class="text-center">
               <v-btn
                 fab
                 :color="step >= 2 ? 'primary' : 'grey lighten-2'"
                 :outlined="step === 2"
-                class="mb-3"
-                :disabled="step < 2"
+                class="mb-2"
+                @click="goToStep2"
+                :disabled="step === 1 || step === 3"
               >
                 <v-icon :color="step >= 2 ? 'black' : 'grey'">
                   {{ step > 2 ? "mdi-check" : "mdi-eye" }}
                 </v-icon>
               </v-btn>
-
               <div
                 class="body-2 font-weight-medium"
                 :class="step >= 2 ? 'primary--text' : 'grey--text'"
@@ -69,29 +59,19 @@
               </div>
             </v-col>
 
-            <!-- Connector -->
-            <v-col
-              cols="12"
-              md="1"
-              class="d-none d-md-flex justify-center align-center"
-            >
-              <v-divider></v-divider>
-            </v-col>
-
             <!-- Step 3 -->
-            <v-col cols="12" md="3" class="text-center">
+            <v-col cols="12" sm="4" class="text-center">
               <v-btn
                 fab
                 :color="step >= 3 ? 'primary' : 'grey lighten-2'"
                 :outlined="step === 3"
-                class="mb-3"
-                :disabled="step < 3"
+                class="mb-2"
+                :disabled="step !== 3"
               >
                 <v-icon :color="step >= 3 ? 'black' : 'grey'">
                   {{ step > 3 ? "mdi-check" : "mdi-magnify" }}
                 </v-icon>
               </v-btn>
-
               <div
                 class="body-2 font-weight-medium"
                 :class="step >= 3 ? 'primary--text' : 'grey--text'"

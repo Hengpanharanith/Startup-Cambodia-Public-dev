@@ -5,15 +5,22 @@ const options = {
     type: "success",
     title: "Success",
     showConfirmButton: false,
-    timer: 0
+    timer: 0,
   },
   failed: {
     position: "center",
     type: "error",
     title: "Error",
     confirmButtonColor: "orange",
-    timer: 0
-  }
+    timer: 0,
+  },
+  submitted: {
+    position: "center",
+    type: "success",
+    title: "Program Submitted",
+    showConfirmButton: false,
+    timer: 0,
+  },
 };
 Vue.mixin({
   methods: {
@@ -22,12 +29,20 @@ Vue.mixin({
         this.$swal({ ...options.success, timer });
         return;
       }
-      this.$swal({ ...options.failed, timer:0, text: message });
+      this.$swal({ ...options.failed, timer: 0, text: message });
     },
+    sweetAlertText(status, message, timer = 1000) {
+      if (status == 1) {
+        this.$swal({ ...options.success, text: message, timer });
+        return;
+      }
+      this.$swal({ ...options.failed, text: message, timer: 0 });
+    },
+
     sweetAlertLoading() {
       this.$swal({
-        title: 'Please Wait !',
-        html: 'Loading...',
+        title: "Please Wait !",
+        html: "Loading...",
         confirmButtonColor: "orange",
         allowOutsideClick: false,
         onBeforeOpen: () => {
@@ -43,7 +58,10 @@ Vue.mixin({
       const text = e?.response?.data?.message || e?.response?.status || e;
       this.$swal({ ...options.failed, text });
     },
-    async sweetAlertConfirmation(message = "You won't be able to revert this!", title = "Are you sure?"){
+    async sweetAlertConfirmation(
+      message = "You won't be able to revert this!",
+      title = "Are you sure?"
+    ) {
       return this.$swal({
         title: title,
         text: message,
@@ -53,11 +71,14 @@ Vue.mixin({
         cancelButtonColor: "grey",
         confirmButtonText: "Yes",
         reverseButtons: true,
-        timer: 0
+        timer: 0,
       });
     },
-    async sweetAlertRemoveConfirmation(message = "You won't be able to revert this!", title = "Are you sure?"){
-      return  this.$swal({
+    async sweetAlertRemoveConfirmation(
+      message = "You won't be able to revert this!",
+      title = "Are you sure?"
+    ) {
+      return this.$swal({
         title: title,
         text: message,
         type: "warning",
@@ -66,21 +87,25 @@ Vue.mixin({
         cancelButtonColor: "grey",
         confirmButtonText: "Yes",
         reverseButtons: true,
-        timer: 0
+        timer: 0,
       });
     },
-    async sweetAlertMessageConfirmation(message = "You won't be able to revert this!", title = "Message", value = ''){
-      return  this.$swal({
+    async sweetAlertMessageConfirmation(
+      message = "You won't be able to revert this!",
+      title = "Message",
+      value = ""
+    ) {
+      return this.$swal({
         title: title,
         text: message,
-        input: 'textarea',
-        inputPlaceholder: 'Type your return here...',
+        input: "textarea",
+        inputPlaceholder: "Type your return here...",
         inputValue: value,
-        inputAttributes: {'aria-label': 'Type your message here'},
+        inputAttributes: { "aria-label": "Type your message here" },
         inputValidator: (value) => {
-            if (!value) {
-                return 'You need to write a return message!'
-            }
+          if (!value) {
+            return "You need to write a return message!";
+          }
         },
         showCancelButton: true,
         confirmButtonColor: "orange",
@@ -93,8 +118,8 @@ Vue.mixin({
         focusConfirm: false,
         inputAutoFocus: false,
         inputAutoTrim: false,
-        timer: 0
+        timer: 0,
       });
-    }
-  }
+    },
+  },
 });

@@ -1,5 +1,5 @@
 <template>
-  <div data-aos="fade-right" data-aos-duration="250">
+  <div data-aos="fade-right" data-aos-duration="500">
     <v-card-title class="ml-4 font-weight-bold primary--text text-h5">
       Program Sharing Details
     </v-card-title>
@@ -163,12 +163,13 @@
                 v-slot="{ errors }"
               >
                 <v-menu
-                  v-model="menuStart"
+                  v-model="localMenuStart"
                   :close-on-content-click="false"
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
                   attach
+                  @input="toggleMenuStart"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -183,7 +184,7 @@
                   </template>
                   <v-date-picker
                     v-model="form.start_date"
-                    @input="menuStart = false"
+                    @input="closeMenuStart"
                     :min="minDate"
                   />
                 </v-menu>
@@ -196,12 +197,13 @@
                 v-slot="{ errors }"
               >
                 <v-menu
-                  v-model="menuEnd"
+                  v-model="localMenuEnd"
                   :close-on-content-click="false"
                   transition="scale-transition"
                   offset-y
                   min-width="auto"
                   attach
+                  @input="toggleMenuEnd"
                 >
                   <template v-slot:activator="{ on, attrs }">
                     <v-text-field
@@ -216,7 +218,7 @@
                   </template>
                   <v-date-picker
                     v-model="form.end_date"
-                    @input="menuEnd = false"
+                    @input="closeMenuEnd"
                     :min="form.start_date"
                   />
                 </v-menu>
@@ -262,6 +264,7 @@
                   v-slot="{ errors, validate }"
                 >
                   <Editor
+                    :key="step"
                     ref="descriptionProvider"
                     class="editor-textarea mt-2"
                     :detail="form.description"
@@ -289,6 +292,7 @@
               <div class="mt-2 mb-8">
                 <label class="editor-label font-weight-light">Content</label>
                 <ValidationProvider
+                  :key="step"
                   name="Content"
                   rules="required"
                   v-slot="{ errors, validate }"
@@ -350,6 +354,8 @@ export default {
   },
   data() {
     return {
+      localMenuEnd: this.menuEnd,
+      localMenuStart: this.menuStart,
       step: 1,
       minDate: new Date().toISOString().substr(0, 10),
       localImagePreview: this.imagePreview,
@@ -392,14 +398,58 @@ export default {
     imagePreview: String,
   },
   watch: {
+    step(val) {
+      if (val === 1) {
+        this.$nextTick(() => {
+          if (this.$refs.descriptionProvider) {
+            const desc = this.form.description;
+            this.$refs.descriptionProvider.validate(desc);
+          }
+          if (this.$refs.contentProvider) {
+            const cont = this.form.content;
+            this.$refs.contentProvider.validate(cont);
+          }
+        });
+      }
+    },
+    triggerEditorSync() {
+      if (this.$refs.descriptionEditor) {
+        this.$refs.descriptionEditor.emitContent();
+      }
+      if (this.$refs.contentEditor) {
+        this.$refs.contentEditor.emitContent();
+      }
+
+      // Then validate
+      this.$nextTick(() => {
+        if (this.$refs.descriptionProvider) {
+          this.$refs.descriptionProvider.validate(this.form.description);
+        }
+        if (this.$refs.contentProvider) {
+          this.$refs.contentProvider.validate(this.form.content);
+        }
+      });
+    },
     "form.image"(file) {
       if (file instanceof File) {
-        this.imagePreview = URL.createObjectURL(file);
+        this.localImagePreview = URL.createObjectURL(file);
+      } else if (typeof file === "string") {
+        this.localImagePreview = file;
       } else {
-        this.imagePreview = null;
+        this.localImagePreview = null;
       }
       this.$emit("update:form", this.form);
-      this.$emit("update:imagePreview", this.imagePreview);
+      this.$emit("update:imagePreview", this.localImagePreview);
+    },
+    imagePreview(newVal) {
+      // Keep local preview in sync if parent updates it
+      this.localImagePreview = newVal;
+    },
+    menuEnd(newVal) {
+      this.localMenuEnd = newVal;
+    },
+    menuStart(newVal) {
+      this.localMenuStart = newVal;
     },
   },
 
@@ -408,12 +458,30 @@ export default {
       this.form.image = file;
 
       if (!file) {
-        this.imagePreview = null;
+        this.localImagePreview = null;
       } else if (file instanceof File) {
-        this.imagePreview = URL.createObjectURL(file);
+        this.localImagePreview = URL.createObjectURL(file);
       } else if (typeof file === "string") {
-        this.imagePreview = file;
+        this.localImagePreview = file;
       }
+
+      this.$emit("update:imagePreview", this.localImagePreview);
+    },
+    toggleMenuStart(val) {
+      this.localMenuStart = val;
+      this.$emit("update:menuStart", val); // Sync to parent
+    },
+    toggleMenuEnd(val) {
+      this.localMenuEnd = val;
+      this.$emit("update:menuEnd", val); // Sync to parent
+    },
+    closeMenuEnd() {
+      this.localMenuEnd = false;
+      this.$emit("update:menuEnd", false);
+    },
+    closeMenuStart() {
+      this.localMenuStart = false;
+      this.$emit("update:menuStart", false);
     },
     handleSubmit(validate) {
       validate().then((valid) => {

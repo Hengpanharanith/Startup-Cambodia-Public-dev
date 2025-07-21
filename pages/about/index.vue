@@ -145,10 +145,10 @@
         </v-card-text>
       </v-card>
     </v-container>
-
+    <!-- 
     <v-container>
       <OnBoardingGuideline />
-    </v-container>
+    </v-container> -->
 
     <v-container>
       <client-only>
