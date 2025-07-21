@@ -316,12 +316,18 @@ export default {
 
       this.showSnackbar("Changes saved", "success", 1500);
       this.editDialog = false;
-      this.$router.replace({ query: {} });
+      const { edit, ...rest } = this.$route.query;
+      if (edit) {
+        this.$router.replace({ query: rest });
+      }
     },
 
     handleClose() {
       this.editDialog = false;
-      this.$router.replace({ query: {} });
+      const { edit, ...rest } = this.$route.query;
+      if (edit) {
+        this.$router.replace({ query: rest });
+      }
     },
   },
 };

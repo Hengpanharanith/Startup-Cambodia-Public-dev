@@ -133,7 +133,7 @@
                 <a
                   :href="form.apply_url"
                   target="_blank"
-                  class="text-body-1 text-decoration-none orange--text"
+                  class="text-body-1 text-decoration-underline primary--text"
                 >
                   {{ form.apply_url }}
                 </a>

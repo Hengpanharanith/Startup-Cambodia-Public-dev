@@ -72,9 +72,9 @@
                 and submit again.
               </p>
               <p class="text-body-1 grey--text text--darken-1">
-                <span class="font-weight-regular">*Note:</span> There was a
-                problem with the information you provided. Please review your
-                details carefully before submitting again.
+                <span class="font-weight-regular"></span> There was a problem
+                with the information you provided. Please review your details
+                carefully before submitting again.
                 <nuxt-link to="/">
                   <span
                     style="text-decoration: underline"
@@ -83,6 +83,9 @@
                     Start again
                   </span>
                 </nuxt-link>
+              </p>
+              <p class="text-body-1 red--text text--darken-1">
+                ***Admin Note:<span> {{ program.admin_note }}</span>
               </p>
             </v-col>
           </v-row>
