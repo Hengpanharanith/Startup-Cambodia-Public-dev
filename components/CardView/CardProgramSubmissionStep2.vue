@@ -163,7 +163,8 @@
                 v-html="form.content"
               ></div>
             </div>
-
+            <v-divider></v-divider>
+            <recaptcha />
             <!-- If no description or content -->
             <div v-if="!form.description && !form.content" class="mb-6">
               <p class="grey--text text-center py-4">
@@ -171,7 +172,6 @@
               </p>
             </div>
 
-            <v-divider></v-divider>
             <v-row>
               <v-col cols="12">
                 <v-checkbox
@@ -340,9 +340,7 @@ export default {
   },
   watch: {
     form: {
-      handler(newVal) {
-        console.log("Form data received in step 2:", newVal);
-      },
+      handler(newVal) {},
       deep: true,
       immediate: true,
     },

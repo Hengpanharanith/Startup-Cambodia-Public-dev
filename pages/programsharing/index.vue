@@ -210,6 +210,7 @@ export default {
         address: "",
         apply_url: "",
         image: null,
+        token: null,
       },
       programTypes: [],
       programCategories: [],
@@ -285,30 +286,40 @@ export default {
     // api call
 
     async handleProgramSubmit() {
-      try {
-        const formData = new FormData();
+      console.log(
+        "Form data being submitted:",
+        await this.$recaptcha.getResponse()
+      );
 
-        for (const key in this.form) {
-          if (key !== "image") {
-            formData.append(key, this.form[key] ?? "");
-          }
-        }
+      const recaptchatoken = await this.$recaptcha.getResponse();
+      console.log("ReCAPTCHA token:", recaptchatoken);
+      // try {
+      //   if (!recaptchatoken) {
+      //     // throw new Error("ReCAPTCHA verification failed.");
 
-        if (this.form.image) {
-          formData.append("image", this.form.image);
-        }
-
-        await this.$axios.post("/api/v1/program/submission/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      } catch (err) {
-        console.error(
-          "API submission error:",
-          err.response?.data || err.message
-        );
-      }
+      //     this.sweetAlertText(0, "ReCAPTCHA verification failed.", 0);
+      //   } else {
+      //     const formData = new FormData();
+      //     for (const key in this.form) {
+      //       if (key !== "image") {
+      //         formData.append(key, this.form[key] ?? "");
+      //       }
+      //     }
+      //     if (this.form.image) {
+      //       formData.append("image", this.form.image);
+      //     }
+      //     formData.append("token", recaptchatoken);
+      //     // console.log("Form data being submitted:", formData);x
+      //     // await this.$axios.post("/api/v1/program/submission/", formData, {
+      //     //   headers: {
+      //     //     "Content-Type": "multipart/form-data",
+      //     //   },
+      //     // });
+      //     await this.$recaptcha.reset();
+      //   }
+      // } catch (error) {
+      //   console.log("Login error:", error);
+      // }
     },
     resetForm() {
       this.form = {

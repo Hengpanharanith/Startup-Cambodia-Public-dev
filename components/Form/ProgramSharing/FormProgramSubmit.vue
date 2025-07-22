@@ -117,6 +117,7 @@
             :form="form"
             @continue="goHome"
           />
+          
         </v-card>
       </v-card>
     </v-dialog>
@@ -230,8 +231,8 @@ export default {
     submitProgram() {
       this.loadingSubmit = true;
       setTimeout(() => {
-        this.step = 3;
-        this.scrollToTop;
+        // this.step = 3;
+        // this.scrollToTop;
         this.$emit("submitProgram", this.form);
         this.loadingSubmit = false;
       }, 2000);

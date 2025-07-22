@@ -161,10 +161,10 @@ export default {
     // "~/plugins/embedded.js"
   ],
   recaptcha: {
-    hideBadge: false, // for v3 only
-    siteKey: "6LelmmwrAAAAABOmBXRYoP49dPc5AaLDbJZ2-hd1", // for laptop at office = 6LelmmwrAAAAABOmBXRYoP49dPc5AaLDbJZ2-hd1 // for laptop at home = 6LdZw2krAAAAADEsYrWdnIR8Kz-CVSCVALrGWF3I
-    version: 2, // Use 2 or 3 depending on what you prefer
-    size: "normal", // for v2: 'normal' or 'invisible'
+    hideBadge: false,
+    mode: "base",
+    version: 2,
+    size: "invisible",
   },
 
   robots: [
@@ -244,6 +244,9 @@ export default {
       id: "UA-137984619-2",
     },
     SHARE_URL: process.env.SHARING_URL,
+    recaptcha: {
+      siteKey: process.env.RECAPTCHA_SITE_KEY,
+    },
   },
   build: {
     standalone: true,
