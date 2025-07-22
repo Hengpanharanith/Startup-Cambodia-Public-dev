@@ -212,7 +212,16 @@ export default {
   /* background-image: linear-gradient(to left, #df7954 0%, #ff9f4d 100%); */
   overflow: hidden;
 }
-
+@media (max-width: 767px) {
+  .main-header {
+    height: 100vh;
+    background-image: url("/images/banner.svg");
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat;
+    
+  }
+}
 #sky {
   top: 0;
   left: 0;
