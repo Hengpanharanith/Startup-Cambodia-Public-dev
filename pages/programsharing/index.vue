@@ -218,9 +218,9 @@ export default {
     };
   },
   watch: {
-    "$route.query.showForm"(val) {
-      this.dialog = val === "true";
-    },
+    // "$route.query.showForm"(val) {
+    //   this.dialog = val === "true";
+    // },
   },
   computed: {
     benefits() {
@@ -272,20 +272,10 @@ export default {
   },
   methods: {
     goToForm() {
-      this.$router.push({
-        path: "/programsharing",
-        query: { ...this.$route.query, showForm: "true" },
-      });
       this.dialog = true;
     },
     closeDialog() {
       this.dialog = false;
-
-      const { query } = this.$route;
-      // Remove showForm from query
-      const newQuery = { ...query };
-      delete newQuery.showForm;
-      this.$router.replace({ query: newQuery });
       this.resetForm();
     },
     goHome() {

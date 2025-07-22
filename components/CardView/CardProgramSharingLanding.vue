@@ -96,8 +96,7 @@ export default {
   methods: {
     goToForm() {
       this.$router.push({
-        name: "program",
-        query: { ...this.$route.query, showForm: "true" },
+        path: "/programsharing",
       });
     },
   },

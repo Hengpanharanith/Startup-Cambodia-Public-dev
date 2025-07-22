@@ -75,14 +75,15 @@
                 <span class="font-weight-regular"></span> There was a problem
                 with the information you provided. Please review your details
                 carefully before submitting again.
-                <nuxt-link to="/">
-                  <span
-                    style="text-decoration: underline"
-                    class="text-underline orange--text font-weight-bold"
-                  >
-                    Start again
-                  </span>
-                </nuxt-link>
+                <v-btn
+                  small
+                  text
+                  color="orange"
+                  class="font-weight-bold text-decoration-underline no-hover-outline"
+                  @click="$emit('gotoForm')"
+                >
+                  Start again
+                </v-btn>
               </p>
               <p class="text-body-1 red--text text--darken-1">
                 ***Admin Note:<span> {{ program.admin_note }}</span>
@@ -304,6 +305,10 @@ export default {
   name: "CardProgramSubmissionDetail",
   props: {
     program: Object,
+    gotoForm: {
+      type: Function,
+      default: () => {},
+    },
     loadingbtn: {
       type: Boolean,
       default: false,

@@ -7,6 +7,7 @@
           @confirm-submit="$emit('confirm-submit')"
           @edit="$emit('edit')"
           :loadingbtn="loadingsubmit"
+          @gotoForm="gotoForm"
         />
       </div>
     </v-card-text>
@@ -61,6 +62,11 @@ export default {
       this.$router.push({
         path: `/program/submission/${this.token}`,
         query: { editForm: "true" },
+      });
+    },
+    gotoForm() {
+      this.$router.push({
+        path: "/programsharing",
       });
     },
   },
