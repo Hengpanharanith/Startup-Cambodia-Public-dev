@@ -175,6 +175,7 @@
       </v-row>
     </v-container>
     <FormProgramSubmit
+      :step.sync="step"
       :visible="dialog"
       @close="closeDialog"
       :form="form"
@@ -196,6 +197,7 @@ export default {
   data() {
     return {
       dialog: false,
+      step: 1,
       form: {
         email: "",
         phone: "",
@@ -218,11 +220,7 @@ export default {
       loadingProgramCategories: false,
     };
   },
-  watch: {
-    // "$route.query.showForm"(val) {
-    //   this.dialog = val === "true";
-    // },
-  },
+  watch: {},
   computed: {
     benefits() {
       return [
@@ -286,40 +284,39 @@ export default {
     // api call
 
     async handleProgramSubmit() {
-      console.log(
-        "Form data being submitted:",
-        await this.$recaptcha.getResponse()
-      );
-
+      this.loadingSubmit = true;
       const recaptchatoken = await this.$recaptcha.getResponse();
-      console.log("ReCAPTCHA token:", recaptchatoken);
-      // try {
-      //   if (!recaptchatoken) {
-      //     // throw new Error("ReCAPTCHA verification failed.");
+      // console.log("ReCAPTCHA token:", recaptchatoken);
+      try {
+        if (!recaptchatoken) {
+          this.sweetAlertText(0, "ReCAPTCHA verification failed.", 0);
+          this.loadingSubmit = false;
+          this.step = 2;
+        } else {
+          const formData = new FormData();
+          for (const key in this.form) {
+            if (key !== "image") {
+              formData.append(key, this.form[key] ?? "");
+            }
+          }
+          if (this.form.image) {
+            formData.append("image", this.form.image);
+          }
+          formData.append("token", recaptchatoken);
+          await this.$axios.post("/api/v1/program/submission/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
 
-      //     this.sweetAlertText(0, "ReCAPTCHA verification failed.", 0);
-      //   } else {
-      //     const formData = new FormData();
-      //     for (const key in this.form) {
-      //       if (key !== "image") {
-      //         formData.append(key, this.form[key] ?? "");
-      //       }
-      //     }
-      //     if (this.form.image) {
-      //       formData.append("image", this.form.image);
-      //     }
-      //     formData.append("token", recaptchatoken);
-      //     // console.log("Form data being submitted:", formData);x
-      //     // await this.$axios.post("/api/v1/program/submission/", formData, {
-      //     //   headers: {
-      //     //     "Content-Type": "multipart/form-data",
-      //     //   },
-      //     // });
-      //     await this.$recaptcha.reset();
-      //   }
-      // } catch (error) {
-      //   console.log("Login error:", error);
-      // }
+          this.sweetAlert(1, "Program submitted successfully!", 2000);
+          await this.$recaptcha.reset();
+          this.loadingSubmit = false;
+          this.step = 3;
+        }
+      } catch (error) {
+        console.log("Login error:", error);
+      }
     },
     resetForm() {
       this.form = {

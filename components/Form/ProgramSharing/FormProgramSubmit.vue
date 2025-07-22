@@ -117,7 +117,6 @@
             :form="form"
             @continue="goHome"
           />
-          
         </v-card>
       </v-card>
     </v-dialog>
@@ -149,6 +148,10 @@ export default {
     CardProgramSubmissionStep2,
   },
   props: {
+    step: {
+      type: Number,
+      default: 1,
+    },
     programTypes: {
       type: Array,
       default: () => [],
@@ -177,7 +180,6 @@ export default {
   data() {
     return {
       loadingSubmit: false,
-      step: 1,
       menuStart: false,
       imagePreview: null,
       menuEnd: false,
@@ -199,9 +201,8 @@ export default {
   },
   methods: {
     goToStep1() {
-      this.step = 1;
+      this.$emit("update:step", 1);
       this.$nextTick(() => {
-        // Wait for step 1 form to render
         setTimeout(() => {
           const formStep1Ref = this.$refs.formStep1;
           if (formStep1Ref && formStep1Ref.triggerEditorSync) {
@@ -212,8 +213,6 @@ export default {
       this.scrollToTop();
     },
     goToStep2() {
-      // console.log("Form valid, moving to step 2", this.form);
-      // console.log("Preview form data:", this.previewFormData);
       const categoryObj =
         this.programCategories.find((c) => c.id === this.form.category) || null;
       const programTypeObj =
@@ -225,17 +224,11 @@ export default {
         imagePreview: this.imagePreview,
       };
       this.previewFormData = JSON.parse(JSON.stringify(this.form));
-      this.step = 2;
+      this.$emit("update:step", 2);
       this.scrollToTop();
     },
     submitProgram() {
-      this.loadingSubmit = true;
-      setTimeout(() => {
-        // this.step = 3;
-        // this.scrollToTop;
-        this.$emit("submitProgram", this.form);
-        this.loadingSubmit = false;
-      }, 2000);
+      this.$emit("submitProgram", this.form);
     },
 
     goHome() {
