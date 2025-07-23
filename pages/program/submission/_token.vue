@@ -22,6 +22,7 @@
         @edit="handleEditForm"
         @confirm-submit="handleConfirmSubmit"
         :loadingsubmit="loadingsubmitBtn"
+        :successbtn="successSubmitBtn"
       />
 
       <InvalidToken v-if="isInvalid" />
@@ -85,6 +86,7 @@ export default {
   data() {
     return {
       loadingsubmitBtn: false,
+      successSubmitBtn: false,
       editDialog: false,
       editForm: {},
       token: null,
@@ -200,6 +202,7 @@ export default {
       }
     },
     async handleConfirmSubmit() {
+      this.loadingsubmitBtn = true;
       if (!this.token) {
         this.showSnackbar("Missing token", "error");
         this.loading = false;
@@ -225,24 +228,19 @@ export default {
             headers: { "Content-Type": "multipart/form-data" },
           }
         );
-        this.loadingsubmitBtn = true;
-        // ✅ Wait 1.5s, then redirect and show alert
 
-        setTimeout(() => {
-          this.loadingsubmitBtn = false;
-
-          this.sweetAlertText(
-            1,
-            "Please wait for admin approval.Check your email for the tracking link.",
-            0
-          );
-          this.loadingsubmitBtn = false;
-        }, 2000);
+        this.sweetAlertText(
+          1,
+          "Please wait for admin approval.Check your email for the tracking link.",
+          0
+        );
       } catch (err) {
         console.error("Error response data:", err.response?.data);
         this.showSnackbar("Failed to confirm.", "error");
       } finally {
         this.loading = false;
+        this.loadingsubmitBtn = false;
+        this.successSubmitBtn = true;
       }
     },
     handleEditForm() {

@@ -8,6 +8,7 @@
           @edit="$emit('edit')"
           :loadingbtn="loadingsubmit"
           @gotoForm="gotoForm"
+          :successbtn="successbtn"
         />
       </div>
     </v-card-text>
@@ -24,6 +25,10 @@ export default {
     program: Object,
     token: String,
     loadingsubmit: {
+      type: Boolean,
+      default: false,
+    },
+    successbtn: {
       type: Boolean,
       default: false,
     },

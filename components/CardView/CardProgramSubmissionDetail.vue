@@ -86,7 +86,7 @@
                 </v-btn>
               </p>
               <p class="text-body-1 red--text text--darken-1">
-                ***Admin Note:<span> {{ program.admin_note }}</span>
+                Admin Note:<span>"{{ program.admin_note }}"</span>
               </p>
             </v-col>
           </v-row>
@@ -134,7 +134,7 @@
                     class="orange--text font-weight-bold"
                     style="text-decoration: underline"
                   >
-                    <br />Your Program
+                    <br />here
                   </span>
                 </nuxt-link>
 
@@ -267,19 +267,32 @@
           ></v-divider>
           <!-- Confirm Submit Button -->
           <v-row class="mt-8">
+            <v-col cols="8">
+              <p v-if="successbtn" class="text-body-1 primary--text">
+                Your program has been successfully submitted! Thank you for
+                sharing your program with us. We’ve received your submission and
+                will review it shortly. You’ll be notified via email once the
+                verification is complete.
+              </p>
+            </v-col>
             <v-col
-              cols="12"
+              cols="4"
               class="d-flex justify-end"
               v-if="program?.status === 'PENDING_CONFIRM_EMAIL'"
             >
               <v-btn
+                :disabled="loadingbtn || successbtn"
+                :class="{ 'disabled-btn': loadingbtn || successbtn }"
                 color="primary"
                 class="white--text text-capitalize font-weight-bold px-8 py-3 d-flex"
                 large
                 elevation="0"
                 @click="$emit('confirm-submit')"
               >
-                <v-icon left small v-if="!loadingbtn">mdi-check</v-icon>
+                <v-icon left small v-if="!loadingbtn && !successbtn"
+                  >mdi-check</v-icon
+                >
+
                 <template v-if="loadingbtn">
                   <v-progress-circular
                     indeterminate
@@ -290,6 +303,12 @@
                   />
                   Submitting...
                 </template>
+
+                <template v-else-if="successbtn">
+                  <v-icon left small color="green">mdi-check-circle</v-icon>
+                  Success
+                </template>
+
                 <template v-else> CONFIRM SUBMIT </template>
               </v-btn>
             </v-col>
@@ -310,6 +329,10 @@ export default {
       default: () => {},
     },
     loadingbtn: {
+      type: Boolean,
+      default: false,
+    },
+    successbtn: {
       type: Boolean,
       default: false,
     },
