@@ -1,5 +1,5 @@
 <template>
-  <v-card class="invalid-token-card pa-6" elevation="3">
+  <v-card class="invalid-token-card pa-6 white" elevation="3">
     <v-card-title class="text-h6 font-weight-bold text-error primary--text">
       Invalid or Expired Token
     </v-card-title>
@@ -25,7 +25,7 @@ const goHome = () => {
   align-items: center;
   border: 2px solid color-primary;
   border-radius: 16px;
-  background-color: #fff5f5;
+
   height: auto;
   max-width: 500px;
 }
