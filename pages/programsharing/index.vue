@@ -184,6 +184,7 @@
       :programCategories="programCategories"
       :loadingProgramTypes="loadingProgramTypes"
       :loadingProgramCategories="loadingProgramCategories"
+      :loadingSubmit="loadingSubmit"
     />
   </div>
 </template>
@@ -198,6 +199,7 @@ export default {
     return {
       dialog: false,
       step: 1,
+      loadingSubmit: false,
       form: {
         email: "",
         phone: "",
@@ -285,12 +287,11 @@ export default {
 
     async handleProgramSubmit() {
       this.loadingSubmit = true;
-      const recaptchatoken = await this.$recaptcha.getResponse();
-      // console.log("ReCAPTCHA token:", recaptchatoken);
+
       try {
+        const recaptchatoken = await this.$recaptcha.getResponse();
         if (!recaptchatoken) {
           this.sweetAlertText(0, "ReCAPTCHA verification failed.", 0);
-          this.loadingSubmit = false;
           this.step = 2;
         } else {
           const formData = new FormData();
@@ -311,11 +312,12 @@ export default {
 
           this.sweetAlert(1, "Program submitted successfully!", 2000);
           await this.$recaptcha.reset();
-          this.loadingSubmit = false;
-          this.step = 3;
         }
       } catch (error) {
         console.log("Login error:", error);
+      } finally {
+        this.loadingSubmit = false;
+        this.step = 3;
       }
     },
     resetForm() {

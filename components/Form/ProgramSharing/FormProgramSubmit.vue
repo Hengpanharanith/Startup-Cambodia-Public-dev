@@ -47,7 +47,7 @@
                 @click="goToStep2"
                 :disabled="step === 1 || step === 3"
               >
-                <v-icon :color="step >= 2 ? 'black' : 'grey'">
+                <v-icon :color="step >= 2 ? 'primary' : 'grey'">
                   {{ step > 2 ? "mdi-check" : "mdi-eye" }}
                 </v-icon>
               </v-btn>
@@ -68,7 +68,7 @@
                 class="mb-2"
                 :disabled="step !== 3"
               >
-                <v-icon :color="step >= 3 ? 'black' : 'grey'">
+                <v-icon :color="step >= 3 ? 'primary' : 'grey'">
                   {{ step > 3 ? "mdi-check" : "mdi-magnify" }}
                 </v-icon>
               </v-btn>
@@ -103,13 +103,13 @@
             :form="previewFormData"
             :programCoverages="programCoverages"
             @back="goToStep1"
-            @submit="submitProgram"
+            @submitProgram="$emit('submitProgram')"
             :loadingProgramCategories="loadingProgramCategories"
             :loadingProgramTypes="loadingProgramTypes"
             :programCategories="programCategories"
             :programTypes="programTypes"
             :image-preview="imagePreview"
-            :loading="loadingSubmit"
+            :loadingSubmit="loadingSubmit"
           />
           <FormPSStep3
             ref="step3"
@@ -148,6 +148,10 @@ export default {
     CardProgramSubmissionStep2,
   },
   props: {
+    loadingSubmit: {
+      type: Boolean,
+      default: false,
+    },
     step: {
       type: Number,
       default: 1,
@@ -179,11 +183,10 @@ export default {
   },
   data() {
     return {
-      loadingSubmit: false,
       menuStart: false,
       imagePreview: null,
       menuEnd: false,
-      previewFormData: null, // Add this to store the resolved data
+      previewFormData: null,
       programCoverages: [
         { label: "National", value: true },
         { label: "International", value: false },
@@ -194,7 +197,7 @@ export default {
     visible(val) {
       if (!val) {
         this.step = 1;
-        this.previewFormData = null; // Reset preview data
+        this.previewFormData = null; 
         this.resetForm();
       }
     },
@@ -225,12 +228,7 @@ export default {
       };
       this.previewFormData = JSON.parse(JSON.stringify(this.form));
       this.$emit("update:step", 2);
-      this.scrollToTop();
     },
-    submitProgram() {
-      this.$emit("submitProgram", this.form);
-    },
-
     goHome() {
       this.resetForm();
       this.$router.replace("/");

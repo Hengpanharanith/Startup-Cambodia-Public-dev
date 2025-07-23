@@ -195,17 +195,17 @@
                 </v-btn>
 
                 <v-btn
-                  :disabled="!checked || loading"
+                  :disabled="!checked || loadingSubmit"
                   :class="{ 'disabled-btn': !checked }"
                   color="primary"
                   class="white--text text-capitalize font-weight-bold px-8 py-3"
                   large
                   elevation="0"
-                  @click="$emit('submit')"
+                  @click="$emit('submitProgram')"
                 >
-                  <v-icon left small v-if="!loading">mdi-check</v-icon>
+                  <v-icon left small v-if="!loadingSubmit">mdi-check</v-icon>
 
-                  <template v-if="loading">
+                  <template v-if="loadingSubmit">
                     <v-progress-circular
                       indeterminate
                       color="white"
@@ -236,7 +236,8 @@ export default {
   },
   name: "CardProgramSubmissionStep2",
   props: {
-    loading: {
+
+    loadingSubmit: {
       type: Boolean,
       default: false,
     },
@@ -270,9 +271,10 @@ export default {
       default: false,
     },
   },
+
   computed: {
     getCategoryName() {
-      const form = this.previewFormData || this.form; // fallback if needed
+      const form = this.previewFormData || this.form; 
 
       if (form?.category?.name || form?.category?.label) {
         return form.category.name || form.category.label;
@@ -445,5 +447,8 @@ a {
   background-color: #b0bec5 !important;
   color: #eceff1 !important;
   cursor: not-allowed !important;
+}
+#rc-imageselect{
+
 }
 </style>

@@ -174,6 +174,7 @@
     </v-container>
 
     <FormProgramSubmit
+      :step.sync="step"
       :visible="dialog"
       @close="closeDialog"
       :form="form"
@@ -182,6 +183,7 @@
       :programCategories="programCategories"
       :loadingProgramTypes="loadingProgramTypes"
       :loadingProgramCategories="loadingProgramCategories"
+      :loadingSubmit="loadingSubmit"
     />
   </div>
 </template>
@@ -199,6 +201,8 @@ import CardProgramSharing from "@/components/CardView/CardProgramSharing.vue";
 export default {
   data() {
     return {
+      step: 1,
+      loadingSubmit: false,
       bannerUrl:
         "https://media.startupcambodia.gov.kh/platform/public-assets/banners/program.png",
       dialogDate: false,
@@ -496,29 +500,38 @@ export default {
       return detail;
     },
     async handleProgramSubmit() {
+      this.loadingSubmit = true;
+
       try {
-        const formData = new FormData();
-
-        for (const key in this.form) {
-          if (key !== "image") {
-            formData.append(key, this.form[key] ?? "");
+        const recaptchatoken = await this.$recaptcha.getResponse();
+        if (!recaptchatoken) {
+          this.sweetAlertText(0, "ReCAPTCHA verification failed.", 0);
+          this.step = 2;
+        } else {
+          const formData = new FormData();
+          for (const key in this.form) {
+            if (key !== "image") {
+              formData.append(key, this.form[key] ?? "");
+            }
           }
-        }
+          if (this.form.image) {
+            formData.append("image", this.form.image);
+          }
+          formData.append("token", recaptchatoken);
+          await this.$axios.post("/api/v1/program/submission/", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
 
-        if (this.form.image) {
-          formData.append("image", this.form.image);
+          this.sweetAlert(1, "Program submitted successfully!", 2000);
+          await this.$recaptcha.reset();
         }
-
-        await this.$axios.post("/api/v1/program/submission/", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-      } catch (err) {
-        console.error(
-          "API submission error:",
-          err.response?.data || err.message
-        );
+      } catch (error) {
+        console.log("Login error:", error);
+      } finally {
+        this.loadingSubmit = false;
+        this.step = 3;
       }
     },
 
